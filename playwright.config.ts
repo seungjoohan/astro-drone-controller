@@ -6,12 +6,16 @@ export default defineConfig({
   workers: 1,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  timeout: process.env.CI || process.env.PLAYWRIGHT_CHROMIUM ? 90000 : 30000,
+  reporter: process.env.CI ? 'list' : undefined,
+  globalTimeout: process.env.CI ? 600000 : 0,
+  timeout: process.env.CI ? 180000 : process.env.PLAYWRIGHT_CHROMIUM ? 90000 : 30000,
+  expect: { timeout: process.env.CI ? 30000 : 5000 },
   use: {
     baseURL: 'http://127.0.0.1:5173',
     channel: process.env.PLAYWRIGHT_CHROMIUM ? 'chromium' : 'chrome',
     viewport: { width: 1440, height: 1080 },
     screenshot: 'only-on-failure',
+    trace: process.env.CI ? 'on-first-retry' : 'off',
     launchOptions: { args: ['--enable-webgl', '--ignore-gpu-blocklist'] },
   },
   webServer: {

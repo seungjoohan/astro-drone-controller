@@ -50,7 +50,7 @@ test('lands gently on a NYC rooftop, stops its motors, and takes off again', asy
   await page.getByRole('combobox', { name: 'Flight map' }).selectOption('nyc');
   await page.getByRole('button', { name: 'Start motors' }).click();
   await page.keyboard.down('w');
-  await expect.poll(async () => parseFloat(await page.locator('#altitude').innerText()), { intervals: [100], timeout: 8000 }).toBeGreaterThan(rooftopHeight + 5);
+  await expect.poll(async () => parseFloat(await page.locator('#altitude').innerText()), { intervals: [100], timeout: process.env.CI ? 45000 : 8000 }).toBeGreaterThan(rooftopHeight + 5);
   await page.keyboard.up('w');
   const initialDistance = parseFloat(await page.locator('#distance').innerText());
   await page.keyboard.down('ArrowUp');

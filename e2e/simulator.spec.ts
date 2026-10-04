@@ -101,7 +101,7 @@ test('scores the first course gate after a real keyboard flight', async ({ page 
   await expect.poll(async () => parseFloat(await page.locator('#altitude').innerText()), { intervals: [100] }).toBeGreaterThan(5);
   await page.keyboard.up('w');
   await page.keyboard.down('ArrowUp');
-  await expect(page.locator('#distance')).toHaveText('1 / 6', { timeout: 10000 });
+  await expect(page.locator('#distance')).toHaveText('1 / 6', { timeout: process.env.CI ? 30000 : 10000 });
   await page.keyboard.up('ArrowUp');
   await expect(page.locator('#toast')).toContainText('Gate 1 cleared');
   await page.keyboard.press('r');

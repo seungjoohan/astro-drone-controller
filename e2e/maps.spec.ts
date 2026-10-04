@@ -1,7 +1,7 @@
 import { expect, test } from './fixtures';
 
 test('switches maps, flies over NYC, and preserves flight preferences', async ({ page }) => {
-  test.setTimeout(45000);
+  test.setTimeout(process.env.CI ? 180000 : 45000);
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/');
@@ -28,7 +28,7 @@ test('switches maps, flies over NYC, and preserves flight preferences', async ({
   await expect(page.locator('#location-name')).toHaveText('Midtown NYC');
   await page.getByRole('button', { name: 'Start motors' }).click();
   await page.keyboard.down('w');
-  await expect.poll(async () => parseFloat(await page.locator('#altitude').innerText()), { intervals: [100], timeout: 20000 }).toBeGreaterThan(100);
+  await expect.poll(async () => parseFloat(await page.locator('#altitude').innerText()), { intervals: [100], timeout: process.env.CI ? 90000 : 20000 }).toBeGreaterThan(100);
   await page.keyboard.up('w');
   await page.screenshot({ path: 'test-results/nyc-skyline.png', fullPage: true });
   await page.getByRole('combobox', { name: 'Flight map' }).selectOption('pine-valley');
@@ -54,7 +54,7 @@ test('scores the NYC course gate and clears progress on map changes', async ({ p
   await expect.poll(async () => parseFloat(await page.locator('#altitude').innerText()), { intervals: [100] }).toBeGreaterThan(9);
   await page.keyboard.up('w');
   await page.keyboard.down('ArrowUp');
-  await expect(page.locator('#distance')).toHaveText('1 / 6', { timeout: 10000 });
+  await expect(page.locator('#distance')).toHaveText('1 / 6', { timeout: process.env.CI ? 30000 : 10000 });
   await page.keyboard.up('ArrowUp');
   await page.getByRole('combobox', { name: 'Flight map' }).selectOption('pine-valley');
   await expect(page.locator('#distance')).toHaveText('0 / 6');
@@ -71,7 +71,7 @@ test('ends the flight on a building collision and resets at the NYC landing pad'
   await page.keyboard.up('w');
   await page.keyboard.down('ArrowUp');
   await page.keyboard.down('ArrowRight');
-  await expect(page.locator('#arm-button')).toContainText('Reset flight', { timeout: 8000 });
+  await expect(page.locator('#arm-button')).toContainText('Reset flight', { timeout: process.env.CI ? 30000 : 8000 });
   await page.keyboard.up('ArrowUp');
   await page.keyboard.up('ArrowRight');
   await expect(page.locator('#toast')).toContainText('Building collision');
