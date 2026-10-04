@@ -84,3 +84,27 @@ npm run build
 - `src/main.ts`: UI, telemetry, session state, and fixed-step loop.
 
 Unit tests cover physics, landing speeds and surfaces, input edge cases, and gate crossing. Browser tests live in `e2e/` and run with `npm run test:e2e`; they launch installed Google Chrome by default. A test-only fixture isolates physical gamepads so a connected controller cannot steer automated keyboard flights; the controller test supplies a simulated device. To use Playwright’s Chromium instead, install it with `npx playwright install chromium`, then run with `PLAYWRIGHT_CHROMIUM=1 npm run test:e2e`.
+
+## Deployment and CI
+
+Live site: [astro-drone-controller.vercel.app](https://astro-drone-controller.vercel.app/).
+
+`.github/workflows/ci.yml` runs unit tests, a production build, and Chromium browser tests for pull requests targeting `main` and every push to `main`. After those checks pass on `main`, it deploys the exact built assets to the existing Vercel project. Merging a pull request triggers a push to `main`; direct pushes also deploy. The workflow can also be run manually from GitHub Actions on `main`. Other branches and pull requests never receive the deployment token or deploy to production.
+
+### One-time setup
+
+In this repository's **Settings → Secrets and variables → Actions**, configure:
+
+| Type | Name | Value |
+| --- | --- | --- |
+| Repository variable | `VERCEL_ORG_ID` | The ID of the existing `seung-2564's projects` Vercel team. |
+| Repository variable | `VERCEL_PROJECT_ID` | The ID of the existing `astro-drone-controller` Vercel project. |
+| Repository secret | `VERCEL_TOKEN` | A dedicated Vercel access token authorized to deploy to that project. |
+
+Get the IDs from the existing Vercel team/project settings, or from `.vercel/project.json` after linking locally to that existing project. Do not create a second project. Prefer a project-scoped token and set an expiration; rotate the GitHub secret before it expires. Never commit the token or paste it into an issue, pull request, or workflow file. Missing configuration fails the deployment job with a setup error rather than silently skipping publication.
+
+The deployment job has no source checkout and only uploads the tested `dist` artifact, packaged with [Vercel's static Build Output API](https://vercel.com/docs/build-output-api). It does not change the existing Vercel/GitHub login connections or require Vercel's native Git integration. No environment variables, backend services, or paid add-ons are needed by the app. Keep native Git auto-deployment disabled for this project to avoid bypassing the test gate or deploying twice.
+
+Production workflows are serialized so an in-progress deployment is not canceled by another merge. GitHub may replace an older pending run with a newer one. Before publishing, the workflow verifies that its commit is still the latest `main` commit; rerunning an outdated workflow cannot roll production back. Pull-request checks can be canceled when superseded. To require checks before merging, configure a `main` branch rule requiring **Test and build**; the workflow itself does not change branch protection.
+
+For a failed deployment, open **Actions → CI and production deployment**, fix the reported test/configuration error, then rerun the workflow on `main`. Browser failure screenshots are kept for seven days. The last successful Vercel production deployment remains available if checks or publication fail.

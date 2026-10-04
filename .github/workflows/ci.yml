@@ -1,0 +1,128 @@
+name: CI and production deployment
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  checks:
+    name: Test and build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run unit tests
+        run: npm test
+      - name: Build production assets
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run browser tests
+        run: npm run test:e2e
+        env:
+          PLAYWRIGHT_CHROMIUM: '1'
+      - name: Save browser test failures
+        if: failure()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: browser-test-results
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Save production assets
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: production-dist
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  deploy:
+    name: Deploy to Vercel
+    needs: checks
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment:
+      name: production
+      url: https://astro-drone-controller.vercel.app
+    env:
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+    steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+      - name: Download tested production assets
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+        with:
+          name: production-dist
+          path: .vercel/output/static
+      - name: Prepare static deployment
+        run: |
+          test -f .vercel/output/static/index.html
+          printf '{"version":3}\n' > .vercel/output/config.json
+      - name: Install Vercel CLI
+        run: npm install --global vercel@62.2.0
+      - name: Check that this is still the latest main commit
+        id: latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          latest_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')
+          if [ "$latest_sha" = "$GITHUB_SHA" ]; then
+            echo "current=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "current=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping an outdated main commit; production is unchanged."
+            echo "Skipped deployment: this run is no longer the latest main commit." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Deploy production
+        if: steps.latest.outputs.current == 'true'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          for variable in VERCEL_ORG_ID VERCEL_PROJECT_ID VERCEL_TOKEN; do
+            if [ -z "${!variable}" ]; then
+              echo "::error::Missing $variable. See the deployment setup in README.md."
+              exit 1
+            fi
+          done
+          vercel deploy --prebuilt --prod --yes > deployment-url.txt
+          printf '### Production deployment\n\n' >> "$GITHUB_STEP_SUMMARY"
+          cat deployment-url.txt >> "$GITHUB_STEP_SUMMARY"
+          printf '\n\nLive site: https://astro-drone-controller.vercel.app\n' >> "$GITHUB_STEP_SUMMARY"
+      - name: Verify public production URL
+        if: steps.latest.outputs.current == 'true'
+        run: |
+          for attempt in 1 2 3 4 5; do
+            status=$(curl --silent --show-error --max-time 20 --output published-index.html --write-out '%{http_code}' https://astro-drone-controller.vercel.app/) || status=000
+            if [ "$status" = 200 ] && cmp --silent .vercel/output/static/index.html published-index.html; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::The public production URL does not serve this build."
+          exit 1
