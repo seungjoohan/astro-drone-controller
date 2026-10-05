@@ -1,0 +1,110 @@
+{
+  "method": "Analytical swept footprints on periodic healthy routes. Spatial midpoint grids within radius320, 1-second evaluation cadence, t240..1439 inclusive, 120-second freshness.",
+  "results": [
+    {
+      "fleetSize": 4,
+      "spacing": 40,
+      "pointCount": 208,
+      "minimumCoverage": 89.42307692307693,
+      "maximumCoverage": 100,
+      "meanCoverage": 93.31370192307709,
+      "belowTargetSeconds": 951,
+      "sampleCount": 1200,
+      "everCovered": 100,
+      "routeCycles": [
+        132.15026519928642,
+        139.59103958525452,
+        139.5910395852545,
+        132.1502651992864
+      ]
+    },
+    {
+      "fleetSize": 4,
+      "spacing": 10,
+      "pointCount": 3228,
+      "minimumCoverage": 93.09169764560099,
+      "maximumCoverage": 100,
+      "meanCoverage": 96.06779223461378,
+      "belowTargetSeconds": 294,
+      "sampleCount": 1200,
+      "everCovered": 100,
+      "routeCycles": [
+        132.15026519928642,
+        139.59103958525452,
+        139.5910395852545,
+        132.1502651992864
+      ]
+    },
+    {
+      "fleetSize": 4,
+      "spacing": 5,
+      "pointCount": 12892,
+      "minimumCoverage": 93.10425069810735,
+      "maximumCoverage": 99.88364877443375,
+      "meanCoverage": 96.05320482986863,
+      "belowTargetSeconds": 300,
+      "sampleCount": 1200,
+      "everCovered": 100,
+      "routeCycles": [
+        132.15026519928642,
+        139.59103958525452,
+        139.5910395852545,
+        132.1502651992864
+      ]
+    },
+    {
+      "fleetSize": 5,
+      "spacing": 40,
+      "pointCount": 208,
+      "minimumCoverage": 100,
+      "maximumCoverage": 100,
+      "meanCoverage": 100,
+      "belowTargetSeconds": 0,
+      "sampleCount": 1200,
+      "everCovered": 100,
+      "routeCycles": [
+        102.90474619858955,
+        113.11343676195169,
+        95.91617257815201,
+        114.69389464346376,
+        106.80998911610224
+      ]
+    },
+    {
+      "fleetSize": 5,
+      "spacing": 10,
+      "pointCount": 3228,
+      "minimumCoverage": 100,
+      "maximumCoverage": 100,
+      "meanCoverage": 100,
+      "belowTargetSeconds": 0,
+      "sampleCount": 1200,
+      "everCovered": 100,
+      "routeCycles": [
+        102.90474619858955,
+        113.11343676195169,
+        95.91617257815201,
+        114.69389464346376,
+        106.80998911610224
+      ]
+    },
+    {
+      "fleetSize": 5,
+      "spacing": 5,
+      "pointCount": 12892,
+      "minimumCoverage": 100,
+      "maximumCoverage": 100,
+      "meanCoverage": 100,
+      "belowTargetSeconds": 0,
+      "sampleCount": 1200,
+      "everCovered": 100,
+      "routeCycles": [
+        102.90474619858955,
+        113.11343676195169,
+        95.91617257815201,
+        114.69389464346376,
+        106.80998911610224
+      ]
+    }
+  ]
+}

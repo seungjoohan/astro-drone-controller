@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "baselineId": "patrol-baseline-v1",
+  "measuredDateLocal": "2026-10-04",
+  "archivedDateLocal": "2026-10-05",
+  "timezone": "Asia/Seoul",
+  "provenance": {
+    "description": "Frozen copies of the existing local benchmark reports, not recordings of user-operated missions. Archival does not change the recorded measurements.",
+    "performanceCreatedAt": "2026-10-04T13:01:13.222Z",
+    "sourceRevision": "Current local patrol/population baseline archived with this manifest; not the prior HEAD ad07d4e46f82b52f2fde537075a53e36c9b6413d.",
+    "hashAlgorithm": "SHA-256",
+    "sourceHashes": {
+      "src/patrol.ts": "5625c6519ea5ed8d81e97c8a44905a8c091c52d2828d4e0fcb84f43fc619368f",
+      "src/population.ts": "f123ec8158d0a304af838eb759a681903abf44924dd2fc7dc236c2f54045e842",
+      "src/patrol-types.ts": "ac54b3caab8b05a32817e13a1db3dad58f541d8a338ce7a27a50e3163143c906",
+      "src/maps.ts": "925d37a97435c9db9cc041bf78f5a02c6057e11974cdf3d44f2344ef726b8380",
+      "src/world.ts": "be61457f9bbcc4270d856120561344906036c278b27550ff521c0ddfd68c5d95",
+      "src/types.ts": "34a46417b8a8720bbe7fc240769d0a2faaa9d5492415e9a824987f8fb2ab5f19",
+      "package-lock.json": "c2e3c18d15f99c1f699ba57b45edc622c85fa2e26d2d71f8d8c339b2fe328592"
+    },
+    "reproductionEnvironment": {
+      "node": "v24.3.0",
+      "vite": "7.3.6"
+    }
+  },
+  "common": {
+    "planner": "Uniform balanced closed-loop patrol; population affects evaluation, not routes.",
+    "defaultConfig": {
+      "coverageTarget": 95,
+      "revisitSeconds": 120,
+      "fleetSize": 5,
+      "populationCount": 5000,
+      "populationSeed": 42,
+      "crowdedRevisitSeconds": 15,
+      "crowdedCellPopulation": 80
+    },
+    "sensing": {
+      "radiusMeters": 320,
+      "sensorRadiusMeters": 32,
+      "cellSpacingMeters": 40,
+      "samplePoints": 208,
+      "droneSpeedMetersPerSecond": 18
+    },
+    "limitations": [
+      "Overhead circular sensing without building occlusion.",
+      "Static clustered population assigned to sample points, not individual moving pedestrians.",
+      "No real-city visibility, battery, weather, takeoff, or browser frame-rate claims.",
+      "Fleet recommendation is conservative within this route family, not proof of global optimality."
+    ]
+  },
+  "reports": {
+    "performance": {
+      "file": "performance.json",
+      "script": "scripts/benchmark-patrol-performance.mjs",
+      "output": "test-results/patrol-performance-results.json",
+      "healthyScenarios": 80,
+      "seeds": [
+        1,
+        7,
+        42,
+        123,
+        301,
+        997,
+        2026,
+        98765,
+        104729,
+        2147483646
+      ],
+      "fleetSizes": [
+        3,
+        4,
+        5,
+        6,
+        8
+      ],
+      "fleetComparisonPopulation": 5000,
+      "additionalPopulationCounts": [
+        1000,
+        10000,
+        20000
+      ],
+      "populationComparisonFleetSize": 5,
+      "warmupSeconds": 600,
+      "evaluationSeconds": 1200,
+      "sampleSeconds": 0.5,
+      "additionalFineSampleDefaultSeconds": 0.1,
+      "additionalFineSampleScenarios": 1,
+      "populationWeightedP95AgeBinSeconds": 0.5,
+      "aggregation": "Means average equal-duration samples and equal-size seed scenarios. Hotspot on-time is population weighted."
+    },
+    "faults": {
+      "file": "faults.json",
+      "script": "scripts/benchmark-patrol-faults.mjs",
+      "output": "test-results/patrol-fault-results.json",
+      "faultScenarios": 17,
+      "populationSeed": 42,
+      "stepSeconds": 0.25,
+      "warmBaselineStartSeconds": 300,
+      "faultTimeSeconds": 600,
+      "horizonSeconds": 1800,
+      "cases": [
+        "Five drones: malfunction of each drone (5 scenarios).",
+        "Five drones: deviation of each drone (5 scenarios).",
+        "Six drones: malfunction of each drone (6 scenarios).",
+        "Five drones: drone 1 malfunction at 600 seconds, restored at 900 seconds (1 scenario)."
+      ],
+      "recovery": "Area freshness >=95% for at least 120 seconds; separately records a sustained interval through the end of the observed run.",
+      "hotspotMetric": "Percent of hotspot cells meeting deadlines, not percent of hotspot residents; do not mix with performance.json hotspot population weighting."
+    },
+    "fidelity": {
+      "file": "fidelity.json",
+      "script": "scripts/benchmark-patrol-fidelity.mjs",
+      "output": "test-results/patrol-fidelity-results.json",
+      "cases": 6,
+      "fleetSizes": [
+        4,
+        5
+      ],
+      "gridSpacingMeters": [
+        40,
+        10,
+        5
+      ],
+      "firstSampleSeconds": 240,
+      "lastSampleSeconds": 1439,
+      "sampleSeconds": 1,
+      "revisitSeconds": 120,
+      "method": "Analytical swept footprints on periodic healthy routes, evaluated on independent spatial midpoint grids."
+    }
+  },
+  "reproduction": {
+    "workingDirectory": "Repository root",
+    "install": "npm ci",
+    "commands": [
+      "node scripts/benchmark-patrol-performance.mjs",
+      "node scripts/benchmark-patrol-faults.mjs",
+      "node scripts/benchmark-patrol-fidelity.mjs"
+    ],
+    "outputPolicy": "Scripts create test-results/ if necessary and write only fresh reports there; they never overwrite this frozen baseline.",
+    "comparison": "Compare parsed JSON, ignoring top-level createdAt and wallSeconds in performance.json. Other values must match; floating-point differences across runtimes should be investigated rather than silently accepted."
+  }
+}

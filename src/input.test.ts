@@ -80,6 +80,28 @@ describe('config validation', () => {
 });
 
 describe('controller lifecycle', () => {
+  it('neutralizes disabled input and re-baselines held controller buttons when enabled', () => {
+    let gamepad = makeGamepad();
+    vi.stubGlobal('navigator', { getGamepads: () => [gamepad] });
+    const input = new ControllerInput();
+    input.poll();
+    input.setEnabled(false);
+    gamepad = makeGamepad([1, -1, 0, 0], [0]);
+    const disabled = input.poll();
+    expect(disabled.controls).toEqual(ZERO_CONTROLS);
+    expect(disabled.actions).toEqual([]);
+    expect(disabled.gamepad).toBe(gamepad);
+    expect(disabled.rawAxes).toEqual([1, -1, 0, 0]);
+    input.setEnabled(true);
+    expect(input.poll().actions).toEqual([]);
+    expect(input.poll().controls.throttle).toBe(1);
+    gamepad = makeGamepad();
+    input.poll();
+    gamepad = makeGamepad([0, 0, 0, 0], [0]);
+    expect(input.poll().actions).toEqual(['arm']);
+    input.dispose();
+  });
+
   it('uses fresh snapshots and requires release before a held connection button activates', () => {
     let gamepad = makeGamepad([0, -1, 0, 0], [0]);
     vi.stubGlobal('navigator', { getGamepads: () => [gamepad] });
@@ -153,6 +175,46 @@ describe('controller lifecycle', () => {
 });
 
 describe('keyboard flight controls', () => {
+  it('leaves keyboard defaults untouched and produces no input while disabled', () => {
+    const surface = new EventTarget();
+    vi.stubGlobal('window', surface);
+    const input = new ControllerInput();
+    input.setEnabled(false);
+    for (const code of ['KeyW', 'KeyS', 'KeyA', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'KeyR', 'KeyC', 'Escape', 'KeyP']) {
+      expect(emitKey(surface, code).defaultPrevented).toBe(false);
+      const frame = input.poll();
+      expect(frame.controls).toEqual(ZERO_CONTROLS);
+      expect(frame.actions).toEqual([]);
+      expect(emitKey(surface, code, 'keyup').defaultPrevented).toBe(false);
+    }
+    input.setEnabled(true);
+    expect(input.poll().controls).toEqual(ZERO_CONTROLS);
+    expect(input.poll().actions).toEqual([]);
+    input.dispose();
+  });
+
+  it('clears held keys and queued actions only when the enabled mode changes', () => {
+    const surface = new EventTarget();
+    vi.stubGlobal('window', surface);
+    const input = new ControllerInput();
+    emitKey(surface, 'KeyW');
+    emitKey(surface, 'ArrowUp');
+    emitKey(surface, 'Space');
+    input.setEnabled(false);
+    input.setEnabled(true);
+    const cleared = input.poll();
+    expect(cleared.controls).toEqual(ZERO_CONTROLS);
+    expect(cleared.actions).toEqual([]);
+    emitKey(surface, 'KeyW');
+    expect(emitKey(surface, 'ArrowUp').defaultPrevented).toBe(true);
+    expect(emitKey(surface, 'Space').defaultPrevented).toBe(true);
+    input.setEnabled(true);
+    const resumed = input.poll();
+    expect(resumed.controls).toEqual({ throttle: 1, yaw: 0, pitch: 1, roll: 0 });
+    expect(resumed.actions).toEqual(['arm']);
+    input.dispose();
+  });
+
   it('overrides only active keyboard axes and clears held keys on blur', () => {
     const surface = new EventTarget();
     vi.stubGlobal('window', surface);

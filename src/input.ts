@@ -134,6 +134,7 @@ function blocksKeyboard(target: EventTarget | null, code?: string): boolean {
 
 export class ControllerInput {
   public config: InputConfig;
+  private enabled = true;
   private pressedKeys = new Set<string>();
   private pendingActions: InputAction[] = [];
   private previousButtons: boolean[] = [];
@@ -159,7 +160,7 @@ export class ControllerInput {
   }
 
   private onKeyDown = (event: KeyboardEvent): void => {
-    if (blocksKeyboard(event.target, event.code) || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (!this.enabled || blocksKeyboard(event.target, event.code) || event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.code === 'Space' || event.code.startsWith('Arrow')) event.preventDefault();
     if (FLIGHT_KEYS.has(event.code)) this.pressedKeys.add(event.code);
     const action = KEY_ACTIONS[event.code];
@@ -167,6 +168,7 @@ export class ControllerInput {
   };
 
   private onKeyUp = (event: KeyboardEvent): void => {
+    if (!this.enabled) return;
     this.pressedKeys.delete(event.code);
   };
 
@@ -240,15 +242,21 @@ export class ControllerInput {
     if (disconnected) this.clear();
 
     return {
-      controls: disconnected ? { ...ZERO_CONTROLS } : controls,
+      controls: disconnected || !this.enabled ? { ...ZERO_CONTROLS } : controls,
       gamepad,
-      actions: disconnected ? [] : [...new Set(actions)],
+      actions: disconnected || !this.enabled ? [] : [...new Set(actions)],
       source: gamepad && !keyboardActive ? 'controller' : 'keyboard',
       rawAxes,
       rawButtons,
       disconnected,
       supported,
     };
+  }
+
+  setEnabled(enabled: boolean): void {
+    if (this.enabled === enabled) return;
+    this.enabled = enabled;
+    this.clear();
   }
 
   setConfig(config: InputConfig): void {

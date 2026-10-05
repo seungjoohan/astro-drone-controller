@@ -1,0 +1,4469 @@
+{
+  "createdAt": "2026-10-04T13:01:13.222Z",
+  "methodology": {
+    "warmupSeconds": 600,
+    "evaluationSeconds": 1200,
+    "sampleSeconds": 0.5,
+    "seeds": [
+      1,
+      7,
+      42,
+      123,
+      301,
+      997,
+      2026,
+      98765,
+      104729,
+      2147483646
+    ],
+    "defaultConfig": {
+      "populationCount": 5000,
+      "populationSeed": 42,
+      "crowdedRevisitSeconds": 15,
+      "crowdedCellPopulation": 80,
+      "coverageTarget": 95,
+      "revisitSeconds": 120,
+      "fleetSize": 5
+    },
+    "sensor": {
+      "maxDrones": 8,
+      "speed": 18,
+      "sensorRadius": 32,
+      "cellSize": 40,
+      "detectionSeconds": 3
+    },
+    "unchangedPlanner": true,
+    "persistedUserRunsAvailable": false,
+    "p95AgeBinSeconds": 0.5,
+    "note": "Mission-quality benchmarks against the implemented 208-point overhead sensing model, not measured real-city visibility or browser frame rate. Each reported mean averages equal-duration samples and equal-size seed scenarios. Fault-free warmup excluded. No learning or controller changes."
+  },
+  "defaultCase": {
+    "config": {
+      "coverageTarget": 95,
+      "revisitSeconds": 120,
+      "fleetSize": 5,
+      "populationCount": 5000,
+      "populationSeed": 42,
+      "crowdedRevisitSeconds": 15,
+      "crowdedCellPopulation": 80
+    },
+    "sampleSeconds": 0.5,
+    "samples": 2400,
+    "hotspotCells": 10,
+    "hotspotPopulation": 922,
+    "areaTargetPassPercent": 100,
+    "allHotspotsPassPercent": 0,
+    "maximumHotspotAgeSeconds": 103.24791926845023,
+    "populationWeightedP95AgeSeconds": 96.5,
+    "maximumUnseenPeople": 0,
+    "metrics": {
+      "area": {
+        "mean": 100,
+        "minimum": 100,
+        "maximum": 100
+      },
+      "peopleOnTime": {
+        "mean": 58.05232499999993,
+        "minimum": 45.32,
+        "maximum": 71.7
+      },
+      "peopleInView": {
+        "mean": 3.8661083333333317,
+        "minimum": 0.8,
+        "maximum": 12.04
+      },
+      "meanAgeSeconds": {
+        "mean": 46.25536561662679,
+        "minimum": 36.41023658003791,
+        "maximum": 56.98578431000942
+      },
+      "gapCost": {
+        "mean": 3.720661370404883,
+        "minimum": 1.4656380772027204,
+        "maximum": 6.66188206133753
+      },
+      "hotspotsOnTime": {
+        "mean": 18.011252711496514,
+        "minimum": 0,
+        "maximum": 41.64859002169197
+      }
+    }
+  },
+  "fineSampleDefault": {
+    "config": {
+      "coverageTarget": 95,
+      "revisitSeconds": 120,
+      "fleetSize": 5,
+      "populationCount": 5000,
+      "populationSeed": 42,
+      "crowdedRevisitSeconds": 15,
+      "crowdedCellPopulation": 80
+    },
+    "sampleSeconds": 0.1,
+    "samples": 12000,
+    "hotspotCells": 10,
+    "hotspotPopulation": 922,
+    "areaTargetPassPercent": 100,
+    "allHotspotsPassPercent": 0,
+    "maximumHotspotAgeSeconds": 103.24791926835746,
+    "populationWeightedP95AgeSeconds": 96.5,
+    "maximumUnseenPeople": 0,
+    "metrics": {
+      "area": {
+        "mean": 100,
+        "minimum": 100,
+        "maximum": 100
+      },
+      "peopleOnTime": {
+        "mean": 58.050585000000936,
+        "minimum": 45.32,
+        "maximum": 71.96
+      },
+      "peopleInView": {
+        "mean": 3.867414999999971,
+        "minimum": 0.76,
+        "maximum": 12.04
+      },
+      "meanAgeSeconds": {
+        "mean": 46.2567115756916,
+        "minimum": 36.322999810735496,
+        "maximum": 57.37523359401332
+      },
+      "gapCost": {
+        "mean": 3.721013968087512,
+        "minimum": 1.447773443308869,
+        "maximum": 6.677970632323329
+      },
+      "hotspotsOnTime": {
+        "mean": 18.007122198119216,
+        "minimum": 0,
+        "maximum": 41.64859002169197
+      }
+    }
+  },
+  "fleetComparison": [
+    {
+      "fleetSize": 3,
+      "scenarios": 10,
+      "areaMinimum": 72.11538461538461,
+      "areaMean": 76.36217948717903,
+      "areaTargetPassPercent": 0,
+      "peopleOnTimeMean": 34.8207583333333,
+      "peopleOnTimeSeedMeanRange": [
+        29.292000000000012,
+        43.49505833333319
+      ],
+      "peopleInViewMean": 2.3199233333333344,
+      "meanAgeSeconds": 76.68631364293883,
+      "p95AgeSeedRangeSeconds": [
+        153,
+        157
+      ],
+      "gapCostMean": 13.90484953599561,
+      "hotspotsOnTimeMean": 11.869320655742804,
+      "hotspotMaxAgeSeconds": 168.24111547091616,
+      "allHotspotsPassPercent": 1.0833333333333335
+    },
+    {
+      "fleetSize": 4,
+      "scenarios": 10,
+      "areaMinimum": 89.90384615384616,
+      "areaMean": 93.32792467948777,
+      "areaTargetPassPercent": 20.5,
+      "peopleOnTimeMean": 45.86289916666668,
+      "peopleOnTimeSeedMeanRange": [
+        38.981491666666756,
+        55.7782583333334
+      ],
+      "peopleInViewMean": 3.2408024999999996,
+      "meanAgeSeconds": 57.01053524063182,
+      "p95AgeSeedRangeSeconds": [
+        120.5,
+        126.5
+      ],
+      "gapCostMean": 7.897032503646301,
+      "hotspotsOnTimeMean": 17.226598924739196,
+      "hotspotMaxAgeSeconds": 136.03404859190164,
+      "allHotspotsPassPercent": 1.4
+    },
+    {
+      "fleetSize": 5,
+      "scenarios": 10,
+      "areaMinimum": 100,
+      "areaMean": 100,
+      "areaTargetPassPercent": 100,
+      "peopleOnTimeMean": 53.913703333333316,
+      "peopleOnTimeSeedMeanRange": [
+        45.25435833333331,
+        67.11617500000001
+      ],
+      "peopleInViewMean": 3.9285808333333327,
+      "meanAgeSeconds": 45.65141635029913,
+      "p95AgeSeedRangeSeconds": [
+        95,
+        97.5
+      ],
+      "gapCostMean": 5.0735935168162705,
+      "hotspotsOnTimeMean": 19.890960710162492,
+      "hotspotMaxAgeSeconds": 111.13728017642654,
+      "allHotspotsPassPercent": 1.8833333333333333
+    },
+    {
+      "fleetSize": 6,
+      "scenarios": 10,
+      "areaMinimum": 100,
+      "areaMean": 100,
+      "areaTargetPassPercent": 100,
+      "peopleOnTimeMean": 61.00170333333331,
+      "peopleOnTimeSeedMeanRange": [
+        52.60936666666662,
+        75.69928333333331
+      ],
+      "peopleInViewMean": 4.738641666666666,
+      "meanAgeSeconds": 36.831571904261196,
+      "p95AgeSeedRangeSeconds": [
+        75.5,
+        79.5
+      ],
+      "gapCostMean": 3.280561377000442,
+      "hotspotsOnTimeMean": 24.06969602766349,
+      "hotspotMaxAgeSeconds": 86.00846136334576,
+      "allHotspotsPassPercent": 2.325
+    },
+    {
+      "fleetSize": 8,
+      "scenarios": 10,
+      "areaMinimum": 100,
+      "areaMean": 100,
+      "areaTargetPassPercent": 100,
+      "peopleOnTimeMean": 70.59342083333324,
+      "peopleOnTimeSeedMeanRange": [
+        58.29449999999985,
+        83.32396666666578
+      ],
+      "peopleInViewMean": 6.595042500000001,
+      "meanAgeSeconds": 26.701625153239313,
+      "p95AgeSeedRangeSeconds": [
+        59,
+        61.5
+      ],
+      "gapCostMean": 1.780105986360521,
+      "hotspotsOnTimeMean": 35.13834761607891,
+      "hotspotMaxAgeSeconds": 69.69897478401185,
+      "allHotspotsPassPercent": 3.166666666666667
+    }
+  ],
+  "populationComparison": [
+    {
+      "populationCount": 1000,
+      "scenarios": 10,
+      "areaMinimum": 100,
+      "areaMean": 100,
+      "areaTargetPassPercent": 100,
+      "peopleOnTimeMean": 96.74508333333326,
+      "peopleOnTimeSeedMeanRange": [
+        92.7022083333335,
+        99.15075000000004
+      ],
+      "peopleInViewMean": 3.9293291666666668,
+      "meanAgeSeconds": 45.661805942008485,
+      "p95AgeSeedRangeSeconds": [
+        95,
+        97.5
+      ],
+      "gapCostMean": 0.2900971001581511,
+      "hotspotsOnTimeMean": null,
+      "hotspotMaxAgeSeconds": 0,
+      "allHotspotsPassPercent": null
+    },
+    {
+      "populationCount": 5000,
+      "scenarios": 10,
+      "areaMinimum": 100,
+      "areaMean": 100,
+      "areaTargetPassPercent": 100,
+      "peopleOnTimeMean": 53.913703333333316,
+      "peopleOnTimeSeedMeanRange": [
+        45.25435833333331,
+        67.11617500000001
+      ],
+      "peopleInViewMean": 3.9285808333333327,
+      "meanAgeSeconds": 45.65141635029913,
+      "p95AgeSeedRangeSeconds": [
+        95,
+        97.5
+      ],
+      "gapCostMean": 5.0735935168162705,
+      "hotspotsOnTimeMean": 19.890960710162492,
+      "hotspotMaxAgeSeconds": 111.13728017642654,
+      "allHotspotsPassPercent": 1.8833333333333333
+    },
+    {
+      "populationCount": 10000,
+      "scenarios": 10,
+      "areaMinimum": 100,
+      "areaMean": 100,
+      "areaTargetPassPercent": 100,
+      "peopleOnTimeMean": 36.05319625000002,
+      "peopleOnTimeSeedMeanRange": [
+        32.41600416666664,
+        41.260320833333296
+      ],
+      "peopleInViewMean": 3.9280883333333323,
+      "meanAgeSeconds": 45.65609595318834,
+      "p95AgeSeedRangeSeconds": [
+        95,
+        97.5
+      ],
+      "gapCostMean": 9.428709721785266,
+      "hotspotsOnTimeMean": 20.510725459505533,
+      "hotspotMaxAgeSeconds": 111.13728017642654,
+      "allHotspotsPassPercent": 0
+    },
+    {
+      "populationCount": 20000,
+      "scenarios": 10,
+      "areaMinimum": 100,
+      "areaMean": 100,
+      "areaTargetPassPercent": 100,
+      "peopleOnTimeMean": 28.193426458333327,
+      "peopleOnTimeSeedMeanRange": [
+        25.753837499999996,
+        29.97512499999997
+      ],
+      "peopleInViewMean": 3.928017708333332,
+      "meanAgeSeconds": 45.656156209671394,
+      "p95AgeSeedRangeSeconds": [
+        95,
+        97.5
+      ],
+      "gapCostMean": 11.551953907944082,
+      "hotspotsOnTimeMean": 20.467889506767882,
+      "hotspotMaxAgeSeconds": 111.13728017642654,
+      "allHotspotsPassPercent": 0
+    }
+  ],
+  "cases": [
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 3,
+        "populationCount": 5000,
+        "populationSeed": 1,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 19,
+      "hotspotPopulation": 2006,
+      "areaTargetPassPercent": 0,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 165.0290011219106,
+      "populationWeightedP95AgeSeconds": 153.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 76.36217948717905,
+          "minimum": 72.11538461538461,
+          "maximum": 79.8076923076923
+        },
+        "peopleOnTime": {
+          "mean": 33.056783333333264,
+          "minimum": 23.66,
+          "maximum": 42.96
+        },
+        "peopleInView": {
+          "mean": 2.2941916666666624,
+          "minimum": 0.18,
+          "maximum": 9.24
+        },
+        "meanAgeSeconds": {
+          "mean": 76.47299098698106,
+          "minimum": 59.97860918907267,
+          "maximum": 95.19090679634304
+        },
+        "gapCost": {
+          "mean": 17.897348497604654,
+          "minimum": 6.520250000918758,
+          "maximum": 32.357432788066056
+        },
+        "hotspotsOnTime": {
+          "mean": 10.864344466600178,
+          "minimum": 0,
+          "maximum": 37.13858424725822
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 3,
+        "populationCount": 5000,
+        "populationSeed": 7,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 20,
+      "hotspotPopulation": 2586,
+      "areaTargetPassPercent": 0,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 168.2095297767537,
+      "populationWeightedP95AgeSeconds": 155,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 76.36217948717905,
+          "minimum": 72.11538461538461,
+          "maximum": 79.8076923076923
+        },
+        "peopleOnTime": {
+          "mean": 29.849250000000023,
+          "minimum": 17.7,
+          "maximum": 52.38
+        },
+        "peopleInView": {
+          "mean": 2.4490583333333373,
+          "minimum": 0.14,
+          "maximum": 17.96
+        },
+        "meanAgeSeconds": {
+          "mean": 74.19353007948854,
+          "minimum": 56.58089868721797,
+          "maximum": 94.77322008683525
+        },
+        "gapCost": {
+          "mean": 19.279576385806262,
+          "minimum": 6.5080794898314505,
+          "maximum": 33.826987114952814
+        },
+        "hotspotsOnTime": {
+          "mean": 13.26685357050784,
+          "minimum": 0,
+          "maximum": 48.25986078886311
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 3,
+        "populationCount": 5000,
+        "populationSeed": 42,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 10,
+      "hotspotPopulation": 922,
+      "areaTargetPassPercent": 0,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 168.24111547091616,
+      "populationWeightedP95AgeSeconds": 156,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 76.36217948717905,
+          "minimum": 72.11538461538461,
+          "maximum": 79.8076923076923
+        },
+        "peopleOnTime": {
+          "mean": 36.99134999999999,
+          "minimum": 26.08,
+          "maximum": 45.9
+        },
+        "peopleInView": {
+          "mean": 2.2797666666666667,
+          "minimum": 0.16,
+          "maximum": 6.84
+        },
+        "meanAgeSeconds": {
+          "mean": 78.09358829629183,
+          "minimum": 68.16371243557803,
+          "maximum": 88.43259560281565
+        },
+        "gapCost": {
+          "mean": 10.158142462459503,
+          "minimum": 4.726596205672169,
+          "maximum": 16.62271733904072
+        },
+        "hotspotsOnTime": {
+          "mean": 11.02932935647129,
+          "minimum": 0,
+          "maximum": 32.646420824295014
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 3,
+        "populationCount": 5000,
+        "populationSeed": 123,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 9,
+      "hotspotPopulation": 801,
+      "areaTargetPassPercent": 0,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 168.14897031825376,
+      "populationWeightedP95AgeSeconds": 153.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 76.36217948717905,
+          "minimum": 72.11538461538461,
+          "maximum": 79.8076923076923
+        },
+        "peopleOnTime": {
+          "mean": 38.42298333333335,
+          "minimum": 28.26,
+          "maximum": 49.76
+        },
+        "peopleInView": {
+          "mean": 2.330824999999997,
+          "minimum": 0.24,
+          "maximum": 8.22
+        },
+        "meanAgeSeconds": {
+          "mean": 76.20049327716873,
+          "minimum": 66.0885184513725,
+          "maximum": 89.6339151418024
+        },
+        "gapCost": {
+          "mean": 9.910652883000699,
+          "minimum": 5.495246599090982,
+          "maximum": 15.895795378137372
+        },
+        "hotspotsOnTime": {
+          "mean": 11.38275072825635,
+          "minimum": 0,
+          "maximum": 47.44069912609238
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 3,
+        "populationCount": 5000,
+        "populationSeed": 301,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 1,
+      "hotspotPopulation": 83,
+      "areaTargetPassPercent": 0,
+      "allHotspotsPassPercent": 10.833333333333334,
+      "maximumHotspotAgeSeconds": 158.84204876806496,
+      "populationWeightedP95AgeSeconds": 153.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 76.36217948717905,
+          "minimum": 72.11538461538461,
+          "maximum": 79.8076923076923
+        },
+        "peopleOnTime": {
+          "mean": 43.49505833333319,
+          "minimum": 29.56,
+          "maximum": 63.1
+        },
+        "peopleInView": {
+          "mean": 2.2931833333333302,
+          "minimum": 0.44,
+          "maximum": 6.56
+        },
+        "meanAgeSeconds": {
+          "mean": 76.7728010543328,
+          "minimum": 62.407435346501124,
+          "maximum": 90.19646360680353
+        },
+        "gapCost": {
+          "mean": 4.594501630924678,
+          "minimum": 2.457076662386621,
+          "maximum": 8.094395306431553
+        },
+        "hotspotsOnTime": {
+          "mean": 10.833333333333334,
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 3,
+        "populationCount": 5000,
+        "populationSeed": 997,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 20,
+      "hotspotPopulation": 2057,
+      "areaTargetPassPercent": 0,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 168.24111547091616,
+      "populationWeightedP95AgeSeconds": 157,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 76.36217948717905,
+          "minimum": 72.11538461538461,
+          "maximum": 79.8076923076923
+        },
+        "peopleOnTime": {
+          "mean": 29.292000000000012,
+          "minimum": 19.36,
+          "maximum": 43.72
+        },
+        "peopleInView": {
+          "mean": 2.1644583333333305,
+          "minimum": 0.1,
+          "maximum": 9.4
+        },
+        "meanAgeSeconds": {
+          "mean": 80.19704616107673,
+          "minimum": 59.31533069078379,
+          "maximum": 100.28216050723636
+        },
+        "gapCost": {
+          "mean": 19.434774395786082,
+          "minimum": 9.236649090930202,
+          "maximum": 32.93997306147562
+        },
+        "hotspotsOnTime": {
+          "mean": 10.818911035488457,
+          "minimum": 0,
+          "maximum": 32.912007778317935
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 3,
+        "populationCount": 5000,
+        "populationSeed": 2026,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 23,
+      "hotspotPopulation": 2661,
+      "areaTargetPassPercent": 0,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 168.24111547091616,
+      "populationWeightedP95AgeSeconds": 155,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 76.36217948717905,
+          "minimum": 72.11538461538461,
+          "maximum": 79.8076923076923
+        },
+        "peopleOnTime": {
+          "mean": 30.50543333333327,
+          "minimum": 17,
+          "maximum": 53.56
+        },
+        "peopleInView": {
+          "mean": 2.4135833333333356,
+          "minimum": 0.18,
+          "maximum": 11.08
+        },
+        "meanAgeSeconds": {
+          "mean": 75.76752052228206,
+          "minimum": 49.179829343275024,
+          "maximum": 99.75249223794349
+        },
+        "gapCost": {
+          "mean": 20.45124850161134,
+          "minimum": 6.25832684330704,
+          "maximum": 33.72581806077947
+        },
+        "hotspotsOnTime": {
+          "mean": 12.744096830765471,
+          "minimum": 0,
+          "maximum": 48.214956783164226
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 3,
+        "populationCount": 5000,
+        "populationSeed": 98765,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 8,
+      "hotspotPopulation": 801,
+      "areaTargetPassPercent": 0,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 168.16532434687747,
+      "populationWeightedP95AgeSeconds": 153,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 76.36217948717905,
+          "minimum": 72.11538461538461,
+          "maximum": 79.8076923076923
+        },
+        "peopleOnTime": {
+          "mean": 39.24989166666666,
+          "minimum": 23.44,
+          "maximum": 54.34
+        },
+        "peopleInView": {
+          "mean": 2.512958333333339,
+          "minimum": 0.24,
+          "maximum": 9.78
+        },
+        "meanAgeSeconds": {
+          "mean": 73.5489069718035,
+          "minimum": 60.10134523157934,
+          "maximum": 91.35398562081612
+        },
+        "gapCost": {
+          "mean": 7.972182663663613,
+          "minimum": 3.9468671058044995,
+          "maximum": 14.006731777002395
+        },
+        "hotspotsOnTime": {
+          "mean": 15.089107365792737,
+          "minimum": 0,
+          "maximum": 64.91885143570536
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 3,
+        "populationCount": 5000,
+        "populationSeed": 104729,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 15,
+      "hotspotPopulation": 1445,
+      "areaTargetPassPercent": 0,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 168.23861351944402,
+      "populationWeightedP95AgeSeconds": 154,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 76.36217948717905,
+          "minimum": 72.11538461538461,
+          "maximum": 79.8076923076923
+        },
+        "peopleOnTime": {
+          "mean": 33.34924166666664,
+          "minimum": 21.7,
+          "maximum": 52.7
+        },
+        "peopleInView": {
+          "mean": 2.264158333333337,
+          "minimum": 0.12,
+          "maximum": 10.52
+        },
+        "meanAgeSeconds": {
+          "mean": 77.58225040517881,
+          "minimum": 57.626954626496996,
+          "maximum": 97.29458234442411
+        },
+        "gapCost": {
+          "mean": 14.618695775434135,
+          "minimum": 4.506317196134943,
+          "maximum": 27.92492557470213
+        },
+        "hotspotsOnTime": {
+          "mean": 11.616955017301047,
+          "minimum": 0,
+          "maximum": 73.35640138408304
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 3,
+        "populationCount": 5000,
+        "populationSeed": 2147483646,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 18,
+      "hotspotPopulation": 1643,
+      "areaTargetPassPercent": 0,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 165.02289680300578,
+      "populationWeightedP95AgeSeconds": 153.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 76.36217948717905,
+          "minimum": 72.11538461538461,
+          "maximum": 79.8076923076923
+        },
+        "peopleOnTime": {
+          "mean": 33.995591666666705,
+          "minimum": 21.72,
+          "maximum": 46.12
+        },
+        "peopleInView": {
+          "mean": 2.1970500000000044,
+          "minimum": 0.1,
+          "maximum": 7.42
+        },
+        "meanAgeSeconds": {
+          "mean": 78.03400867478416,
+          "minimum": 66.89277275461819,
+          "maximum": 90.97898055360717
+        },
+        "gapCost": {
+          "mean": 14.731372163665103,
+          "minimum": 8.451826842150949,
+          "maximum": 25.127700006852415
+        },
+        "hotspotsOnTime": {
+          "mean": 11.047524852911325,
+          "minimum": 0,
+          "maximum": 38.46622032866707
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 4,
+        "populationCount": 5000,
+        "populationSeed": 1,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 19,
+      "hotspotPopulation": 2006,
+      "areaTargetPassPercent": 20.5,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 136.03328790542332,
+      "populationWeightedP95AgeSeconds": 122.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 93.32792467948777,
+          "minimum": 89.90384615384616,
+          "maximum": 98.07692307692308
+        },
+        "peopleOnTime": {
+          "mean": 43.32399166666683,
+          "minimum": 29.6,
+          "maximum": 60.68
+        },
+        "peopleInView": {
+          "mean": 3.3176083333333284,
+          "minimum": 0.3,
+          "maximum": 11.42
+        },
+        "meanAgeSeconds": {
+          "mean": 55.297672492400295,
+          "minimum": 45.22972550386841,
+          "maximum": 65.09482606189707
+        },
+        "gapCost": {
+          "mean": 8.898737603152897,
+          "minimum": 5.035445536518912,
+          "maximum": 14.695366817292545
+        },
+        "hotspotsOnTime": {
+          "mean": 18.913509471585144,
+          "minimum": 0,
+          "maximum": 49.25224327018943
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 4,
+        "populationCount": 5000,
+        "populationSeed": 7,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 20,
+      "hotspotPopulation": 2586,
+      "areaTargetPassPercent": 20.5,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 128.59143200670655,
+      "populationWeightedP95AgeSeconds": 120.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 93.32792467948777,
+          "minimum": 89.90384615384616,
+          "maximum": 98.07692307692308
+        },
+        "peopleOnTime": {
+          "mean": 38.981491666666756,
+          "minimum": 23.6,
+          "maximum": 56.72
+        },
+        "peopleInView": {
+          "mean": 3.347983333333333,
+          "minimum": 0.24,
+          "maximum": 13.94
+        },
+        "meanAgeSeconds": {
+          "mean": 55.511395648030955,
+          "minimum": 41.219410446727764,
+          "maximum": 71.33759946970842
+        },
+        "gapCost": {
+          "mean": 11.28228759039226,
+          "minimum": 6.133219369741372,
+          "maximum": 18.137001663950493
+        },
+        "hotspotsOnTime": {
+          "mean": 17.778245037380795,
+          "minimum": 0,
+          "maximum": 45.20494972931168
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 4,
+        "populationCount": 5000,
+        "populationSeed": 42,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 10,
+      "hotspotPopulation": 922,
+      "areaTargetPassPercent": 20.5,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 128.59264924730473,
+      "populationWeightedP95AgeSeconds": 121.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 93.32792467948777,
+          "minimum": 89.90384615384616,
+          "maximum": 98.07692307692308
+        },
+        "peopleOnTime": {
+          "mean": 49.479108333333244,
+          "minimum": 35.58,
+          "maximum": 67.5
+        },
+        "peopleInView": {
+          "mean": 3.2425249999999983,
+          "minimum": 0.6,
+          "maximum": 10.06
+        },
+        "meanAgeSeconds": {
+          "mean": 56.58662898091507,
+          "minimum": 43.328132120921104,
+          "maximum": 70.36101008090684
+        },
+        "gapCost": {
+          "mean": 5.223253105346077,
+          "minimum": 1.6110291233350864,
+          "maximum": 8.671829110092457
+        },
+        "hotspotsOnTime": {
+          "mean": 16.993221258134263,
+          "minimum": 0,
+          "maximum": 41.64859002169197
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 4,
+        "populationCount": 5000,
+        "populationSeed": 123,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 9,
+      "hotspotPopulation": 801,
+      "areaTargetPassPercent": 20.5,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 136.01787540158125,
+      "populationWeightedP95AgeSeconds": 125,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 93.32792467948777,
+          "minimum": 89.90384615384616,
+          "maximum": 98.07692307692308
+        },
+        "peopleOnTime": {
+          "mean": 49.406725000000044,
+          "minimum": 39.84,
+          "maximum": 58.88
+        },
+        "peopleInView": {
+          "mean": 3.1866666666666674,
+          "minimum": 0.54,
+          "maximum": 11.36
+        },
+        "meanAgeSeconds": {
+          "mean": 57.98184139276576,
+          "minimum": 49.14697270234517,
+          "maximum": 69.11985474973189
+        },
+        "gapCost": {
+          "mean": 5.779932319684313,
+          "minimum": 2.467803162993025,
+          "maximum": 11.097031227687454
+        },
+        "hotspotsOnTime": {
+          "mean": 17.539533915938396,
+          "minimum": 0,
+          "maximum": 68.66416978776529
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 4,
+        "populationCount": 5000,
+        "populationSeed": 301,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 1,
+      "hotspotPopulation": 83,
+      "areaTargetPassPercent": 20.5,
+      "allHotspotsPassPercent": 13.916666666666666,
+      "maximumHotspotAgeSeconds": 136.00246289773918,
+      "populationWeightedP95AgeSeconds": 125.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 93.32792467948777,
+          "minimum": 89.90384615384616,
+          "maximum": 98.07692307692308
+        },
+        "peopleOnTime": {
+          "mean": 55.7782583333334,
+          "minimum": 41.84,
+          "maximum": 68.04
+        },
+        "peopleInView": {
+          "mean": 3.0676833333333384,
+          "minimum": 0.58,
+          "maximum": 7.88
+        },
+        "meanAgeSeconds": {
+          "mean": 59.1911755809806,
+          "minimum": 50.07703012813604,
+          "maximum": 66.139887831756
+        },
+        "gapCost": {
+          "mean": 3.0618254466535397,
+          "minimum": 1.520498031052132,
+          "maximum": 4.800792172517467
+        },
+        "hotspotsOnTime": {
+          "mean": 13.916666666666666,
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 4,
+        "populationCount": 5000,
+        "populationSeed": 997,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 20,
+      "hotspotPopulation": 2057,
+      "areaTargetPassPercent": 20.5,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 136.03404859190164,
+      "populationWeightedP95AgeSeconds": 121.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 93.32792467948777,
+          "minimum": 89.90384615384616,
+          "maximum": 98.07692307692308
+        },
+        "peopleOnTime": {
+          "mean": 41.325366666666646,
+          "minimum": 28.8,
+          "maximum": 54.22
+        },
+        "peopleInView": {
+          "mean": 3.349866666666659,
+          "minimum": 0.2,
+          "maximum": 11.24
+        },
+        "meanAgeSeconds": {
+          "mean": 55.51617587483915,
+          "minimum": 41.95180001950081,
+          "maximum": 69.8774361925436
+        },
+        "gapCost": {
+          "mean": 9.282074957289531,
+          "minimum": 3.1975757652513725,
+          "maximum": 16.977810152986546
+        },
+        "hotspotsOnTime": {
+          "mean": 18.890435099659566,
+          "minimum": 0,
+          "maximum": 51.48274185707341
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 4,
+        "populationCount": 5000,
+        "populationSeed": 2026,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 23,
+      "hotspotPopulation": 2661,
+      "areaTargetPassPercent": 20.5,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 136.02938956988692,
+      "populationWeightedP95AgeSeconds": 121.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 93.32792467948777,
+          "minimum": 89.90384615384616,
+          "maximum": 98.07692307692308
+        },
+        "peopleOnTime": {
+          "mean": 41.19666666666665,
+          "minimum": 22.02,
+          "maximum": 67.08
+        },
+        "peopleInView": {
+          "mean": 3.4353166666666684,
+          "minimum": 0.3,
+          "maximum": 15.04
+        },
+        "meanAgeSeconds": {
+          "mean": 54.73164640499689,
+          "minimum": 32.585557413388926,
+          "maximum": 78.03947126466029
+        },
+        "gapCost": {
+          "mean": 11.208296372305758,
+          "minimum": 3.2614201472678928,
+          "maximum": 23.619546946112024
+        },
+        "hotspotsOnTime": {
+          "mean": 17.758157960666253,
+          "minimum": 0,
+          "maximum": 55.58060879368659
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 4,
+        "populationCount": 5000,
+        "populationSeed": 98765,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 8,
+      "hotspotPopulation": 801,
+      "areaTargetPassPercent": 20.5,
+      "allHotspotsPassPercent": 0.08333333333333333,
+      "maximumHotspotAgeSeconds": 128.57809066468508,
+      "populationWeightedP95AgeSeconds": 122,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 93.32792467948777,
+          "minimum": 89.90384615384616,
+          "maximum": 98.07692307692308
+        },
+        "peopleOnTime": {
+          "mean": 50.931783333333385,
+          "minimum": 35.18,
+          "maximum": 73.82
+        },
+        "peopleInView": {
+          "mean": 3.382533333333337,
+          "minimum": 0.34,
+          "maximum": 11.84
+        },
+        "meanAgeSeconds": {
+          "mean": 55.75972812314633,
+          "minimum": 40.35876087058167,
+          "maximum": 68.88756160540866
+        },
+        "gapCost": {
+          "mean": 4.78843584437574,
+          "minimum": 1.0297942168293701,
+          "maximum": 9.060533121019752
+        },
+        "hotspotsOnTime": {
+          "mean": 21.513784852268095,
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 4,
+        "populationCount": 5000,
+        "populationSeed": 104729,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 15,
+      "hotspotPopulation": 1445,
+      "areaTargetPassPercent": 20.5,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 136.03404859190164,
+      "populationWeightedP95AgeSeconds": 126.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 93.32792467948777,
+          "minimum": 89.90384615384616,
+          "maximum": 98.07692307692308
+        },
+        "peopleOnTime": {
+          "mean": 41.39469999999986,
+          "minimum": 26.52,
+          "maximum": 57.2
+        },
+        "peopleInView": {
+          "mean": 2.875599999999998,
+          "minimum": 0.18,
+          "maximum": 8.56
+        },
+        "meanAgeSeconds": {
+          "mean": 62.24362478691922,
+          "minimum": 48.20540164742745,
+          "maximum": 75.36704239767057
+        },
+        "gapCost": {
+          "mean": 10.206428033371289,
+          "minimum": 5.029500176867198,
+          "maximum": 16.69764983308989
+        },
+        "hotspotsOnTime": {
+          "mean": 13.684919261822373,
+          "minimum": 0,
+          "maximum": 53.21799307958477
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 4,
+        "populationCount": 5000,
+        "populationSeed": 2147483646,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 18,
+      "hotspotPopulation": 1643,
+      "areaTargetPassPercent": 20.5,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 136.03404859190164,
+      "populationWeightedP95AgeSeconds": 124.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 93.32792467948777,
+          "minimum": 89.90384615384616,
+          "maximum": 98.07692307692308
+        },
+        "peopleOnTime": {
+          "mean": 46.81089999999998,
+          "minimum": 32.88,
+          "maximum": 63.28
+        },
+        "peopleInView": {
+          "mean": 3.202241666666664,
+          "minimum": 0.34,
+          "maximum": 9.72
+        },
+        "meanAgeSeconds": {
+          "mean": 57.28546312132387,
+          "minimum": 46.807944750890755,
+          "maximum": 65.55580778904567
+        },
+        "gapCost": {
+          "mean": 9.239053763891606,
+          "minimum": 4.521818534542851,
+          "maximum": 13.509821317238998
+        },
+        "hotspotsOnTime": {
+          "mean": 15.277515723270392,
+          "minimum": 0,
+          "maximum": 38.77054169202678
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 5000,
+        "populationSeed": 1,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 19,
+      "hotspotPopulation": 2006,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 109.55394325770385,
+      "populationWeightedP95AgeSeconds": 95.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 50.42859999999983,
+          "minimum": 36.54,
+          "maximum": 65.06
+        },
+        "peopleInView": {
+          "mean": 3.971108333333328,
+          "minimum": 0.4,
+          "maximum": 13.38
+        },
+        "meanAgeSeconds": {
+          "mean": 45.4411257076983,
+          "minimum": 34.24868594691744,
+          "maximum": 57.60673478871207
+        },
+        "gapCost": {
+          "mean": 6.3914469469793564,
+          "minimum": 2.796424347655397,
+          "maximum": 12.266099712759098
+        },
+        "hotspotsOnTime": {
+          "mean": 19.826167331339224,
+          "minimum": 0,
+          "maximum": 54.7357926221336
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 5000,
+        "populationSeed": 7,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 20,
+      "hotspotPopulation": 2586,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 103.24791926845023,
+      "populationWeightedP95AgeSeconds": 95,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 45.25435833333331,
+          "minimum": 28.54,
+          "maximum": 64.52
+        },
+        "peopleInView": {
+          "mean": 4.03373333333334,
+          "minimum": 0.3,
+          "maximum": 15.6
+        },
+        "meanAgeSeconds": {
+          "mean": 44.424844583520226,
+          "minimum": 32.42309976762348,
+          "maximum": 56.85781293387788
+        },
+        "gapCost": {
+          "mean": 7.17000079974781,
+          "minimum": 2.544975571707963,
+          "maximum": 11.962390204118673
+        },
+        "hotspotsOnTime": {
+          "mean": 21.30549110595526,
+          "minimum": 0,
+          "maximum": 56.921887084300074
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 5000,
+        "populationSeed": 42,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 10,
+      "hotspotPopulation": 922,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 103.24791926845023,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 58.05232499999993,
+          "minimum": 45.32,
+          "maximum": 71.7
+        },
+        "peopleInView": {
+          "mean": 3.8661083333333317,
+          "minimum": 0.8,
+          "maximum": 12.04
+        },
+        "meanAgeSeconds": {
+          "mean": 46.25536561662679,
+          "minimum": 36.41023658003791,
+          "maximum": 56.98578431000942
+        },
+        "gapCost": {
+          "mean": 3.720661370404883,
+          "minimum": 1.4656380772027204,
+          "maximum": 6.66188206133753
+        },
+        "hotspotsOnTime": {
+          "mean": 18.011252711496514,
+          "minimum": 0,
+          "maximum": 41.64859002169197
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 5000,
+        "populationSeed": 123,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 9,
+      "hotspotPopulation": 801,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.0893811441224,
+      "populationWeightedP95AgeSeconds": 97,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 59.660616666666705,
+          "minimum": 45.96,
+          "maximum": 74.74
+        },
+        "peopleInView": {
+          "mean": 4.044199999999994,
+          "minimum": 0.7,
+          "maximum": 10.62
+        },
+        "meanAgeSeconds": {
+          "mean": 45.308393674452894,
+          "minimum": 35.98472949399653,
+          "maximum": 56.81715547623184
+        },
+        "gapCost": {
+          "mean": 3.6230787816094283,
+          "minimum": 1.6549122201856625,
+          "maximum": 6.764877700277098
+        },
+        "hotspotsOnTime": {
+          "mean": 19.194548481065397,
+          "minimum": 0,
+          "maximum": 57.30337078651685
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 5000,
+        "populationSeed": 301,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 1,
+      "hotspotPopulation": 83,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 18.583333333333332,
+      "maximumHotspotAgeSeconds": 92.3119787062476,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 67.11617500000001,
+          "minimum": 52.58,
+          "maximum": 83.22
+        },
+        "peopleInView": {
+          "mean": 3.9362083333333353,
+          "minimum": 1.22,
+          "maximum": 10.38
+        },
+        "meanAgeSeconds": {
+          "mean": 45.558349045693134,
+          "minimum": 38.1417056088005,
+          "maximum": 52.31218791048683
+        },
+        "gapCost": {
+          "mean": 1.5531599180497815,
+          "minimum": 0.6215268911276652,
+          "maximum": 2.6722059943515064
+        },
+        "hotspotsOnTime": {
+          "mean": 18.583333333333332,
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 5000,
+        "populationSeed": 997,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 20,
+      "hotspotPopulation": 2057,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.13728017642654,
+      "populationWeightedP95AgeSeconds": 97.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 46.28248333333349,
+          "minimum": 32.72,
+          "maximum": 59.7
+        },
+        "peopleInView": {
+          "mean": 3.6730500000000035,
+          "minimum": 0.26,
+          "maximum": 11.26
+        },
+        "meanAgeSeconds": {
+          "mean": 47.66692824676571,
+          "minimum": 35.55024608101146,
+          "maximum": 59.786841996712205
+        },
+        "gapCost": {
+          "mean": 7.2702569372205925,
+          "minimum": 2.842525740405776,
+          "maximum": 12.676703061013985
+        },
+        "hotspotsOnTime": {
+          "mean": 17.83294846864363,
+          "minimum": 0,
+          "maximum": 47.39912493923189
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 5000,
+        "populationSeed": 2026,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 23,
+      "hotspotPopulation": 2661,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.11880832484258,
+      "populationWeightedP95AgeSeconds": 97.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 45.49218333333337,
+          "minimum": 29.1,
+          "maximum": 65.52
+        },
+        "peopleInView": {
+          "mean": 3.7666666666666675,
+          "minimum": 0.46,
+          "maximum": 13.3
+        },
+        "meanAgeSeconds": {
+          "mean": 46.33237553464832,
+          "minimum": 32.7059423912341,
+          "maximum": 58.102071738058676
+        },
+        "gapCost": {
+          "mean": 7.85524887326579,
+          "minimum": 3.1364038605960247,
+          "maximum": 12.973889521310536
+        },
+        "hotspotsOnTime": {
+          "mean": 19.67934986847045,
+          "minimum": 0,
+          "maximum": 54.152574220217964
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 5000,
+        "populationSeed": 98765,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 8,
+      "hotspotPopulation": 801,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0.25,
+      "maximumHotspotAgeSeconds": 111.11770872288093,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 58.605641666666564,
+          "minimum": 41.28,
+          "maximum": 78.56
+        },
+        "peopleInView": {
+          "mean": 3.8668333333333247,
+          "minimum": 0.52,
+          "maximum": 12.72
+        },
+        "meanAgeSeconds": {
+          "mean": 45.516991076746116,
+          "minimum": 34.07417261595003,
+          "maximum": 58.19190095336164
+        },
+        "gapCost": {
+          "mean": 3.2689303120886715,
+          "minimum": 0.8679794901791805,
+          "maximum": 6.8278203967412425
+        },
+        "hotspotsOnTime": {
+          "mean": 20.341656263004793,
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 5000,
+        "populationSeed": 104729,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 15,
+      "hotspotPopulation": 1445,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.11550951895799,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 52.312074999999965,
+          "minimum": 28.72,
+          "maximum": 71.28
+        },
+        "peopleInView": {
+          "mean": 3.966883333333344,
+          "minimum": 0.32,
+          "maximum": 11.38
+        },
+        "meanAgeSeconds": {
+          "mean": 45.88009219278492,
+          "minimum": 33.72667398279178,
+          "maximum": 58.72862580218877
+        },
+        "gapCost": {
+          "mean": 5.215766817164559,
+          "minimum": 1.50427294801608,
+          "maximum": 10.575729415642753
+        },
+        "hotspotsOnTime": {
+          "mean": 20.583708189158052,
+          "minimum": 0,
+          "maximum": 79.51557093425606
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 5000,
+        "populationSeed": 2147483646,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 18,
+      "hotspotPopulation": 1643,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 109.55626890854433,
+      "populationWeightedP95AgeSeconds": 95,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 55.932575000000035,
+          "minimum": 40.16,
+          "maximum": 74.66
+        },
+        "peopleInView": {
+          "mean": 4.16101666666666,
+          "minimum": 0.36,
+          "maximum": 11.96
+        },
+        "meanAgeSeconds": {
+          "mean": 44.12969782405489,
+          "minimum": 35.33460757210487,
+          "maximum": 52.610898843655825
+        },
+        "gapCost": {
+          "mean": 4.667384411631828,
+          "minimum": 2.117309544554798,
+          "maximum": 8.273595392787417
+        },
+        "hotspotsOnTime": {
+          "mean": 23.551151349158268,
+          "minimum": 0,
+          "maximum": 66.82897139379185
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 6,
+        "populationCount": 5000,
+        "populationSeed": 1,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 19,
+      "hotspotPopulation": 2006,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 85.47575146571694,
+      "populationWeightedP95AgeSeconds": 75.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 57.81607499999995,
+          "minimum": 43.32,
+          "maximum": 72.44
+        },
+        "peopleInView": {
+          "mean": 4.922816666666654,
+          "minimum": 0.6,
+          "maximum": 15.64
+        },
+        "meanAgeSeconds": {
+          "mean": 35.69743545946605,
+          "minimum": 27.16869222912616,
+          "maximum": 44.48275907907172
+        },
+        "gapCost": {
+          "mean": 3.811945691314902,
+          "minimum": 1.4965721277491593,
+          "maximum": 5.8425213040497095
+        },
+        "hotspotsOnTime": {
+          "mean": 26.24198238617474,
+          "minimum": 0,
+          "maximum": 55.533399800598204
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 6,
+        "populationCount": 5000,
+        "populationSeed": 7,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 20,
+      "hotspotPopulation": 2586,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 86.00846136334576,
+      "populationWeightedP95AgeSeconds": 78.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 52.60936666666662,
+          "minimum": 38.84,
+          "maximum": 72
+        },
+        "peopleInView": {
+          "mean": 5.107900000000005,
+          "minimum": 0.56,
+          "maximum": 17.8
+        },
+        "meanAgeSeconds": {
+          "mean": 35.15235506018106,
+          "minimum": 27.236971157081086,
+          "maximum": 45.962987376442044
+        },
+        "gapCost": {
+          "mean": 4.641609237100348,
+          "minimum": 2.0309301931179817,
+          "maximum": 8.051037459934916
+        },
+        "hotspotsOnTime": {
+          "mean": 27.010859757669355,
+          "minimum": 0,
+          "maximum": 55.529775715390564
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 6,
+        "populationCount": 5000,
+        "populationSeed": 42,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 10,
+      "hotspotPopulation": 922,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 85.97648889346715,
+      "populationWeightedP95AgeSeconds": 79.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 65.22966666666684,
+          "minimum": 51.84,
+          "maximum": 76.64
+        },
+        "peopleInView": {
+          "mean": 4.555883333333334,
+          "minimum": 0.88,
+          "maximum": 11.16
+        },
+        "meanAgeSeconds": {
+          "mean": 38.14980695627579,
+          "minimum": 30.373141592339437,
+          "maximum": 44.98553505537765
+        },
+        "gapCost": {
+          "mean": 2.501808381857074,
+          "minimum": 1.5437103988332679,
+          "maximum": 3.5824604240850015
+        },
+        "hotspotsOnTime": {
+          "mean": 23.080034345625243,
+          "minimum": 0,
+          "maximum": 39.69631236442516
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 6,
+        "populationCount": 5000,
+        "populationSeed": 123,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 9,
+      "hotspotPopulation": 801,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 84.87249860676343,
+      "populationWeightedP95AgeSeconds": 75.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 66.66402499999988,
+          "minimum": 53.3,
+          "maximum": 78.26
+        },
+        "peopleInView": {
+          "mean": 4.681250000000006,
+          "minimum": 1.06,
+          "maximum": 11.1
+        },
+        "meanAgeSeconds": {
+          "mean": 36.95521352402563,
+          "minimum": 29.802632603210444,
+          "maximum": 44.331344382986366
+        },
+        "gapCost": {
+          "mean": 2.298379027020896,
+          "minimum": 0.8461742469137367,
+          "maximum": 3.7360329728027937
+        },
+        "hotspotsOnTime": {
+          "mean": 23.303578859758638,
+          "minimum": 0,
+          "maximum": 63.79525593008739
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 6,
+        "populationCount": 5000,
+        "populationSeed": 301,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 1,
+      "hotspotPopulation": 83,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 23.25,
+      "maximumHotspotAgeSeconds": 78.22446694839323,
+      "populationWeightedP95AgeSeconds": 75.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 75.69928333333331,
+          "minimum": 62.88,
+          "maximum": 89.72
+        },
+        "peopleInView": {
+          "mean": 4.650799999999999,
+          "minimum": 1.02,
+          "maximum": 10.36
+        },
+        "meanAgeSeconds": {
+          "mean": 36.85422709591979,
+          "minimum": 31.3308411940597,
+          "maximum": 42.31810120797787
+        },
+        "gapCost": {
+          "mean": 1.066969091729666,
+          "minimum": 0.44164719657663026,
+          "maximum": 1.8969482593752218
+        },
+        "hotspotsOnTime": {
+          "mean": 23.25,
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 6,
+        "populationCount": 5000,
+        "populationSeed": 997,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 20,
+      "hotspotPopulation": 2057,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 85.9923462031677,
+      "populationWeightedP95AgeSeconds": 79.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 53.50688333333336,
+          "minimum": 39.02,
+          "maximum": 71.92
+        },
+        "peopleInView": {
+          "mean": 4.528224999999998,
+          "minimum": 0.24,
+          "maximum": 13.12
+        },
+        "meanAgeSeconds": {
+          "mean": 38.16181647219103,
+          "minimum": 23.99706731329529,
+          "maximum": 48.529334811488596
+        },
+        "gapCost": {
+          "mean": 4.6826402184236695,
+          "minimum": 1.5183086683167002,
+          "maximum": 8.130144456472593
+        },
+        "hotspotsOnTime": {
+          "mean": 23.063786258305125,
+          "minimum": 0,
+          "maximum": 52.406417112299465
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 6,
+        "populationCount": 5000,
+        "populationSeed": 2026,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 23,
+      "hotspotPopulation": 2661,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 86.00820351286825,
+      "populationWeightedP95AgeSeconds": 76.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 52.84915833333321,
+          "minimum": 37.84,
+          "maximum": 72.94
+        },
+        "peopleInView": {
+          "mean": 5.0350583333333345,
+          "minimum": 0.52,
+          "maximum": 16.48
+        },
+        "meanAgeSeconds": {
+          "mean": 35.754789588224426,
+          "minimum": 25.868611892210367,
+          "maximum": 44.39435085648002
+        },
+        "gapCost": {
+          "mean": 4.739408846278987,
+          "minimum": 1.5743799471388529,
+          "maximum": 8.378705119363964
+        },
+        "hotspotsOnTime": {
+          "mean": 25.59662720781645,
+          "minimum": 3.570086433671552,
+          "maximum": 60.24051108605787
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 6,
+        "populationCount": 5000,
+        "populationSeed": 98765,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 8,
+      "hotspotPopulation": 801,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 85.94503212454333,
+      "populationWeightedP95AgeSeconds": 77,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 66.44435833333347,
+          "minimum": 51.64,
+          "maximum": 79.52
+        },
+        "peopleInView": {
+          "mean": 4.832258333333331,
+          "minimum": 0.94,
+          "maximum": 13.2
+        },
+        "meanAgeSeconds": {
+          "mean": 36.90195549239964,
+          "minimum": 28.111228048038726,
+          "maximum": 47.26666165550358
+        },
+        "gapCost": {
+          "mean": 2.262816792287366,
+          "minimum": 0.8260943564598354,
+          "maximum": 4.073710599683929
+        },
+        "hotspotsOnTime": {
+          "mean": 23.242249271743948,
+          "minimum": 0,
+          "maximum": 72.78401997503121
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 6,
+        "populationCount": 5000,
+        "populationSeed": 104729,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 15,
+      "hotspotPopulation": 1445,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 84.85957995412423,
+      "populationWeightedP95AgeSeconds": 76.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 58.16411666666652,
+          "minimum": 40.28,
+          "maximum": 85.94
+        },
+        "peopleInView": {
+          "mean": 4.473050000000003,
+          "minimum": 0.4,
+          "maximum": 15.28
+        },
+        "meanAgeSeconds": {
+          "mean": 37.9160255885472,
+          "minimum": 26.854232182214904,
+          "maximum": 49.64825790136446
+        },
+        "gapCost": {
+          "mean": 3.429167076540329,
+          "minimum": 0.7495844071737132,
+          "maximum": 6.768136578987837
+        },
+        "hotspotsOnTime": {
+          "mean": 22.983592848904365,
+          "minimum": 0,
+          "maximum": 86.02076124567473
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 6,
+        "populationCount": 5000,
+        "populationSeed": 2147483646,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 18,
+      "hotspotPopulation": 1643,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 84.88216841442318,
+      "populationWeightedP95AgeSeconds": 75.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 61.03409999999992,
+          "minimum": 50.64,
+          "maximum": 75.02
+        },
+        "peopleInView": {
+          "mean": 4.599175000000001,
+          "minimum": 0.4,
+          "maximum": 12.1
+        },
+        "meanAgeSeconds": {
+          "mean": 36.77209380538133,
+          "minimum": 29.08651491328011,
+          "maximum": 45.69939524502192
+        },
+        "gapCost": {
+          "mean": 3.3708694074511825,
+          "minimum": 1.3105616228916692,
+          "maximum": 6.704575316633724
+        },
+        "hotspotsOnTime": {
+          "mean": 22.924249340637058,
+          "minimum": 0,
+          "maximum": 67.13329275715155
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 8,
+        "populationCount": 5000,
+        "populationSeed": 1,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 19,
+      "hotspotPopulation": 2006,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 69.67500492261865,
+      "populationWeightedP95AgeSeconds": 60,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 66.88287500000017,
+          "minimum": 49.92,
+          "maximum": 81.8
+        },
+        "peopleInView": {
+          "mean": 6.757916666666681,
+          "minimum": 1.06,
+          "maximum": 19.3
+        },
+        "meanAgeSeconds": {
+          "mean": 26.399537200659832,
+          "minimum": 18.87237872920751,
+          "maximum": 34.050038470678395
+        },
+        "gapCost": {
+          "mean": 2.1915901682466803,
+          "minimum": 0.7829737998937066,
+          "maximum": 3.8933278827589435
+        },
+        "hotspotsOnTime": {
+          "mean": 36.8192505815883,
+          "minimum": 0,
+          "maximum": 74.82552342971087
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 8,
+        "populationCount": 5000,
+        "populationSeed": 7,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 20,
+      "hotspotPopulation": 2586,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 69.69897478401185,
+      "populationWeightedP95AgeSeconds": 61,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 58.29449999999985,
+          "minimum": 35.04,
+          "maximum": 80.16
+        },
+        "peopleInView": {
+          "mean": 6.429416666666671,
+          "minimum": 0.82,
+          "maximum": 19.72
+        },
+        "meanAgeSeconds": {
+          "mean": 27.179891032045155,
+          "minimum": 17.869326688411263,
+          "maximum": 33.631735200118456
+        },
+        "gapCost": {
+          "mean": 2.8470706513604567,
+          "minimum": 1.2765804482763534,
+          "maximum": 4.258244655642147
+        },
+        "hotspotsOnTime": {
+          "mean": 33.829063547305864,
+          "minimum": 0,
+          "maximum": 61.63959783449343
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 8,
+        "populationCount": 5000,
+        "populationSeed": 42,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 10,
+      "hotspotPopulation": 922,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 65.81345075505567,
+      "populationWeightedP95AgeSeconds": 59.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 79.59445833333315,
+          "minimum": 63.4,
+          "maximum": 91.86
+        },
+        "peopleInView": {
+          "mean": 6.865308333333334,
+          "minimum": 2.14,
+          "maximum": 20.44
+        },
+        "meanAgeSeconds": {
+          "mean": 25.959175349270584,
+          "minimum": 20.186513530461554,
+          "maximum": 31.045200237172132
+        },
+        "gapCost": {
+          "mean": 0.9884806469508428,
+          "minimum": 0.48488439529693517,
+          "maximum": 1.904957410661134
+        },
+        "hotspotsOnTime": {
+          "mean": 42.58166124367345,
+          "minimum": 0,
+          "maximum": 81.67028199566161
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 8,
+        "populationCount": 5000,
+        "populationSeed": 123,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 9,
+      "hotspotPopulation": 801,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 66.97081442941874,
+      "populationWeightedP95AgeSeconds": 60.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 75.34820000000025,
+          "minimum": 63.82,
+          "maximum": 88.12
+        },
+        "peopleInView": {
+          "mean": 6.41966666666668,
+          "minimum": 1.94,
+          "maximum": 16.44
+        },
+        "meanAgeSeconds": {
+          "mean": 27.270636498542657,
+          "minimum": 21.77763317484079,
+          "maximum": 33.894136302244114
+        },
+        "gapCost": {
+          "mean": 1.3912565234878365,
+          "minimum": 0.5900927504639875,
+          "maximum": 2.702640170844742
+        },
+        "hotspotsOnTime": {
+          "mean": 32.99953183520638,
+          "minimum": 0,
+          "maximum": 79.27590511860174
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 8,
+        "populationCount": 5000,
+        "populationSeed": 301,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 1,
+      "hotspotPopulation": 83,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 26.291666666666668,
+      "maximumHotspotAgeSeconds": 65.50938740764309,
+      "populationWeightedP95AgeSeconds": 61,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 83.32396666666578,
+          "minimum": 73.76,
+          "maximum": 92.24
+        },
+        "peopleInView": {
+          "mean": 6.249791666666663,
+          "minimum": 2.12,
+          "maximum": 11.74
+        },
+        "meanAgeSeconds": {
+          "mean": 27.83946081028273,
+          "minimum": 23.24686995649438,
+          "maximum": 31.976264994490613
+        },
+        "gapCost": {
+          "mean": 0.7037388403040291,
+          "minimum": 0.31950094872358287,
+          "maximum": 1.1720330567933106
+        },
+        "hotspotsOnTime": {
+          "mean": 26.291666666666668,
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 8,
+        "populationCount": 5000,
+        "populationSeed": 997,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 20,
+      "hotspotPopulation": 2057,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 69.67256661411943,
+      "populationWeightedP95AgeSeconds": 59,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 66.65605833333325,
+          "minimum": 44.6,
+          "maximum": 84.2
+        },
+        "peopleInView": {
+          "mean": 7.011041666666656,
+          "minimum": 1.08,
+          "maximum": 24.16
+        },
+        "meanAgeSeconds": {
+          "mean": 25.231358285983966,
+          "minimum": 17.732656837061327,
+          "maximum": 33.760636041990864
+        },
+        "gapCost": {
+          "mean": 1.9427957815905401,
+          "minimum": 0.7530832899309735,
+          "maximum": 3.6618372363410576
+        },
+        "hotspotsOnTime": {
+          "mean": 40.174546264786905,
+          "minimum": 0,
+          "maximum": 80.35974720466699
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 8,
+        "populationCount": 5000,
+        "populationSeed": 2026,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 23,
+      "hotspotPopulation": 2661,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 69.67210465967901,
+      "populationWeightedP95AgeSeconds": 59,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 61.238241666666475,
+          "minimum": 46.74,
+          "maximum": 77.32
+        },
+        "peopleInView": {
+          "mean": 6.8636083333333335,
+          "minimum": 1.12,
+          "maximum": 19.56
+        },
+        "meanAgeSeconds": {
+          "mean": 25.73698626702583,
+          "minimum": 17.566207070491572,
+          "maximum": 33.4086748659193
+        },
+        "gapCost": {
+          "mean": 2.4340200429198044,
+          "minimum": 0.8371466093838217,
+          "maximum": 4.308449854965767
+        },
+        "hotspotsOnTime": {
+          "mean": 35.723772391331394,
+          "minimum": 7.140172867343104,
+          "maximum": 61.89402480270575
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 8,
+        "populationCount": 5000,
+        "populationSeed": 98765,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 8,
+      "hotspotPopulation": 801,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 5.375,
+      "maximumHotspotAgeSeconds": 69.69897478401185,
+      "populationWeightedP95AgeSeconds": 60,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 79.28369166666674,
+          "minimum": 60.62,
+          "maximum": 97.34
+        },
+        "peopleInView": {
+          "mean": 7.036583333333333,
+          "minimum": 1.5,
+          "maximum": 24.44
+        },
+        "meanAgeSeconds": {
+          "mean": 25.987690974608107,
+          "minimum": 17.783586088518504,
+          "maximum": 32.61030322137562
+        },
+        "gapCost": {
+          "mean": 0.9891972479247296,
+          "minimum": 0.16787212540128513,
+          "maximum": 2.0067898091231955
+        },
+        "hotspotsOnTime": {
+          "mean": 44.59680607573829,
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 8,
+        "populationCount": 5000,
+        "populationSeed": 104729,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 15,
+      "hotspotPopulation": 1445,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 66.97420273002876,
+      "populationWeightedP95AgeSeconds": 61.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 65.41542500000017,
+          "minimum": 52.1,
+          "maximum": 83.4
+        },
+        "peopleInView": {
+          "mean": 5.877224999999997,
+          "minimum": 0.72,
+          "maximum": 13.86
+        },
+        "meanAgeSeconds": {
+          "mean": 28.711026774220002,
+          "minimum": 20.754921980920678,
+          "maximum": 36.166209453377014
+        },
+        "gapCost": {
+          "mean": 2.310606960420228,
+          "minimum": 0.7947619760063244,
+          "maximum": 3.812383781883573
+        },
+        "hotspotsOnTime": {
+          "mean": 26.78967704728938,
+          "minimum": 0,
+          "maximum": 65.88235294117646
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 8,
+        "populationCount": 5000,
+        "populationSeed": 2147483646,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 18,
+      "hotspotPopulation": 1643,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 65.51522141427029,
+      "populationWeightedP95AgeSeconds": 60,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 69.89679166666672,
+          "minimum": 56.36,
+          "maximum": 82.74
+        },
+        "peopleInView": {
+          "mean": 6.439866666666673,
+          "minimum": 1.7,
+          "maximum": 17.24
+        },
+        "meanAgeSeconds": {
+          "mean": 26.700488339754255,
+          "minimum": 21.762664875496434,
+          "maximum": 31.23340510063238
+        },
+        "gapCost": {
+          "mean": 2.002303000400062,
+          "minimum": 0.9321839084475507,
+          "maximum": 2.956132888094193
+        },
+        "hotspotsOnTime": {
+          "mean": 31.577500507202423,
+          "minimum": 0,
+          "maximum": 62.751065124771756
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 1000,
+        "populationSeed": 1,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 0,
+      "hotspotPopulation": 0,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": null,
+      "maximumHotspotAgeSeconds": null,
+      "populationWeightedP95AgeSeconds": 95.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 96.30454166666598,
+          "minimum": 84.4,
+          "maximum": 100
+        },
+        "peopleInView": {
+          "mean": 3.973041666666671,
+          "minimum": 0.4,
+          "maximum": 13.2
+        },
+        "meanAgeSeconds": {
+          "mean": 45.48389424613817,
+          "minimum": 34.472071291793696,
+          "maximum": 57.57950877070711
+        },
+        "gapCost": {
+          "mean": 0.29405524716016296,
+          "minimum": 0.18013997445807253,
+          "maximum": 0.45498404625793404
+        },
+        "hotspotsOnTime": null
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 1000,
+        "populationSeed": 7,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 0,
+      "hotspotPopulation": 0,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": null,
+      "maximumHotspotAgeSeconds": null,
+      "populationWeightedP95AgeSeconds": 95,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 92.7022083333335,
+          "minimum": 79.7,
+          "maximum": 100
+        },
+        "peopleInView": {
+          "mean": 4.033125000000003,
+          "minimum": 0.2,
+          "maximum": 15.6
+        },
+        "meanAgeSeconds": {
+          "mean": 44.398297043353416,
+          "minimum": 32.09317373346191,
+          "maximum": 56.98672825300541
+        },
+        "gapCost": {
+          "mean": 0.33955981189983586,
+          "minimum": 0.17115328957793188,
+          "maximum": 0.5107891641624056
+        },
+        "hotspotsOnTime": null
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 1000,
+        "populationSeed": 42,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 0,
+      "hotspotPopulation": 0,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": null,
+      "maximumHotspotAgeSeconds": null,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 98.67345833333292,
+          "minimum": 87.7,
+          "maximum": 100
+        },
+        "peopleInView": {
+          "mean": 3.8637916666666614,
+          "minimum": 0.8,
+          "maximum": 12.1
+        },
+        "meanAgeSeconds": {
+          "mean": 46.2931777358235,
+          "minimum": 36.4194794535773,
+          "maximum": 57.02628439036661
+        },
+        "gapCost": {
+          "mean": 0.27618555541669365,
+          "minimum": 0.18178132862748594,
+          "maximum": 0.4082726494873153
+        },
+        "hotspotsOnTime": null
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 1000,
+        "populationSeed": 123,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 0,
+      "hotspotPopulation": 0,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": null,
+      "maximumHotspotAgeSeconds": null,
+      "populationWeightedP95AgeSeconds": 97,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 97.89891666666621,
+          "minimum": 91.5,
+          "maximum": 100
+        },
+        "peopleInView": {
+          "mean": 4.039874999999998,
+          "minimum": 0.6,
+          "maximum": 10.7
+        },
+        "meanAgeSeconds": {
+          "mean": 45.37257079256233,
+          "minimum": 36.11905171041529,
+          "maximum": 56.71517952920612
+        },
+        "gapCost": {
+          "mean": 0.26531802428061063,
+          "minimum": 0.17739131945338657,
+          "maximum": 0.39225343875470425
+        },
+        "hotspotsOnTime": null
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 1000,
+        "populationSeed": 301,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 0,
+      "hotspotPopulation": 0,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": null,
+      "maximumHotspotAgeSeconds": null,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 99.15075000000004,
+          "minimum": 92.8,
+          "maximum": 100
+        },
+        "peopleInView": {
+          "mean": 3.9374166666666635,
+          "minimum": 1.1,
+          "maximum": 10.4
+        },
+        "meanAgeSeconds": {
+          "mean": 45.58429814682232,
+          "minimum": 38.30104839766163,
+          "maximum": 52.2213207776959
+        },
+        "gapCost": {
+          "mean": 0.2537810548559481,
+          "minimum": 0.18460218374231135,
+          "maximum": 0.32363641571313784
+        },
+        "hotspotsOnTime": null
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 1000,
+        "populationSeed": 997,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 0,
+      "hotspotPopulation": 0,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": null,
+      "maximumHotspotAgeSeconds": null,
+      "populationWeightedP95AgeSeconds": 97.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 95.20975000000026,
+          "minimum": 81,
+          "maximum": 100
+        },
+        "peopleInView": {
+          "mean": 3.6654583333333344,
+          "minimum": 0,
+          "maximum": 11.3
+        },
+        "meanAgeSeconds": {
+          "mean": 47.74153725878511,
+          "minimum": 35.51509731578837,
+          "maximum": 59.98026879384179
+        },
+        "gapCost": {
+          "mean": 0.32195633786700595,
+          "minimum": 0.18614116684942653,
+          "maximum": 0.4835364389754042
+        },
+        "hotspotsOnTime": null
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 1000,
+        "populationSeed": 2026,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 0,
+      "hotspotPopulation": 0,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": null,
+      "maximumHotspotAgeSeconds": null,
+      "populationWeightedP95AgeSeconds": 97.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 92.95249999999987,
+          "minimum": 79.6,
+          "maximum": 100
+        },
+        "peopleInView": {
+          "mean": 3.7847916666666706,
+          "minimum": 0.4,
+          "maximum": 13.3
+        },
+        "meanAgeSeconds": {
+          "mean": 46.237379288159,
+          "minimum": 32.563585973934195,
+          "maximum": 57.77213056882616
+        },
+        "gapCost": {
+          "mean": 0.3388875877555196,
+          "minimum": 0.1836860095731273,
+          "maximum": 0.5002425604475248
+        },
+        "hotspotsOnTime": null
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 1000,
+        "populationSeed": 98765,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 0,
+      "hotspotPopulation": 0,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": null,
+      "maximumHotspotAgeSeconds": null,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 98.41575000000032,
+          "minimum": 90.3,
+          "maximum": 100
+        },
+        "peopleInView": {
+          "mean": 3.873750000000007,
+          "minimum": 0.5,
+          "maximum": 12.8
+        },
+        "meanAgeSeconds": {
+          "mean": 45.46067408556008,
+          "minimum": 33.84905527132329,
+          "maximum": 58.08320246802938
+        },
+        "gapCost": {
+          "mean": 0.2691245355430036,
+          "minimum": 0.15736360602837862,
+          "maximum": 0.40905574511271664
+        },
+        "hotspotsOnTime": null
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 1000,
+        "populationSeed": 104729,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 0,
+      "hotspotPopulation": 0,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": null,
+      "maximumHotspotAgeSeconds": null,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 97.78333333333397,
+          "minimum": 88.9,
+          "maximum": 100
+        },
+        "peopleInView": {
+          "mean": 3.9609166666666686,
+          "minimum": 0.2,
+          "maximum": 11.5
+        },
+        "meanAgeSeconds": {
+          "mean": 45.88852941191604,
+          "minimum": 33.75565911940755,
+          "maximum": 58.913870650803794
+        },
+        "gapCost": {
+          "mean": 0.2821170128567491,
+          "minimum": 0.15333364367119334,
+          "maximum": 0.42195249537785867
+        },
+        "hotspotsOnTime": null
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 1000,
+        "populationSeed": 2147483646,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 0,
+      "hotspotPopulation": 0,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": null,
+      "maximumHotspotAgeSeconds": null,
+      "populationWeightedP95AgeSeconds": 95,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 98.35962499999951,
+          "minimum": 90,
+          "maximum": 100
+        },
+        "peopleInView": {
+          "mean": 4.1611249999999895,
+          "minimum": 0.3,
+          "maximum": 12.1
+        },
+        "meanAgeSeconds": {
+          "mean": 44.1577014109649,
+          "minimum": 35.46619592757162,
+          "maximum": 52.69220405133468
+        },
+        "gapCost": {
+          "mean": 0.2599858339459821,
+          "minimum": 0.17477854030300907,
+          "maximum": 0.3625356368032081
+        },
+        "hotspotsOnTime": null
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 10000,
+        "populationSeed": 1,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 48,
+      "hotspotPopulation": 7276,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.0893811441224,
+      "populationWeightedP95AgeSeconds": 95.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 36.22334583333337,
+          "minimum": 22.37,
+          "maximum": 50.36
+        },
+        "peopleInView": {
+          "mean": 3.9720500000000025,
+          "minimum": 0.41,
+          "maximum": 13.4
+        },
+        "meanAgeSeconds": {
+          "mean": 45.44009307175903,
+          "minimum": 34.24792491161715,
+          "maximum": 57.61795235104636
+        },
+        "gapCost": {
+          "mean": 9.863701596355178,
+          "minimum": 5.477902281228365,
+          "maximum": 16.322249738312166
+        },
+        "hotspotsOnTime": {
+          "mean": 20.893725948323226,
+          "minimum": 2.6525563496426607,
+          "maximum": 39.43100604727872
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 10000,
+        "populationSeed": 7,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 40,
+      "hotspotPopulation": 7471,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.05779544995994,
+      "populationWeightedP95AgeSeconds": 95,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 35.245983333333484,
+          "minimum": 18.03,
+          "maximum": 54.73
+        },
+        "peopleInView": {
+          "mean": 4.032312499999999,
+          "minimum": 0.32,
+          "maximum": 15.59
+        },
+        "meanAgeSeconds": {
+          "mean": 44.441308105101974,
+          "minimum": 32.52469047021977,
+          "maximum": 56.82129008031995
+        },
+        "gapCost": {
+          "mean": 9.771477393426862,
+          "minimum": 4.668229379728932,
+          "maximum": 14.675505810636919
+        },
+        "hotspotsOnTime": {
+          "mean": 21.0756257529111,
+          "minimum": 0,
+          "maximum": 47.02181769508767
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 10000,
+        "populationSeed": 42,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 49,
+      "hotspotPopulation": 6206,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.13728017642654,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 33.91836666666673,
+          "minimum": 25.57,
+          "maximum": 47.44
+        },
+        "peopleInView": {
+          "mean": 3.864191666666667,
+          "minimum": 0.81,
+          "maximum": 12.03
+        },
+        "meanAgeSeconds": {
+          "mean": 46.26032545322724,
+          "minimum": 36.438773185842614,
+          "maximum": 56.96764937408786
+        },
+        "gapCost": {
+          "mean": 9.867563701467486,
+          "minimum": 5.6289152458220615,
+          "maximum": 15.381892182730258
+        },
+        "hotspotsOnTime": {
+          "mean": 19.23082500805674,
+          "minimum": 5.800837898807606,
+          "maximum": 39.60683209796971
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 10000,
+        "populationSeed": 123,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 49,
+      "hotspotPopulation": 6226,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.13728017642654,
+      "populationWeightedP95AgeSeconds": 97,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 38.40601250000008,
+          "minimum": 22.79,
+          "maximum": 53.36
+        },
+        "peopleInView": {
+          "mean": 4.04385416666666,
+          "minimum": 0.68,
+          "maximum": 10.63
+        },
+        "meanAgeSeconds": {
+          "mean": 45.30660613822213,
+          "minimum": 35.96965873890043,
+          "maximum": 56.81039325997225
+        },
+        "gapCost": {
+          "mean": 8.726963477664743,
+          "minimum": 5.034259999634051,
+          "maximum": 14.489485039884748
+        },
+        "hotspotsOnTime": {
+          "mean": 21.748922529178717,
+          "minimum": 0,
+          "maximum": 41.792483135239316
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 10000,
+        "populationSeed": 301,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 45,
+      "hotspotPopulation": 5194,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.11550951895799,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 41.260320833333296,
+          "minimum": 31.2,
+          "maximum": 54.83
+        },
+        "peopleInView": {
+          "mean": 3.9358124999999973,
+          "minimum": 1.21,
+          "maximum": 10.4
+        },
+        "meanAgeSeconds": {
+          "mean": 45.56999949049064,
+          "minimum": 38.13799257570935,
+          "maximum": 52.341933982810566
+        },
+        "gapCost": {
+          "mean": 7.799400882033811,
+          "minimum": 3.9931613563682884,
+          "maximum": 11.736370777525007
+        },
+        "hotspotsOnTime": {
+          "mean": 20.545741881658333,
+          "minimum": 3.195995379283789,
+          "maximum": 47.45860608394301
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 10000,
+        "populationSeed": 997,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 46,
+      "hotspotPopulation": 7177,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.13728017642654,
+      "populationWeightedP95AgeSeconds": 97.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 32.41600416666664,
+          "minimum": 17.46,
+          "maximum": 46.71
+        },
+        "peopleInView": {
+          "mean": 3.6720749999999978,
+          "minimum": 0.24,
+          "maximum": 11.25
+        },
+        "meanAgeSeconds": {
+          "mean": 47.680985115508584,
+          "minimum": 35.539241224095214,
+          "maximum": 59.780824688212086
+        },
+        "gapCost": {
+          "mean": 10.989439561297349,
+          "minimum": 5.7868901430492565,
+          "maximum": 16.993156629569746
+        },
+        "hotspotsOnTime": {
+          "mean": 18.0559367888162,
+          "minimum": 0,
+          "maximum": 37.96851051971576
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 10000,
+        "populationSeed": 2026,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 39,
+      "hotspotPopulation": 7169,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.11880832484258,
+      "populationWeightedP95AgeSeconds": 97.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 34.371370833333344,
+          "minimum": 19.44,
+          "maximum": 57.71
+        },
+        "peopleInView": {
+          "mean": 3.767937500000002,
+          "minimum": 0.46,
+          "maximum": 13.27
+        },
+        "meanAgeSeconds": {
+          "mean": 46.328623267256226,
+          "minimum": 32.65015537616896,
+          "maximum": 58.16006477002982
+        },
+        "gapCost": {
+          "mean": 10.291856462919917,
+          "minimum": 4.48584743764477,
+          "maximum": 15.87286114501511
+        },
+        "hotspotsOnTime": {
+          "mean": 19.774718696238416,
+          "minimum": 0,
+          "maximum": 51.1786860092063
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 10000,
+        "populationSeed": 98765,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 49,
+      "hotspotPopulation": 6265,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.11770872288093,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 36.073329166666674,
+          "minimum": 19.35,
+          "maximum": 59.68
+        },
+        "peopleInView": {
+          "mean": 3.8655749999999975,
+          "minimum": 0.5,
+          "maximum": 12.74
+        },
+        "meanAgeSeconds": {
+          "mean": 45.52555627974862,
+          "minimum": 34.08098258853891,
+          "maximum": 58.20490061901908
+        },
+        "gapCost": {
+          "mean": 8.984313327207387,
+          "minimum": 3.7328116657213344,
+          "maximum": 14.781654415030818
+        },
+        "hotspotsOnTime": {
+          "mean": 20.531863527533826,
+          "minimum": 0,
+          "maximum": 52.94493216280926
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 10000,
+        "populationSeed": 104729,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 48,
+      "hotspotPopulation": 6753,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.11550951895799,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 35.021762499999966,
+          "minimum": 17.58,
+          "maximum": 51.47
+        },
+        "peopleInView": {
+          "mean": 3.966508333333328,
+          "minimum": 0.32,
+          "maximum": 11.37
+        },
+        "meanAgeSeconds": {
+          "mean": 45.878471281410896,
+          "minimum": 33.7127662141435,
+          "maximum": 58.753487421648344
+        },
+        "gapCost": {
+          "mean": 9.562165065841873,
+          "minimum": 4.219289176135402,
+          "maximum": 15.706310467975884
+        },
+        "hotspotsOnTime": {
+          "mean": 20.430055777679197,
+          "minimum": 0,
+          "maximum": 44.1433436990967
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 10000,
+        "populationSeed": 2147483646,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 46,
+      "hotspotPopulation": 6447,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.11331031503312,
+      "populationWeightedP95AgeSeconds": 95,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 37.595466666666574,
+          "minimum": 22.09,
+          "maximum": 54.51
+        },
+        "peopleInView": {
+          "mean": 4.160566666666672,
+          "minimum": 0.37,
+          "maximum": 11.97
+        },
+        "meanAgeSeconds": {
+          "mean": 44.1289913291581,
+          "minimum": 35.324550278496496,
+          "maximum": 52.59163906296736
+        },
+        "gapCost": {
+          "mean": 8.430215749638071,
+          "minimum": 4.759511174127244,
+          "maximum": 12.502966839934015
+        },
+        "hotspotsOnTime": {
+          "mean": 22.81983868465956,
+          "minimum": 0,
+          "maximum": 44.17558554366372
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 20000,
+        "populationSeed": 1,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 69,
+      "hotspotPopulation": 16719,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.11770872288093,
+      "populationWeightedP95AgeSeconds": 95.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 29.352037500000062,
+          "minimum": 16.975,
+          "maximum": 42.715
+        },
+        "peopleInView": {
+          "mean": 3.971297916666653,
+          "minimum": 0.39,
+          "maximum": 13.4
+        },
+        "meanAgeSeconds": {
+          "mean": 45.43896639777133,
+          "minimum": 34.23179436463286,
+          "maximum": 57.62571882081428
+        },
+        "gapCost": {
+          "mean": 11.404331476095704,
+          "minimum": 6.891595546708562,
+          "maximum": 17.76422253835236
+        },
+        "hotspotsOnTime": {
+          "mean": 20.78583248599398,
+          "minimum": 5.891500687840182,
+          "maximum": 36.59907889227824
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 20000,
+        "populationSeed": 7,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 56,
+      "hotspotPopulation": 16834,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.05779544995994,
+      "populationWeightedP95AgeSeconds": 95,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 29.97512499999997,
+          "minimum": 12.755,
+          "maximum": 47.97
+        },
+        "peopleInView": {
+          "mean": 4.032454166666669,
+          "minimum": 0.31,
+          "maximum": 15.595
+        },
+        "meanAgeSeconds": {
+          "mean": 44.440366541129876,
+          "minimum": 32.50519452030583,
+          "maximum": 56.838388261929786
+        },
+        "gapCost": {
+          "mean": 10.955158153425248,
+          "minimum": 5.865395860518884,
+          "maximum": 15.695595955420616
+        },
+        "hotspotsOnTime": {
+          "mean": 21.04564670706105,
+          "minimum": 1.3544018058690745,
+          "maximum": 43.22205061185696
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 20000,
+        "populationSeed": 42,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 85,
+      "hotspotPopulation": 17168,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.13728017642654,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 26.5433645833333,
+          "minimum": 17.57,
+          "maximum": 40.6
+        },
+        "peopleInView": {
+          "mean": 3.8654291666666807,
+          "minimum": 0.805,
+          "maximum": 12.04
+        },
+        "meanAgeSeconds": {
+          "mean": 46.25521807866575,
+          "minimum": 36.42212374152324,
+          "maximum": 56.94295792179918
+        },
+        "gapCost": {
+          "mean": 11.963567999711216,
+          "minimum": 7.778719139748093,
+          "maximum": 17.86036847602441
+        },
+        "hotspotsOnTime": {
+          "mean": 19.999487903852124,
+          "minimum": 9.820596458527493,
+          "maximum": 35.566169617893756
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 20000,
+        "populationSeed": 123,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 82,
+      "hotspotPopulation": 16319,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.13728017642654,
+      "populationWeightedP95AgeSeconds": 97,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 28.69548749999998,
+          "minimum": 15.365,
+          "maximum": 43.49
+        },
+        "peopleInView": {
+          "mean": 4.043772916666661,
+          "minimum": 0.695,
+          "maximum": 10.635
+        },
+        "meanAgeSeconds": {
+          "mean": 45.30916606537527,
+          "minimum": 35.9655853362519,
+          "maximum": 56.8122299287833
+        },
+        "gapCost": {
+          "mean": 11.166674377733463,
+          "minimum": 6.769853898600208,
+          "maximum": 17.218077668198593
+        },
+        "hotspotsOnTime": {
+          "mean": 21.297654063770167,
+          "minimum": 3.9218089343709788,
+          "maximum": 36.96304920644647
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 20000,
+        "populationSeed": 301,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 93,
+      "hotspotPopulation": 15965,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.11770872288093,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 29.068435416666706,
+          "minimum": 18.4,
+          "maximum": 41.025
+        },
+        "peopleInView": {
+          "mean": 3.935645833333336,
+          "minimum": 1.205,
+          "maximum": 10.4
+        },
+        "meanAgeSeconds": {
+          "mean": 45.56987599599999,
+          "minimum": 38.12212992940338,
+          "maximum": 52.35547299425735
+        },
+        "gapCost": {
+          "mean": 11.128087832879963,
+          "minimum": 7.524539545327569,
+          "maximum": 14.688105003309465
+        },
+        "hotspotsOnTime": {
+          "mean": 20.62010909280723,
+          "minimum": 9.245223927341058,
+          "maximum": 34.85123708111494
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 20000,
+        "populationSeed": 997,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 69,
+      "hotspotPopulation": 17089,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.13728017642654,
+      "populationWeightedP95AgeSeconds": 97.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 25.753837499999996,
+          "minimum": 10.21,
+          "maximum": 40.76
+        },
+        "peopleInView": {
+          "mean": 3.6719374999999954,
+          "minimum": 0.25,
+          "maximum": 11.24
+        },
+        "meanAgeSeconds": {
+          "mean": 47.67766511102583,
+          "minimum": 35.54761943639966,
+          "maximum": 59.77895492491778
+        },
+        "gapCost": {
+          "mean": 12.688842755346892,
+          "minimum": 7.326566392633737,
+          "maximum": 18.704320631444457
+        },
+        "hotspotsOnTime": {
+          "mean": 18.563010806171665,
+          "minimum": 0.6261337702615718,
+          "maximum": 35.06349113464802
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 20000,
+        "populationSeed": 2026,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 62,
+      "hotspotPopulation": 16997,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.11880832484258,
+      "populationWeightedP95AgeSeconds": 97.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 28.853716666666624,
+          "minimum": 14.75,
+          "maximum": 51.675
+        },
+        "peopleInView": {
+          "mean": 3.768283333333338,
+          "minimum": 0.47,
+          "maximum": 13.265
+        },
+        "meanAgeSeconds": {
+          "mean": 46.32799692975729,
+          "minimum": 32.700130387691836,
+          "maximum": 58.10880660689749
+        },
+        "gapCost": {
+          "mean": 11.813485027143852,
+          "minimum": 5.908503539777139,
+          "maximum": 17.571633484172786
+        },
+        "hotspotsOnTime": {
+          "mean": 19.939572669686772,
+          "minimum": 3.000529505206801,
+          "maximum": 47.631935047361296
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 20000,
+        "populationSeed": 98765,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 88,
+      "hotspotPopulation": 17095,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.11880832484258,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 27.54744374999999,
+          "minimum": 11.355,
+          "maximum": 49.815
+        },
+        "peopleInView": {
+          "mean": 3.8653062499999904,
+          "minimum": 0.51,
+          "maximum": 12.735
+        },
+        "meanAgeSeconds": {
+          "mean": 45.526989752881185,
+          "minimum": 34.097321534158944,
+          "maximum": 58.22408589937232
+        },
+        "gapCost": {
+          "mean": 11.740448493222978,
+          "minimum": 6.166930471262208,
+          "maximum": 18.051189914524592
+        },
+        "hotspotsOnTime": {
+          "mean": 20.08021107536317,
+          "minimum": 1.9011406844106464,
+          "maximum": 45.35244223457151
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 20000,
+        "populationSeed": 104729,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 79,
+      "hotspotPopulation": 17135,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.13728017642654,
+      "populationWeightedP95AgeSeconds": 96.5,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 26.86862916666669,
+          "minimum": 10.975,
+          "maximum": 42.7
+        },
+        "peopleInView": {
+          "mean": 3.9653062499999963,
+          "minimum": 0.315,
+          "maximum": 11.38
+        },
+        "meanAgeSeconds": {
+          "mean": 45.88931169454524,
+          "minimum": 33.730555173207804,
+          "maximum": 58.76657970084554
+        },
+        "gapCost": {
+          "mean": 11.964826163943835,
+          "minimum": 6.283917474694465,
+          "maximum": 17.793469245141985
+        },
+        "hotspotsOnTime": {
+          "mean": 20.31038566287331,
+          "minimum": 3.740881237233732,
+          "maximum": 38.69857017799825
+        }
+      }
+    },
+    {
+      "config": {
+        "coverageTarget": 95,
+        "revisitSeconds": 120,
+        "fleetSize": 5,
+        "populationCount": 20000,
+        "populationSeed": 2147483646,
+        "crowdedRevisitSeconds": 15,
+        "crowdedCellPopulation": 80
+      },
+      "sampleSeconds": 0.5,
+      "samples": 2400,
+      "hotspotCells": 79,
+      "hotspotPopulation": 16775,
+      "areaTargetPassPercent": 100,
+      "allHotspotsPassPercent": 0,
+      "maximumHotspotAgeSeconds": 111.13728017642654,
+      "populationWeightedP95AgeSeconds": 95,
+      "maximumUnseenPeople": 0,
+      "metrics": {
+        "area": {
+          "mean": 100,
+          "minimum": 100,
+          "maximum": 100
+        },
+        "peopleOnTime": {
+          "mean": 29.276187499999978,
+          "minimum": 12.81,
+          "maximum": 43.73
+        },
+        "peopleInView": {
+          "mean": 4.160743749999999,
+          "minimum": 0.39,
+          "maximum": 11.96
+        },
+        "meanAgeSeconds": {
+          "mean": 44.126005529562114,
+          "minimum": 35.32201252665029,
+          "maximum": 52.6024847129069
+        },
+        "gapCost": {
+          "mean": 10.694116799937639,
+          "minimum": 6.838856014076114,
+          "maximum": 14.909015148623475
+        },
+        "hotspotsOnTime": {
+          "mean": 22.036984600099345,
+          "minimum": 3.052160953800298,
+          "maximum": 39.63636363636363
+        }
+      }
+    }
+  ],
+  "wallSeconds": 10.249112083
+}

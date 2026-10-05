@@ -1,0 +1,4021 @@
+{
+  "config": {
+    "stepSeconds": 0.25,
+    "faultTime": 600,
+    "horizon": 1800,
+    "populationCount": 5000,
+    "populationSeed": 42
+  },
+  "results": [
+    {
+      "fleetSize": 5,
+      "droneId": 1,
+      "fault": "malfunction",
+      "detectionLatency": 3,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.33759999999989,
+          "min": 47.7,
+          "max": 66.34
+        },
+        "hotspotOnTime": {
+          "mean": 18.291666666666668,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7353947425595844,
+          "min": 1.6430244220922712,
+          "max": 5.251848453728204
+        },
+        "meanAge": {
+          "mean": 46.05949940472557,
+          "min": 40.71047758336077,
+          "max": 51.111931494008545
+        },
+        "inView": {
+          "mean": 3.8762500000000006,
+          "min": 1.02,
+          "max": 7.8
+        },
+        "maxAge": {
+          "mean": 107.74084814038366,
+          "min": 99.90779954557337,
+          "max": 111.13673037544646
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 91.70673076923077,
+          "min": 84.13461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.37179166666665,
+          "min": 38.3,
+          "max": 59.86
+        },
+        "hotspotOnTime": {
+          "mean": 15.6875,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 7.116551513433363,
+          "min": 2.1821590272683324,
+          "max": 12.44032324618393
+        },
+        "meanAge": {
+          "mean": 60.11218262623761,
+          "min": 44.36543098021316,
+          "max": 69.96719795431758
+        },
+        "inView": {
+          "mean": 3.2575000000000025,
+          "min": 0.32,
+          "max": 8.86
+        },
+        "maxAge": {
+          "mean": 147.68821357027198,
+          "min": 107.34800059136433,
+          "max": 166.48688948025324
+        },
+        "areaTargetFraction": 0.34791666666666665
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 92.95853365384596,
+          "min": 84.13461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 48.108258333333346,
+          "min": 31.06,
+          "max": 61.86
+        },
+        "hotspotOnTime": {
+          "mean": 16.558333333333334,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.635843661993758,
+          "min": 2.1821590272683324,
+          "max": 12.44032324618393
+        },
+        "meanAge": {
+          "mean": 58.30145779449816,
+          "min": 44.36543098021316,
+          "max": 69.96719795431758
+        },
+        "inView": {
+          "mean": 3.2011166666666697,
+          "min": 0.32,
+          "max": 9.34
+        },
+        "maxAge": {
+          "mean": 137.50226894912697,
+          "min": 107.34800059136433,
+          "max": 166.48688948025324
+        },
+        "areaTargetFraction": 0.17083333333333334
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.3114983974364,
+          "min": 89.42307692307692,
+          "max": 96.15384615384616
+        },
+        "populationOnTime": {
+          "mean": 50.218099999999964,
+          "min": 32.42,
+          "max": 67.12
+        },
+        "hotspotOnTime": {
+          "mean": 17.133333333333333,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.33756653317877,
+          "min": 2.12503904741865,
+          "max": 9.594393206011587
+        },
+        "meanAge": {
+          "mean": 56.42665188347465,
+          "min": 45.44089981709164,
+          "max": 71.01914691633228
+        },
+        "inView": {
+          "mean": 3.3055499999999904,
+          "min": 0.44,
+          "max": 11.74
+        },
+        "maxAge": {
+          "mean": 134.37611555375796,
+          "min": 127.16087043185667,
+          "max": 136.03434681690328
+        },
+        "areaTargetFraction": 0.0975
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 93.13501602564068,
+          "min": 84.13461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.16317916666716,
+          "min": 31.06,
+          "max": 67.12
+        },
+        "hotspotOnTime": {
+          "mean": 16.845833333333335,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.486705097586276,
+          "min": 2.12503904741865,
+          "max": 12.44032324618393
+        },
+        "meanAge": {
+          "mean": 57.36405483898645,
+          "min": 44.36543098021316,
+          "max": 71.01914691633228
+        },
+        "inView": {
+          "mean": 3.2533333333333365,
+          "min": 0.32,
+          "max": 11.74
+        },
+        "maxAge": {
+          "mean": 135.93919225144288,
+          "min": 107.34800059136433,
+          "max": 166.48688948025324
+        },
+        "areaTargetFraction": 0.13416666666666666
+      },
+      "recovery": {
+        "first120Seconds": null,
+        "sustainedRestOfRunSeconds": null,
+        "observedSustainedSeconds": 0
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 1 lost contact; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603,
+          "message": "Drone 1 malfunction confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603,
+          "message": "Replanned all 4 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 5,
+      "droneId": 2,
+      "fault": "malfunction",
+      "detectionLatency": 3,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.33759999999989,
+          "min": 47.7,
+          "max": 66.34
+        },
+        "hotspotOnTime": {
+          "mean": 18.291666666666668,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7353947425595844,
+          "min": 1.6430244220922712,
+          "max": 5.251848453728204
+        },
+        "meanAge": {
+          "mean": 46.05949940472557,
+          "min": 40.71047758336077,
+          "max": 51.111931494008545
+        },
+        "inView": {
+          "mean": 3.8762500000000006,
+          "min": 1.02,
+          "max": 7.8
+        },
+        "maxAge": {
+          "mean": 107.74084814038366,
+          "min": 99.90779954557337,
+          "max": 111.13673037544646
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 93.65584935897478,
+          "min": 88.9423076923077,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 50.58516666666672,
+          "min": 34.94,
+          "max": 59.86
+        },
+        "hotspotOnTime": {
+          "mean": 15.625,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.493066473476029,
+          "min": 2.1821587861791247,
+          "max": 8.152354107635905
+        },
+        "meanAge": {
+          "mean": 55.9331784874325,
+          "min": 44.36148098021316,
+          "max": 63.61281257353751
+        },
+        "inView": {
+          "mean": 3.360375,
+          "min": 0.88,
+          "max": 10.02
+        },
+        "maxAge": {
+          "mean": 147.71113049027463,
+          "min": 107.82022281358655,
+          "max": 166.48688948025324
+        },
+        "areaTargetFraction": 0.3375
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.40364583333351,
+          "min": 88.9423076923077,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 48.824249999999864,
+          "min": 32.14,
+          "max": 61.84
+        },
+        "hotspotOnTime": {
+          "mean": 16.2,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.304574151101493,
+          "min": 1.8629595187525512,
+          "max": 8.787979918225854
+        },
+        "meanAge": {
+          "mean": 57.094173233785455,
+          "min": 44.36148098021316,
+          "max": 67.85298311596733
+        },
+        "inView": {
+          "mean": 3.227391666666672,
+          "min": 0.6,
+          "max": 10.38
+        },
+        "maxAge": {
+          "mean": 137.10465732457976,
+          "min": 107.82022281358655,
+          "max": 166.48688948025324
+        },
+        "areaTargetFraction": 0.20625
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.29867788461529,
+          "min": 88.9423076923077,
+          "max": 96.15384615384616
+        },
+        "populationOnTime": {
+          "mean": 50.54108333333329,
+          "min": 36.76,
+          "max": 68.34
+        },
+        "hotspotOnTime": {
+          "mean": 17.716666666666665,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.1475136884968204,
+          "min": 1.6258919385000878,
+          "max": 8.751395490720355
+        },
+        "meanAge": {
+          "mean": 55.88004685472215,
+          "min": 41.16491992591895,
+          "max": 70.54097797417853
+        },
+        "inView": {
+          "mean": 3.2998333333333334,
+          "min": 0.7,
+          "max": 13.26
+        },
+        "maxAge": {
+          "mean": 134.3753390000292,
+          "min": 127.16087043185667,
+          "max": 136.03434681690328
+        },
+        "areaTargetFraction": 0.08708333333333333
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 93.35116185897473,
+          "min": 88.9423076923077,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.68266666666655,
+          "min": 32.14,
+          "max": 68.34
+        },
+        "hotspotOnTime": {
+          "mean": 16.958333333333332,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.226043919799134,
+          "min": 1.6258919385000878,
+          "max": 8.787979918225854
+        },
+        "meanAge": {
+          "mean": 56.487110044253704,
+          "min": 41.16491992591895,
+          "max": 70.54097797417853
+        },
+        "inView": {
+          "mean": 3.263612500000006,
+          "min": 0.6,
+          "max": 13.26
+        },
+        "maxAge": {
+          "mean": 135.7399981623048,
+          "min": 107.82022281358655,
+          "max": 166.48688948025324
+        },
+        "areaTargetFraction": 0.14666666666666667
+      },
+      "recovery": {
+        "first120Seconds": null,
+        "sustainedRestOfRunSeconds": null,
+        "observedSustainedSeconds": 0
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 2 lost contact; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603,
+          "message": "Drone 2 malfunction confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603,
+          "message": "Replanned all 4 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 5,
+      "droneId": 3,
+      "fault": "malfunction",
+      "detectionLatency": 3,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.33759999999989,
+          "min": 47.7,
+          "max": 66.34
+        },
+        "hotspotOnTime": {
+          "mean": 18.291666666666668,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7353947425595844,
+          "min": 1.6430244220922712,
+          "max": 5.251848453728204
+        },
+        "meanAge": {
+          "mean": 46.05949940472557,
+          "min": 40.71047758336077,
+          "max": 51.111931494008545
+        },
+        "inView": {
+          "mean": 3.8762500000000006,
+          "min": 1.02,
+          "max": 7.8
+        },
+        "maxAge": {
+          "mean": 107.74084814038366,
+          "min": 99.90779954557337,
+          "max": 111.13673037544646
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 94.413060897436,
+          "min": 88.9423076923077,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.11541666666671,
+          "min": 38.9,
+          "max": 59.86
+        },
+        "hotspotOnTime": {
+          "mean": 15.625,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.585054905345288,
+          "min": 2.1821587907220246,
+          "max": 8.157602850592053
+        },
+        "meanAge": {
+          "mean": 57.16863400007769,
+          "min": 44.36168098021316,
+          "max": 67.40329270096346
+        },
+        "inView": {
+          "mean": 3.136666666666669,
+          "min": 1,
+          "max": 7.32
+        },
+        "maxAge": {
+          "mean": 142.94823509288,
+          "min": 103.22469266479578,
+          "max": 178.58580377590692
+        },
+        "areaTargetFraction": 0.38333333333333336
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.5649038461544,
+          "min": 88.9423076923077,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.00279166666663,
+          "min": 38.04,
+          "max": 59.86
+        },
+        "hotspotOnTime": {
+          "mean": 16.2,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.305710619785246,
+          "min": 2.1066849271129473,
+          "max": 8.603174386024447
+        },
+        "meanAge": {
+          "mean": 56.98128473105068,
+          "min": 44.36168098021316,
+          "max": 67.40329270096346
+        },
+        "inView": {
+          "mean": 3.222650000000015,
+          "min": 0.54,
+          "max": 8.42
+        },
+        "maxAge": {
+          "mean": 135.80657205459772,
+          "min": 103.22469266479578,
+          "max": 178.58580377590692
+        },
+        "areaTargetFraction": 0.22125
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.17568108974382,
+          "min": 89.42307692307692,
+          "max": 98.07692307692308
+        },
+        "populationOnTime": {
+          "mean": 49.3906749999999,
+          "min": 32.06,
+          "max": 62.66
+        },
+        "hotspotOnTime": {
+          "mean": 17.716666666666665,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.237884005238816,
+          "min": 1.7855606744410253,
+          "max": 8.556914639259857
+        },
+        "meanAge": {
+          "mean": 56.94258694505581,
+          "min": 45.26049805981875,
+          "max": 65.66826514053234
+        },
+        "inView": {
+          "mean": 3.2546416666666698,
+          "min": 0.54,
+          "max": 9.52
+        },
+        "maxAge": {
+          "mean": 134.17143853407651,
+          "min": 125.50272078839885,
+          "max": 136.03434681690328
+        },
+        "areaTargetFraction": 0.1925
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 93.37029246794854,
+          "min": 88.9423076923077,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.196733333333675,
+          "min": 32.06,
+          "max": 62.66
+        },
+        "hotspotOnTime": {
+          "mean": 16.958333333333332,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.271797312512022,
+          "min": 1.7855606744410253,
+          "max": 8.603174386024447
+        },
+        "meanAge": {
+          "mean": 56.96193583805285,
+          "min": 44.36168098021316,
+          "max": 67.40329270096346
+        },
+        "inView": {
+          "mean": 3.2386458333333428,
+          "min": 0.54,
+          "max": 9.52
+        },
+        "maxAge": {
+          "mean": 134.98900529433587,
+          "min": 103.22469266479578,
+          "max": 178.58580377590692
+        },
+        "areaTargetFraction": 0.206875
+      },
+      "recovery": {
+        "first120Seconds": null,
+        "sustainedRestOfRunSeconds": null,
+        "observedSustainedSeconds": 0
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 3 lost contact; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603,
+          "message": "Drone 3 malfunction confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603,
+          "message": "Replanned all 4 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 5,
+      "droneId": 4,
+      "fault": "malfunction",
+      "detectionLatency": 3,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.33759999999989,
+          "min": 47.7,
+          "max": 66.34
+        },
+        "hotspotOnTime": {
+          "mean": 18.291666666666668,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7353947425595844,
+          "min": 1.6430244220922712,
+          "max": 5.251848453728204
+        },
+        "meanAge": {
+          "mean": 46.05949940472557,
+          "min": 40.71047758336077,
+          "max": 51.111931494008545
+        },
+        "inView": {
+          "mean": 3.8762500000000006,
+          "min": 1.02,
+          "max": 7.8
+        },
+        "maxAge": {
+          "mean": 107.74084814038366,
+          "min": 99.90779954557337,
+          "max": 111.13673037544646
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 92.54807692307689,
+          "min": 84.61538461538461,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 47.97816666666672,
+          "min": 38.02,
+          "max": 59.86
+        },
+        "hotspotOnTime": {
+          "mean": 15.625,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.841669259597208,
+          "min": 2.182158784196548,
+          "max": 8.698682791264572
+        },
+        "meanAge": {
+          "mean": 59.31100971033546,
+          "min": 44.36138098021316,
+          "max": 71.73236505145216
+        },
+        "inView": {
+          "mean": 3.1476666666666646,
+          "min": 0.62,
+          "max": 8.5
+        },
+        "maxAge": {
+          "mean": 156.22364095806995,
+          "min": 110.80775475947848,
+          "max": 191.97469266479573
+        },
+        "areaTargetFraction": 0.3375
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.11458333333348,
+          "min": 84.61538461538461,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.1515749999999,
+          "min": 38.02,
+          "max": 61.9
+        },
+        "hotspotOnTime": {
+          "mean": 16.2,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.328547947603513,
+          "min": 1.9403752230368825,
+          "max": 8.698682791264572
+        },
+        "meanAge": {
+          "mean": 57.01725774084234,
+          "min": 44.36138098021316,
+          "max": 71.73236505145216
+        },
+        "inView": {
+          "mean": 3.204833333333336,
+          "min": 0.62,
+          "max": 9.12
+        },
+        "maxAge": {
+          "mean": 140.43478437423045,
+          "min": 110.80775475947848,
+          "max": 197.36358155368464
+        },
+        "areaTargetFraction": 0.24125
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.16446314102625,
+          "min": 89.42307692307692,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 48.919158333333186,
+          "min": 37.26,
+          "max": 56.72
+        },
+        "hotspotOnTime": {
+          "mean": 17.716666666666665,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.26078716120422,
+          "min": 2.1157614587020666,
+          "max": 8.233570683810038
+        },
+        "meanAge": {
+          "mean": 57.337769426190754,
+          "min": 49.87999597925788,
+          "max": 66.49298372356266
+        },
+        "inView": {
+          "mean": 3.2403499999999994,
+          "min": 0.54,
+          "max": 9.04
+        },
+        "maxAge": {
+          "mean": 133.78844784463942,
+          "min": 119.73834599064321,
+          "max": 136.0324604665375
+        },
+        "areaTargetFraction": 0.1975
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 93.13952323717913,
+          "min": 84.61538461538461,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.03536666666655,
+          "min": 37.26,
+          "max": 61.9
+        },
+        "hotspotOnTime": {
+          "mean": 16.958333333333332,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.294667554403865,
+          "min": 1.9403752230368825,
+          "max": 8.698682791264572
+        },
+        "meanAge": {
+          "mean": 57.17751358351652,
+          "min": 44.36138098021316,
+          "max": 71.73236505145216
+        },
+        "inView": {
+          "mean": 3.222591666666666,
+          "min": 0.54,
+          "max": 9.12
+        },
+        "maxAge": {
+          "mean": 137.111616109434,
+          "min": 110.80775475947848,
+          "max": 197.36358155368464
+        },
+        "areaTargetFraction": 0.219375
+      },
+      "recovery": {
+        "first120Seconds": null,
+        "sustainedRestOfRunSeconds": null,
+        "observedSustainedSeconds": 0
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 4 lost contact; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603,
+          "message": "Drone 4 malfunction confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603,
+          "message": "Replanned all 4 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 5,
+      "droneId": 5,
+      "fault": "malfunction",
+      "detectionLatency": 3,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.33759999999989,
+          "min": 47.7,
+          "max": 66.34
+        },
+        "hotspotOnTime": {
+          "mean": 18.291666666666668,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7353947425595844,
+          "min": 1.6430244220922712,
+          "max": 5.251848453728204
+        },
+        "meanAge": {
+          "mean": 46.05949940472557,
+          "min": 40.71047758336077,
+          "max": 51.111931494008545
+        },
+        "inView": {
+          "mean": 3.8762500000000006,
+          "min": 1.02,
+          "max": 7.8
+        },
+        "maxAge": {
+          "mean": 107.74084814038366,
+          "min": 99.90779954557337,
+          "max": 111.13673037544646
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 89.06750801282048,
+          "min": 77.88461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 47.86349999999993,
+          "min": 36.94,
+          "max": 59.86
+        },
+        "hotspotOnTime": {
+          "mean": 15.645833333333334,
+          "min": 0,
+          "max": 30
+        },
+        "gapCost": {
+          "mean": 5.437594431480135,
+          "min": 2.182158784196548,
+          "max": 8.056431263875687
+        },
+        "meanAge": {
+          "mean": 58.70962231391733,
+          "min": 44.36138098021316,
+          "max": 68.30939020978796
+        },
+        "inView": {
+          "mean": 3.1492500000000008,
+          "min": 0.96,
+          "max": 8.2
+        },
+        "maxAge": {
+          "mean": 154.89477365243846,
+          "min": 107.34800059136433,
+          "max": 191.97469266479573
+        },
+        "areaTargetFraction": 0.2875
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 92.33914262820512,
+          "min": 77.88461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.092808333333316,
+          "min": 36.94,
+          "max": 60.7
+        },
+        "hotspotOnTime": {
+          "mean": 16.508333333333333,
+          "min": 0,
+          "max": 30
+        },
+        "gapCost": {
+          "mean": 5.274932568164432,
+          "min": 2.182158784196548,
+          "max": 8.139578690379796
+        },
+        "meanAge": {
+          "mean": 57.177722621357084,
+          "min": 44.36138098021316,
+          "max": 68.30939020978796
+        },
+        "inView": {
+          "mean": 3.2413750000000032,
+          "min": 0.7,
+          "max": 9.28
+        },
+        "maxAge": {
+          "mean": 140.1659226238305,
+          "min": 107.34800059136433,
+          "max": 197.36358155368464
+        },
+        "areaTargetFraction": 0.20333333333333334
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.16566506410275,
+          "min": 88.9423076923077,
+          "max": 99.03846153846153
+        },
+        "populationOnTime": {
+          "mean": 48.575700000000055,
+          "min": 35.58,
+          "max": 63.52
+        },
+        "hotspotOnTime": {
+          "mean": 17.408333333333335,
+          "min": 0,
+          "max": 30
+        },
+        "gapCost": {
+          "mean": 5.2756425233954625,
+          "min": 2.9617903489219755,
+          "max": 7.9817853824132925
+        },
+        "meanAge": {
+          "mean": 57.44397226846226,
+          "min": 49.147806575356135,
+          "max": 66.08143252717723
+        },
+        "inView": {
+          "mean": 3.1973833333333275,
+          "min": 0.54,
+          "max": 9.96
+        },
+        "maxAge": {
+          "mean": 133.8411347497545,
+          "min": 124.24625432879861,
+          "max": 136.0324604665375
+        },
+        "areaTargetFraction": 0.17958333333333334
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 92.75240384615319,
+          "min": 77.88461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 48.834254166666966,
+          "min": 35.58,
+          "max": 63.52
+        },
+        "hotspotOnTime": {
+          "mean": 16.958333333333332,
+          "min": 0,
+          "max": 30
+        },
+        "gapCost": {
+          "mean": 5.275287545779948,
+          "min": 2.182158784196548,
+          "max": 8.139578690379796
+        },
+        "meanAge": {
+          "mean": 57.31084744490963,
+          "min": 44.36138098021316,
+          "max": 68.30939020978796
+        },
+        "inView": {
+          "mean": 3.2193791666666733,
+          "min": 0.54,
+          "max": 9.96
+        },
+        "maxAge": {
+          "mean": 137.00352868679119,
+          "min": 107.34800059136433,
+          "max": 197.36358155368464
+        },
+        "areaTargetFraction": 0.19145833333333334
+      },
+      "recovery": {
+        "first120Seconds": null,
+        "sustainedRestOfRunSeconds": null,
+        "observedSustainedSeconds": 0
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 5 lost contact; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603,
+          "message": "Drone 5 malfunction confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603,
+          "message": "Replanned all 4 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 5,
+      "droneId": 1,
+      "fault": "deviation",
+      "detectionLatency": 3.7000000000000455,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.33759999999989,
+          "min": 47.7,
+          "max": 66.34
+        },
+        "hotspotOnTime": {
+          "mean": 18.291666666666668,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7353947425595844,
+          "min": 1.6430244220922712,
+          "max": 5.251848453728204
+        },
+        "meanAge": {
+          "mean": 46.05949940472557,
+          "min": 40.71047758336077,
+          "max": 51.111931494008545
+        },
+        "inView": {
+          "mean": 3.8762500000000006,
+          "min": 1.02,
+          "max": 7.8
+        },
+        "maxAge": {
+          "mean": 107.74084814038366,
+          "min": 99.90779954557337,
+          "max": 111.13673037544646
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 92.08133012820494,
+          "min": 85.09615384615384,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.69591666666669,
+          "min": 39.08,
+          "max": 59.86
+        },
+        "hotspotOnTime": {
+          "mean": 15.708333333333334,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 7.015888743986966,
+          "min": 2.1821590272683324,
+          "max": 12.127090359028154
+        },
+        "meanAge": {
+          "mean": 59.61201464280393,
+          "min": 44.36543098021316,
+          "max": 69.44630664499958
+        },
+        "inView": {
+          "mean": 3.2765000000000026,
+          "min": 0.32,
+          "max": 9.06
+        },
+        "maxAge": {
+          "mean": 146.60985119777146,
+          "min": 107.34800059136433,
+          "max": 164.8202228135866
+        },
+        "areaTargetFraction": 0.35625
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.03265224358947,
+          "min": 85.09615384615384,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 48.17838333333332,
+          "min": 31.06,
+          "max": 61.5
+        },
+        "hotspotOnTime": {
+          "mean": 16.641666666666666,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.606911374659016,
+          "min": 2.1821590272683324,
+          "max": 12.127090359028154
+        },
+        "meanAge": {
+          "mean": 58.20303238316062,
+          "min": 44.36543098021316,
+          "max": 69.44630664499958
+        },
+        "inView": {
+          "mean": 3.21115833333333,
+          "min": 0.32,
+          "max": 9.38
+        },
+        "maxAge": {
+          "mean": 137.28357294506725,
+          "min": 107.34800059136433,
+          "max": 164.8202228135866
+        },
+        "areaTargetFraction": 0.17833333333333334
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.31109775641094,
+          "min": 88.9423076923077,
+          "max": 96.15384615384616
+        },
+        "populationOnTime": {
+          "mean": 50.22164166666665,
+          "min": 32.42,
+          "max": 67.5
+        },
+        "hotspotOnTime": {
+          "mean": 17.1625,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.329895134978686,
+          "min": 2.112483650076211,
+          "max": 9.544544349716203
+        },
+        "meanAge": {
+          "mean": 56.409216204241055,
+          "min": 45.41274754136995,
+          "max": 70.98271830963097
+        },
+        "inView": {
+          "mean": 3.3040249999999944,
+          "min": 0.4,
+          "max": 11.46
+        },
+        "maxAge": {
+          "mean": 134.35988739068648,
+          "min": 127.16658396784851,
+          "max": 136.0323541009741
+        },
+        "areaTargetFraction": 0.10166666666666667
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 93.17187499999963,
+          "min": 85.09615384615384,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.20001250000039,
+          "min": 31.06,
+          "max": 67.5
+        },
+        "hotspotOnTime": {
+          "mean": 16.902083333333334,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.46840325481885,
+          "min": 2.112483650076211,
+          "max": 12.127090359028154
+        },
+        "meanAge": {
+          "mean": 57.30612429370062,
+          "min": 44.36543098021316,
+          "max": 70.98271830963097
+        },
+        "inView": {
+          "mean": 3.2575916666666664,
+          "min": 0.32,
+          "max": 11.46
+        },
+        "maxAge": {
+          "mean": 135.82173016787726,
+          "min": 107.34800059136433,
+          "max": 164.8202228135866
+        },
+        "areaTargetFraction": 0.14
+      },
+      "recovery": {
+        "first120Seconds": null,
+        "sustainedRestOfRunSeconds": null,
+        "observedSustainedSeconds": 0
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 1 left its planned route; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603.7,
+          "message": "Drone 1 route deviation confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603.7,
+          "message": "Replanned all 4 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 5,
+      "droneId": 2,
+      "fault": "deviation",
+      "detectionLatency": 3.7000000000000455,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.33759999999989,
+          "min": 47.7,
+          "max": 66.34
+        },
+        "hotspotOnTime": {
+          "mean": 18.291666666666668,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7353947425595844,
+          "min": 1.6430244220922712,
+          "max": 5.251848453728204
+        },
+        "meanAge": {
+          "mean": 46.05949940472557,
+          "min": 40.71047758336077,
+          "max": 51.111931494008545
+        },
+        "inView": {
+          "mean": 3.8762500000000006,
+          "min": 1.02,
+          "max": 7.8
+        },
+        "maxAge": {
+          "mean": 107.74084814038366,
+          "min": 99.90779954557337,
+          "max": 111.13673037544646
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 93.93329326923099,
+          "min": 89.42307692307692,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 50.782375000000016,
+          "min": 35.6,
+          "max": 59.86
+        },
+        "hotspotOnTime": {
+          "mean": 15.625,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.487396121161443,
+          "min": 2.1821587861791247,
+          "max": 8.191598367415716
+        },
+        "meanAge": {
+          "mean": 55.730040068468725,
+          "min": 44.36148098021316,
+          "max": 63.280967124131045
+        },
+        "inView": {
+          "mean": 3.375083333333337,
+          "min": 0.76,
+          "max": 10.68
+        },
+        "maxAge": {
+          "mean": 146.41506727476454,
+          "min": 107.82022281358655,
+          "max": 164.8202228135866
+        },
+        "areaTargetFraction": 0.33958333333333335
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.46233974358998,
+          "min": 89.42307692307692,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 48.81952499999989,
+          "min": 32.14,
+          "max": 60.7
+        },
+        "hotspotOnTime": {
+          "mean": 16.179166666666667,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.3092059316308555,
+          "min": 1.8774130285509765,
+          "max": 8.835152792110089
+        },
+        "meanAge": {
+          "mean": 57.09704097667869,
+          "min": 44.36148098021316,
+          "max": 67.5517157026224
+        },
+        "inView": {
+          "mean": 3.2326000000000152,
+          "min": 0.56,
+          "max": 10.68
+        },
+        "maxAge": {
+          "mean": 136.7878883946428,
+          "min": 107.82022281358655,
+          "max": 164.8202228135866
+        },
+        "areaTargetFraction": 0.21958333333333332
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.296674679487,
+          "min": 88.46153846153847,
+          "max": 96.15384615384616
+        },
+        "populationOnTime": {
+          "mean": 50.53755833333322,
+          "min": 35.9,
+          "max": 68.04
+        },
+        "hotspotOnTime": {
+          "mean": 17.716666666666665,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.1475562778949895,
+          "min": 1.6228003962954434,
+          "max": 8.805062421687847
+        },
+        "meanAge": {
+          "mean": 55.88356546482102,
+          "min": 41.37925255336663,
+          "max": 70.28780058482839
+        },
+        "inView": {
+          "mean": 3.2962499999999952,
+          "min": 0.56,
+          "max": 11.74
+        },
+        "maxAge": {
+          "mean": 134.3604296516611,
+          "min": 127.16658396784851,
+          "max": 136.0323541009741
+        },
+        "areaTargetFraction": 0.10083333333333333
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 93.37950721153842,
+          "min": 88.46153846153847,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.67854166666664,
+          "min": 32.14,
+          "max": 68.04
+        },
+        "hotspotOnTime": {
+          "mean": 16.947916666666668,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.228381104762932,
+          "min": 1.6228003962954434,
+          "max": 8.835152792110089
+        },
+        "meanAge": {
+          "mean": 56.49030322074974,
+          "min": 41.37925255336663,
+          "max": 70.28780058482839
+        },
+        "inView": {
+          "mean": 3.2644250000000055,
+          "min": 0.56,
+          "max": 11.74
+        },
+        "maxAge": {
+          "mean": 135.57415902315225,
+          "min": 107.82022281358655,
+          "max": 164.8202228135866
+        },
+        "areaTargetFraction": 0.16020833333333334
+      },
+      "recovery": {
+        "first120Seconds": null,
+        "sustainedRestOfRunSeconds": null,
+        "observedSustainedSeconds": 0
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 2 left its planned route; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603.7,
+          "message": "Drone 2 route deviation confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603.7,
+          "message": "Replanned all 4 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 5,
+      "droneId": 3,
+      "fault": "deviation",
+      "detectionLatency": 3.7000000000000455,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.33759999999989,
+          "min": 47.7,
+          "max": 66.34
+        },
+        "hotspotOnTime": {
+          "mean": 18.291666666666668,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7353947425595844,
+          "min": 1.6430244220922712,
+          "max": 5.251848453728204
+        },
+        "meanAge": {
+          "mean": 46.05949940472557,
+          "min": 40.71047758336077,
+          "max": 51.111931494008545
+        },
+        "inView": {
+          "mean": 3.8762500000000006,
+          "min": 1.02,
+          "max": 7.8
+        },
+        "maxAge": {
+          "mean": 107.74084814038366,
+          "min": 99.90779954557337,
+          "max": 111.13673037544646
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 94.64443108974366,
+          "min": 89.42307692307692,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.321041666666595,
+          "min": 39.7,
+          "max": 59.86
+        },
+        "hotspotOnTime": {
+          "mean": 15.625,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.575326898756026,
+          "min": 2.1821587907220246,
+          "max": 8.200185584591502
+        },
+        "meanAge": {
+          "mean": 56.91696025507963,
+          "min": 44.36168098021316,
+          "max": 66.77034870772528
+        },
+        "inView": {
+          "mean": 3.1728749999999977,
+          "min": 0.96,
+          "max": 7.36
+        },
+        "maxAge": {
+          "mean": 141.58900693653564,
+          "min": 101.22469266479578,
+          "max": 176.66913710924018
+        },
+        "areaTargetFraction": 0.41875
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.61137820512882,
+          "min": 88.46153846153847,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.0816,
+          "min": 37.7,
+          "max": 59.86
+        },
+        "hotspotOnTime": {
+          "mean": 16.179166666666667,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.301758815309605,
+          "min": 2.038368135979886,
+          "max": 8.65358143914537
+        },
+        "meanAge": {
+          "mean": 56.89882757206781,
+          "min": 44.36168098021316,
+          "max": 66.77034870772528
+        },
+        "inView": {
+          "mean": 3.2195833333333326,
+          "min": 0.56,
+          "max": 8.54
+        },
+        "maxAge": {
+          "mean": 135.48575638963493,
+          "min": 101.22469266479578,
+          "max": 176.66913710924018
+        },
+        "areaTargetFraction": 0.22458333333333333
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.16586538461537,
+          "min": 88.46153846153847,
+          "max": 98.07692307692308
+        },
+        "populationOnTime": {
+          "mean": 49.37518333333325,
+          "min": 31.44,
+          "max": 62.3
+        },
+        "hotspotOnTime": {
+          "mean": 17.716666666666665,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.238699630459165,
+          "min": 1.812381952264607,
+          "max": 8.601879017981387
+        },
+        "meanAge": {
+          "mean": 56.957587797189845,
+          "min": 45.30940769864125,
+          "max": 65.14697866369852
+        },
+        "inView": {
+          "mean": 3.2497499999999997,
+          "min": 0.48,
+          "max": 9.14
+        },
+        "maxAge": {
+          "mean": 134.1694338770694,
+          "min": 124.97650620083527,
+          "max": 136.03317381952547
+        },
+        "areaTargetFraction": 0.17625
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 93.38862179487131,
+          "min": 88.46153846153847,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.22839166666718,
+          "min": 31.44,
+          "max": 62.3
+        },
+        "hotspotOnTime": {
+          "mean": 16.947916666666668,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.270229222884379,
+          "min": 1.812381952264607,
+          "max": 8.65358143914537
+        },
+        "meanAge": {
+          "mean": 56.928207684628916,
+          "min": 44.36168098021316,
+          "max": 66.77034870772528
+        },
+        "inView": {
+          "mean": 3.234666666666659,
+          "min": 0.48,
+          "max": 9.14
+        },
+        "maxAge": {
+          "mean": 134.82759513335085,
+          "min": 101.22469266479578,
+          "max": 176.66913710924018
+        },
+        "areaTargetFraction": 0.20041666666666666
+      },
+      "recovery": {
+        "first120Seconds": null,
+        "sustainedRestOfRunSeconds": null,
+        "observedSustainedSeconds": 0
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 3 left its planned route; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603.7,
+          "message": "Drone 3 route deviation confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603.7,
+          "message": "Replanned all 4 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 5,
+      "droneId": 4,
+      "fault": "deviation",
+      "detectionLatency": 3.7000000000000455,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.33759999999989,
+          "min": 47.7,
+          "max": 66.34
+        },
+        "hotspotOnTime": {
+          "mean": 18.291666666666668,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7353947425595844,
+          "min": 1.6430244220922712,
+          "max": 5.251848453728204
+        },
+        "meanAge": {
+          "mean": 46.05949940472557,
+          "min": 40.71047758336077,
+          "max": 51.111931494008545
+        },
+        "inView": {
+          "mean": 3.8762500000000006,
+          "min": 1.02,
+          "max": 7.8
+        },
+        "maxAge": {
+          "mean": 107.74084814038366,
+          "min": 99.90779954557337,
+          "max": 111.13673037544646
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 92.75641025641016,
+          "min": 85.57692307692308,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 48.06191666666675,
+          "min": 38.02,
+          "max": 59.86
+        },
+        "hotspotOnTime": {
+          "mean": 15.625,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.855523391559387,
+          "min": 2.182158784196548,
+          "max": 8.739528119576809
+        },
+        "meanAge": {
+          "mean": 59.27484065498847,
+          "min": 44.36138098021316,
+          "max": 73.23594007473663
+        },
+        "inView": {
+          "mean": 3.207291666666667,
+          "min": 0.72,
+          "max": 8.5
+        },
+        "maxAge": {
+          "mean": 156.55228057551767,
+          "min": 110.80775475947848,
+          "max": 191.97469266479573
+        },
+        "areaTargetFraction": 0.3375
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.14583333333415,
+          "min": 85.57692307692308,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.22100833333323,
+          "min": 38.02,
+          "max": 63.5
+        },
+        "hotspotOnTime": {
+          "mean": 16.179166666666667,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.328506717964942,
+          "min": 1.8294278215141206,
+          "max": 8.739528119576809
+        },
+        "meanAge": {
+          "mean": 56.9683254463942,
+          "min": 44.36138098021316,
+          "max": 73.23594007473663
+        },
+        "inView": {
+          "mean": 3.2040583333333363,
+          "min": 0.72,
+          "max": 8.84
+        },
+        "maxAge": {
+          "mean": 140.73413111788344,
+          "min": 110.80775475947848,
+          "max": 200.22469266479573
+        },
+        "areaTargetFraction": 0.21458333333333332
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.17387820512872,
+          "min": 89.42307692307692,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 48.88760833333318,
+          "min": 37.72,
+          "max": 57.76
+        },
+        "hotspotOnTime": {
+          "mean": 17.716666666666665,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.260899819302444,
+          "min": 2.122337061963141,
+          "max": 8.255368145329305
+        },
+        "meanAge": {
+          "mean": 57.35628805564158,
+          "min": 50.174737965098394,
+          "max": 66.15247781076964
+        },
+        "inView": {
+          "mean": 3.233108333333326,
+          "min": 0.52,
+          "max": 9.1
+        },
+        "maxAge": {
+          "mean": 133.83867281997115,
+          "min": 119.31614156889918,
+          "max": 136.03453965842027
+        },
+        "areaTargetFraction": 0.1725
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 93.15985576923013,
+          "min": 85.57692307692308,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.054308333333296,
+          "min": 37.72,
+          "max": 63.5
+        },
+        "hotspotOnTime": {
+          "mean": 16.947916666666668,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.2947032686336755,
+          "min": 1.8294278215141206,
+          "max": 8.739528119576809
+        },
+        "meanAge": {
+          "mean": 57.162306751017944,
+          "min": 44.36138098021316,
+          "max": 73.23594007473663
+        },
+        "inView": {
+          "mean": 3.2185833333333327,
+          "min": 0.52,
+          "max": 9.1
+        },
+        "maxAge": {
+          "mean": 137.286401968926,
+          "min": 110.80775475947848,
+          "max": 200.22469266479573
+        },
+        "areaTargetFraction": 0.19354166666666667
+      },
+      "recovery": {
+        "first120Seconds": null,
+        "sustainedRestOfRunSeconds": null,
+        "observedSustainedSeconds": 0
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 4 left its planned route; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603.7,
+          "message": "Drone 4 route deviation confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603.7,
+          "message": "Replanned all 4 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 5,
+      "droneId": 5,
+      "fault": "deviation",
+      "detectionLatency": 3.7000000000000455,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.33759999999989,
+          "min": 47.7,
+          "max": 66.34
+        },
+        "hotspotOnTime": {
+          "mean": 18.291666666666668,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7353947425595844,
+          "min": 1.6430244220922712,
+          "max": 5.251848453728204
+        },
+        "meanAge": {
+          "mean": 46.05949940472557,
+          "min": 40.71047758336077,
+          "max": 51.111931494008545
+        },
+        "inView": {
+          "mean": 3.8762500000000006,
+          "min": 1.02,
+          "max": 7.8
+        },
+        "maxAge": {
+          "mean": 107.74084814038366,
+          "min": 99.90779954557337,
+          "max": 111.13673037544646
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 89.21975160256403,
+          "min": 78.36538461538461,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 47.77604166666668,
+          "min": 36.16,
+          "max": 59.86
+        },
+        "hotspotOnTime": {
+          "mean": 15.645833333333334,
+          "min": 0,
+          "max": 30
+        },
+        "gapCost": {
+          "mean": 5.46662570414615,
+          "min": 2.182158784196548,
+          "max": 8.340270048717114
+        },
+        "meanAge": {
+          "mean": 58.87482820215567,
+          "min": 44.36138098021316,
+          "max": 69.60058091132625
+        },
+        "inView": {
+          "mean": 3.196041666666666,
+          "min": 0.82,
+          "max": 9.98
+        },
+        "maxAge": {
+          "mean": 155.33912266620214,
+          "min": 107.34800059136433,
+          "max": 191.97469266479573
+        },
+        "areaTargetFraction": 0.2875
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 92.35476762820525,
+          "min": 78.36538461538461,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.12871666666676,
+          "min": 36.16,
+          "max": 60.42
+        },
+        "hotspotOnTime": {
+          "mean": 16.491666666666667,
+          "min": 0,
+          "max": 30
+        },
+        "gapCost": {
+          "mean": 5.27887541238256,
+          "min": 2.182158784196548,
+          "max": 8.340270048717114
+        },
+        "meanAge": {
+          "mean": 57.16544958071389,
+          "min": 44.36138098021316,
+          "max": 69.60058091132625
+        },
+        "inView": {
+          "mean": 3.242691666666675,
+          "min": 0.62,
+          "max": 11.34
+        },
+        "maxAge": {
+          "mean": 140.44546285928752,
+          "min": 107.34800059136433,
+          "max": 200.22469266479573
+        },
+        "areaTargetFraction": 0.17833333333333334
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 93.18108974359058,
+          "min": 89.90384615384616,
+          "max": 99.03846153846153
+        },
+        "populationOnTime": {
+          "mean": 48.57841666666672,
+          "min": 35.86,
+          "max": 64.3
+        },
+        "hotspotOnTime": {
+          "mean": 17.408333333333335,
+          "min": 0,
+          "max": 30
+        },
+        "gapCost": {
+          "mean": 5.271159273393574,
+          "min": 2.8964521914785486,
+          "max": 7.922874428892069
+        },
+        "meanAge": {
+          "mean": 57.42762331681417,
+          "min": 49.31705067271895,
+          "max": 65.86271148451972
+        },
+        "inView": {
+          "mean": 3.1885083333333384,
+          "min": 0.58,
+          "max": 10.88
+        },
+        "maxAge": {
+          "mean": 133.86625785843296,
+          "min": 121.91336437972814,
+          "max": 136.03453965842027
+        },
+        "areaTargetFraction": 0.15208333333333332
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 92.76792868589659,
+          "min": 78.36538461538461,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 48.85356666666669,
+          "min": 35.86,
+          "max": 64.3
+        },
+        "hotspotOnTime": {
+          "mean": 16.95,
+          "min": 0,
+          "max": 30
+        },
+        "gapCost": {
+          "mean": 5.275017342888064,
+          "min": 2.182158784196548,
+          "max": 8.340270048717114
+        },
+        "meanAge": {
+          "mean": 57.29653644876384,
+          "min": 44.36138098021316,
+          "max": 69.60058091132625
+        },
+        "inView": {
+          "mean": 3.2156000000000056,
+          "min": 0.58,
+          "max": 11.34
+        },
+        "maxAge": {
+          "mean": 137.1558603588595,
+          "min": 107.34800059136433,
+          "max": 200.22469266479573
+        },
+        "areaTargetFraction": 0.16520833333333335
+      },
+      "recovery": {
+        "first120Seconds": null,
+        "sustainedRestOfRunSeconds": null,
+        "observedSustainedSeconds": 0
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 5 left its planned route; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603.7,
+          "message": "Drone 5 route deviation confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603.7,
+          "message": "Replanned all 4 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 6,
+      "droneId": 1,
+      "fault": "malfunction",
+      "detectionLatency": 3,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 65.64385000000004,
+          "min": 53.68,
+          "max": 73.68
+        },
+        "hotspotOnTime": {
+          "mean": 21.908333333333335,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 2.5129508405587475,
+          "min": 1.5192952832165716,
+          "max": 3.5577223390302293
+        },
+        "meanAge": {
+          "mean": 37.94316376129754,
+          "min": 32.801622914968064,
+          "max": 42.991783537843
+        },
+        "inView": {
+          "mean": 4.557616666666667,
+          "min": 1.2,
+          "max": 9
+        },
+        "maxAge": {
+          "mean": 84.55319357663926,
+          "min": 80.1430330921716,
+          "max": 86.01228826176163
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 97.04126602564108,
+          "min": 90.38461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 57.10508333333341,
+          "min": 45.74,
+          "max": 70.52
+        },
+        "hotspotOnTime": {
+          "mean": 17.75,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.926979606805369,
+          "min": 1.983105972261008,
+          "max": 9.421516625361852
+        },
+        "meanAge": {
+          "mean": 50.38340579920346,
+          "min": 35.790715393819966,
+          "max": 57.954146831917015
+        },
+        "inView": {
+          "mean": 3.7976666666666654,
+          "min": 0.86,
+          "max": 6.58
+        },
+        "maxAge": {
+          "mean": 132.54824836039708,
+          "min": 82.05673197005353,
+          "max": 174.80673197005353
+        },
+        "areaTargetFraction": 0.7875
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 99.40825320512822,
+          "min": 90.38461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 57.73470000000028,
+          "min": 45.74,
+          "max": 70.52
+        },
+        "hotspotOnTime": {
+          "mean": 17.670833333333334,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 4.219971248808954,
+          "min": 1.6330340293873764,
+          "max": 9.421516625361852
+        },
+        "meanAge": {
+          "mean": 47.188487005897365,
+          "min": 35.790715393819966,
+          "max": 57.954146831917015
+        },
+        "inView": {
+          "mean": 3.8610499999999948,
+          "min": 0.72,
+          "max": 9.64
+        },
+        "maxAge": {
+          "mean": 112.67092251046876,
+          "min": 82.05673197005353,
+          "max": 174.80673197005353
+        },
+        "areaTargetFraction": 0.9575
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.33045000000019,
+          "min": 45.6,
+          "max": 72.06
+        },
+        "hotspotOnTime": {
+          "mean": 18.45,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.663086551236137,
+          "min": 1.5320203671311885,
+          "max": 6.456808984313765
+        },
+        "meanAge": {
+          "mean": 46.05922705980527,
+          "min": 35.71831286454315,
+          "max": 57.350649269420224
+        },
+        "inView": {
+          "mean": 3.8403083333333243,
+          "min": 0.86,
+          "max": 10.54
+        },
+        "maxAge": {
+          "mean": 108.31659617708493,
+          "min": 97.70285455487169,
+          "max": 111.126671518178
+        },
+        "areaTargetFraction": 1
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 99.70412660256412,
+          "min": 90.38461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.032575000000435,
+          "min": 45.6,
+          "max": 72.06
+        },
+        "hotspotOnTime": {
+          "mean": 18.060416666666665,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.9415289000225515,
+          "min": 1.5320203671311885,
+          "max": 9.421516625361852
+        },
+        "meanAge": {
+          "mean": 46.62385703285121,
+          "min": 35.71831286454315,
+          "max": 57.954146831917015
+        },
+        "inView": {
+          "mean": 3.850679166666665,
+          "min": 0.72,
+          "max": 10.54
+        },
+        "maxAge": {
+          "mean": 110.4937593437751,
+          "min": 82.05673197005353,
+          "max": 174.80673197005353
+        },
+        "areaTargetFraction": 0.97875
+      },
+      "recovery": {
+        "first120Seconds": 98.25,
+        "sustainedRestOfRunSeconds": 98.25,
+        "observedSustainedSeconds": 1101.75
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 6 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 1 lost contact; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603,
+          "message": "Drone 1 malfunction confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 6,
+      "droneId": 2,
+      "fault": "malfunction",
+      "detectionLatency": 3,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 65.64385000000004,
+          "min": 53.68,
+          "max": 73.68
+        },
+        "hotspotOnTime": {
+          "mean": 21.908333333333335,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 2.5129508405587475,
+          "min": 1.5192952832165716,
+          "max": 3.5577223390302293
+        },
+        "meanAge": {
+          "mean": 37.94316376129754,
+          "min": 32.801622914968064,
+          "max": 42.991783537843
+        },
+        "inView": {
+          "mean": 4.557616666666667,
+          "min": 1.2,
+          "max": 9
+        },
+        "maxAge": {
+          "mean": 84.55319357663926,
+          "min": 80.1430330921716,
+          "max": 86.01228826176163
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 98.5146233974357,
+          "min": 93.75,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 57.730041666666644,
+          "min": 43.44,
+          "max": 70.52
+        },
+        "hotspotOnTime": {
+          "mean": 19.958333333333332,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.6322313513479694,
+          "min": 1.7848266100687378,
+          "max": 5.59659679061147
+        },
+        "meanAge": {
+          "mean": 46.59117764205837,
+          "min": 35.79101575049331,
+          "max": 53.553805761152596
+        },
+        "inView": {
+          "mean": 3.891541666666664,
+          "min": 0.82,
+          "max": 7.56
+        },
+        "maxAge": {
+          "mean": 124.3802259015445,
+          "min": 82.05673197005353,
+          "max": 163.78087686686433
+        },
+        "areaTargetFraction": 0.94375
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 99.70292467948714,
+          "min": 93.75,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 57.84924166666692,
+          "min": 43.44,
+          "max": 70.52
+        },
+        "hotspotOnTime": {
+          "mean": 18.2625,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.723109488206914,
+          "min": 1.7848266100687378,
+          "max": 5.59659679061147
+        },
+        "meanAge": {
+          "mean": 46.432123782060486,
+          "min": 35.79101575049331,
+          "max": 53.553805761152596
+        },
+        "inView": {
+          "mean": 3.8540416666666784,
+          "min": 0.82,
+          "max": 8.78
+        },
+        "maxAge": {
+          "mean": 111.03585501947546,
+          "min": 82.05673197005353,
+          "max": 163.78087686686433
+        },
+        "areaTargetFraction": 0.98875
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.35120000000003,
+          "min": 44.04,
+          "max": 70.78
+        },
+        "hotspotOnTime": {
+          "mean": 18.466666666666665,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.6658942392553344,
+          "min": 1.5429843633320135,
+          "max": 6.65359402256202
+        },
+        "meanAge": {
+          "mean": 45.98427882279525,
+          "min": 36.24630963851348,
+          "max": 59.404670505451726
+        },
+        "inView": {
+          "mean": 3.8684750000000054,
+          "min": 0.76,
+          "max": 10.96
+        },
+        "maxAge": {
+          "mean": 108.31800553867862,
+          "min": 98.54847151109038,
+          "max": 111.126671518178
+        },
+        "areaTargetFraction": 1
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 99.85146233974356,
+          "min": 93.75,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.10022083333366,
+          "min": 43.44,
+          "max": 70.78
+        },
+        "hotspotOnTime": {
+          "mean": 18.364583333333332,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.6945018637311176,
+          "min": 1.5429843633320135,
+          "max": 6.65359402256202
+        },
+        "meanAge": {
+          "mean": 46.20820130242792,
+          "min": 35.79101575049331,
+          "max": 59.404670505451726
+        },
+        "inView": {
+          "mean": 3.861258333333335,
+          "min": 0.76,
+          "max": 10.96
+        },
+        "maxAge": {
+          "mean": 109.67693027907556,
+          "min": 82.05673197005353,
+          "max": 163.78087686686433
+        },
+        "areaTargetFraction": 0.994375
+      },
+      "recovery": {
+        "first120Seconds": 88.5,
+        "sustainedRestOfRunSeconds": 88.5,
+        "observedSustainedSeconds": 1111.5
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 6 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 2 lost contact; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603,
+          "message": "Drone 2 malfunction confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 6,
+      "droneId": 3,
+      "fault": "malfunction",
+      "detectionLatency": 3,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 65.64385000000004,
+          "min": 53.68,
+          "max": 73.68
+        },
+        "hotspotOnTime": {
+          "mean": 21.908333333333335,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 2.5129508405587475,
+          "min": 1.5192952832165716,
+          "max": 3.5577223390302293
+        },
+        "meanAge": {
+          "mean": 37.94316376129754,
+          "min": 32.801622914968064,
+          "max": 42.991783537843
+        },
+        "inView": {
+          "mean": 4.557616666666667,
+          "min": 1.2,
+          "max": 9
+        },
+        "maxAge": {
+          "mean": 84.55319357663926,
+          "min": 80.1430330921716,
+          "max": 86.01228826176163
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 98.85016025641022,
+          "min": 94.23076923076923,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 57.37787499999994,
+          "min": 42.82,
+          "max": 70.52
+        },
+        "hotspotOnTime": {
+          "mean": 19.958333333333332,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.640157536256662,
+          "min": 1.788921213267795,
+          "max": 5.551564688135586
+        },
+        "meanAge": {
+          "mean": 46.836774178160304,
+          "min": 35.78996539381996,
+          "max": 55.39654674388261
+        },
+        "inView": {
+          "mean": 3.906375000000001,
+          "min": 1.12,
+          "max": 8.9
+        },
+        "maxAge": {
+          "mean": 116.25127695132089,
+          "min": 82.05673197005353,
+          "max": 136.21672035000336
+        },
+        "areaTargetFraction": 0.95
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 99.77003205128204,
+          "min": 94.23076923076923,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 57.905416666666774,
+          "min": 42.82,
+          "max": 70.52
+        },
+        "hotspotOnTime": {
+          "mean": 18.2625,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7251446127165884,
+          "min": 1.788921213267795,
+          "max": 5.551564688135586
+        },
+        "meanAge": {
+          "mean": 46.423158047748714,
+          "min": 35.78996539381996,
+          "max": 55.39654674388261
+        },
+        "inView": {
+          "mean": 3.836341666666667,
+          "min": 0.8,
+          "max": 8.9
+        },
+        "maxAge": {
+          "mean": 110.18087855325503,
+          "min": 82.05673197005353,
+          "max": 136.21672035000336
+        },
+        "areaTargetFraction": 0.99
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.16500833333345,
+          "min": 46.08,
+          "max": 72.04
+        },
+        "hotspotOnTime": {
+          "mean": 18.466666666666665,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.668982242987871,
+          "min": 1.5075265099032875,
+          "max": 6.4562588500628
+        },
+        "meanAge": {
+          "mean": 46.11248205291704,
+          "min": 36.04484702971649,
+          "max": 57.40650702269882
+        },
+        "inView": {
+          "mean": 3.860033333333324,
+          "min": 0.9,
+          "max": 11.62
+        },
+        "maxAge": {
+          "mean": 108.45573605773718,
+          "min": 99.19009596344335,
+          "max": 111.126671518178
+        },
+        "areaTargetFraction": 1
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 99.88501602564102,
+          "min": 94.23076923076923,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.03521250000001,
+          "min": 42.82,
+          "max": 72.04
+        },
+        "hotspotOnTime": {
+          "mean": 18.364583333333332,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.6970634278522416,
+          "min": 1.5075265099032875,
+          "max": 6.4562588500628
+        },
+        "meanAge": {
+          "mean": 46.267820050333064,
+          "min": 35.78996539381996,
+          "max": 57.40650702269882
+        },
+        "inView": {
+          "mean": 3.8481874999999977,
+          "min": 0.8,
+          "max": 11.62
+        },
+        "maxAge": {
+          "mean": 109.31830730549686,
+          "min": 82.05673197005353,
+          "max": 136.21672035000336
+        },
+        "areaTargetFraction": 0.995
+      },
+      "recovery": {
+        "first120Seconds": 88.5,
+        "sustainedRestOfRunSeconds": 88.5,
+        "observedSustainedSeconds": 1111.5
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 6 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 3 lost contact; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603,
+          "message": "Drone 3 malfunction confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 6,
+      "droneId": 4,
+      "fault": "malfunction",
+      "detectionLatency": 3,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 65.64385000000004,
+          "min": 53.68,
+          "max": 73.68
+        },
+        "hotspotOnTime": {
+          "mean": 21.908333333333335,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 2.5129508405587475,
+          "min": 1.5192952832165716,
+          "max": 3.5577223390302293
+        },
+        "meanAge": {
+          "mean": 37.94316376129754,
+          "min": 32.801622914968064,
+          "max": 42.991783537843
+        },
+        "inView": {
+          "mean": 4.557616666666667,
+          "min": 1.2,
+          "max": 9
+        },
+        "maxAge": {
+          "mean": 84.55319357663926,
+          "min": 80.1430330921716,
+          "max": 86.01228826176163
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 99.23978365384609,
+          "min": 96.63461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 57.99095833333345,
+          "min": 45.26,
+          "max": 70.52
+        },
+        "hotspotOnTime": {
+          "mean": 19.958333333333332,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.631114378041092,
+          "min": 1.7844232125249861,
+          "max": 5.517402071099356
+        },
+        "meanAge": {
+          "mean": 46.441310414854215,
+          "min": 35.788365393819966,
+          "max": 54.120875644041575
+        },
+        "inView": {
+          "mean": 3.922916666666667,
+          "min": 1.12,
+          "max": 8.84
+        },
+        "maxAge": {
+          "mean": 115.5419170403032,
+          "min": 82.05673197005353,
+          "max": 133.674955073232
+        },
+        "areaTargetFraction": 1
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 99.84795673076923,
+          "min": 96.63461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.02681666666668,
+          "min": 45.26,
+          "max": 70.52
+        },
+        "hotspotOnTime": {
+          "mean": 18.2625,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7233389417861518,
+          "min": 1.7844232125249861,
+          "max": 5.517402071099356
+        },
+        "meanAge": {
+          "mean": 46.34362578310756,
+          "min": 35.788365393819966,
+          "max": 54.120875644041575
+        },
+        "inView": {
+          "mean": 3.84006666666666,
+          "min": 0.76,
+          "max": 8.84
+        },
+        "maxAge": {
+          "mean": 110.03900657105153,
+          "min": 82.05673197005353,
+          "max": 133.674955073232
+        },
+        "areaTargetFraction": 1
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.150091666666754,
+          "min": 46.58,
+          "max": 72.04
+        },
+        "hotspotOnTime": {
+          "mean": 18.466666666666665,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.668770769165373,
+          "min": 1.5170751852731037,
+          "max": 6.438520508750643
+        },
+        "meanAge": {
+          "mean": 46.09042909198749,
+          "min": 36.924540776954444,
+          "max": 56.71916166589885
+        },
+        "inView": {
+          "mean": 3.8641000000000107,
+          "min": 0.9,
+          "max": 11.62
+        },
+        "maxAge": {
+          "mean": 108.45573605773718,
+          "min": 99.19009596344335,
+          "max": 111.126671518178
+        },
+        "areaTargetFraction": 1
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 99.92397836538461,
+          "min": 96.63461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.088454166666416,
+          "min": 45.26,
+          "max": 72.04
+        },
+        "hotspotOnTime": {
+          "mean": 18.364583333333332,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.696054855475755,
+          "min": 1.5170751852731037,
+          "max": 6.438520508750643
+        },
+        "meanAge": {
+          "mean": 46.21702743754752,
+          "min": 35.788365393819966,
+          "max": 56.71916166589885
+        },
+        "inView": {
+          "mean": 3.8520833333333377,
+          "min": 0.76,
+          "max": 11.62
+        },
+        "maxAge": {
+          "mean": 109.24737131439514,
+          "min": 82.05673197005353,
+          "max": 133.674955073232
+        },
+        "areaTargetFraction": 1
+      },
+      "recovery": {
+        "first120Seconds": 0.25,
+        "sustainedRestOfRunSeconds": 0.25,
+        "observedSustainedSeconds": 1199.75
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 6 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 4 lost contact; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603,
+          "message": "Drone 4 malfunction confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 6,
+      "droneId": 5,
+      "fault": "malfunction",
+      "detectionLatency": 3,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 65.64385000000004,
+          "min": 53.68,
+          "max": 73.68
+        },
+        "hotspotOnTime": {
+          "mean": 21.908333333333335,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 2.5129508405587475,
+          "min": 1.5192952832165716,
+          "max": 3.5577223390302293
+        },
+        "meanAge": {
+          "mean": 37.94316376129754,
+          "min": 32.801622914968064,
+          "max": 42.991783537843
+        },
+        "inView": {
+          "mean": 4.557616666666667,
+          "min": 1.2,
+          "max": 9
+        },
+        "maxAge": {
+          "mean": 84.55319357663926,
+          "min": 80.1430330921716,
+          "max": 86.01228826176163
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 99.9979967948718,
+          "min": 99.51923076923077,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 60.23087499999995,
+          "min": 45.26,
+          "max": 70.52
+        },
+        "hotspotOnTime": {
+          "mean": 19.958333333333332,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.493775354810928,
+          "min": 1.7838502629538016,
+          "max": 5.47892923842811
+        },
+        "meanAge": {
+          "mean": 44.44153005610291,
+          "min": 35.788224712735,
+          "max": 53.08584174625872
+        },
+        "inView": {
+          "mean": 3.9236250000000035,
+          "min": 1.08,
+          "max": 10.56
+        },
+        "maxAge": {
+          "mean": 105.1876691227335,
+          "min": 82.05673197005353,
+          "max": 120.42077699727508
+        },
+        "areaTargetFraction": 1
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 99.99959935897436,
+          "min": 99.51923076923077,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.28570833333306,
+          "min": 44.98,
+          "max": 70.52
+        },
+        "hotspotOnTime": {
+          "mean": 18.2625,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7008913919308717,
+          "min": 1.6130958548141747,
+          "max": 5.47892923842811
+        },
+        "meanAge": {
+          "mean": 46.046568464977675,
+          "min": 35.788224712735,
+          "max": 54.80699283445821
+        },
+        "inView": {
+          "mean": 3.8399166666666527,
+          "min": 0.62,
+          "max": 10.56
+        },
+        "maxAge": {
+          "mean": 107.9316680979427,
+          "min": 82.05673197005353,
+          "max": 120.42077699727508
+        },
+        "areaTargetFraction": 1
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 57.999100000000254,
+          "min": 45.62,
+          "max": 71.08
+        },
+        "hotspotOnTime": {
+          "mean": 18.466666666666665,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.6775271554435496,
+          "min": 1.6654974931160846,
+          "max": 6.163023329244441
+        },
+        "meanAge": {
+          "mean": 46.20774998221718,
+          "min": 39.709453111590626,
+          "max": 54.172032238255305
+        },
+        "inView": {
+          "mean": 3.8755333333333306,
+          "min": 0.86,
+          "max": 9.86
+        },
+        "maxAge": {
+          "mean": 107.97009279810275,
+          "min": 97.23099548745768,
+          "max": 111.13833522549658
+        },
+        "areaTargetFraction": 1
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 99.99979967948718,
+          "min": 99.51923076923077,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.14240416666672,
+          "min": 44.98,
+          "max": 71.08
+        },
+        "hotspotOnTime": {
+          "mean": 18.364583333333332,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.689209273687198,
+          "min": 1.6130958548141747,
+          "max": 6.163023329244441
+        },
+        "meanAge": {
+          "mean": 46.12715922359726,
+          "min": 35.788224712735,
+          "max": 54.80699283445821
+        },
+        "inView": {
+          "mean": 3.857724999999984,
+          "min": 0.62,
+          "max": 10.56
+        },
+        "maxAge": {
+          "mean": 107.95088044802263,
+          "min": 82.05673197005353,
+          "max": 120.42077699727508
+        },
+        "areaTargetFraction": 1
+      },
+      "recovery": {
+        "first120Seconds": 0.25,
+        "sustainedRestOfRunSeconds": 0.25,
+        "observedSustainedSeconds": 1199.75
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 6 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 5 lost contact; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603,
+          "message": "Drone 5 malfunction confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 6,
+      "droneId": 6,
+      "fault": "malfunction",
+      "detectionLatency": 3,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 65.64385000000004,
+          "min": 53.68,
+          "max": 73.68
+        },
+        "hotspotOnTime": {
+          "mean": 21.908333333333335,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 2.5129508405587475,
+          "min": 1.5192952832165716,
+          "max": 3.5577223390302293
+        },
+        "meanAge": {
+          "mean": 37.94316376129754,
+          "min": 32.801622914968064,
+          "max": 42.991783537843
+        },
+        "inView": {
+          "mean": 4.557616666666667,
+          "min": 1.2,
+          "max": 9
+        },
+        "maxAge": {
+          "mean": 84.55319357663926,
+          "min": 80.1430330921716,
+          "max": 86.01228826176163
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 99.08553685897392,
+          "min": 97.11538461538461,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 60.71012500000011,
+          "min": 53.92,
+          "max": 70.52
+        },
+        "hotspotOnTime": {
+          "mean": 19.958333333333332,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.4144134433639683,
+          "min": 1.7827144232556082,
+          "max": 5.4454237654257724
+        },
+        "meanAge": {
+          "mean": 43.75697851608085,
+          "min": 35.79171539381996,
+          "max": 48.63561359399446
+        },
+        "inView": {
+          "mean": 3.839666666666663,
+          "min": 1.36,
+          "max": 8.06
+        },
+        "maxAge": {
+          "mean": 120.2546105504917,
+          "min": 82.05673197005353,
+          "max": 158.47183544650602
+        },
+        "areaTargetFraction": 1
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 99.81710737179479,
+          "min": 97.11538461538461,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.76965000000012,
+          "min": 46.92,
+          "max": 70.52
+        },
+        "hotspotOnTime": {
+          "mean": 18.404166666666665,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.639368227568557,
+          "min": 1.7827144232556082,
+          "max": 5.734430315178266
+        },
+        "meanAge": {
+          "mean": 45.62041844559769,
+          "min": 35.79171539381996,
+          "max": 54.03584896093925
+        },
+        "inView": {
+          "mean": 3.8424166666666784,
+          "min": 0.62,
+          "max": 9.34
+        },
+        "maxAge": {
+          "mean": 110.94764981232827,
+          "min": 82.05673197005353,
+          "max": 158.47183544650602
+        },
+        "areaTargetFraction": 1
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 57.66071666666678,
+          "min": 43.6,
+          "max": 75.76
+        },
+        "hotspotOnTime": {
+          "mean": 18.458333333333332,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7238355789491577,
+          "min": 2.020750467641996,
+          "max": 5.73853653762958
+        },
+        "meanAge": {
+          "mean": 46.50227131507259,
+          "min": 36.25020982658256,
+          "max": 54.40532100271372
+        },
+        "inView": {
+          "mean": 3.895333333333333,
+          "min": 0.94,
+          "max": 10
+        },
+        "maxAge": {
+          "mean": 107.94167463028214,
+          "min": 97.23099548745768,
+          "max": 111.13833522549658
+        },
+        "areaTargetFraction": 1
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 99.9085536858974,
+          "min": 97.11538461538461,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.21518333333327,
+          "min": 43.6,
+          "max": 75.76
+        },
+        "hotspotOnTime": {
+          "mean": 18.43125,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.6816019032588696,
+          "min": 1.7827144232556082,
+          "max": 5.73853653762958
+        },
+        "meanAge": {
+          "mean": 46.06134488033505,
+          "min": 35.79171539381996,
+          "max": 54.40532100271372
+        },
+        "inView": {
+          "mean": 3.868874999999996,
+          "min": 0.62,
+          "max": 10
+        },
+        "maxAge": {
+          "mean": 109.44466222130534,
+          "min": 82.05673197005353,
+          "max": 158.47183544650602
+        },
+        "areaTargetFraction": 1
+      },
+      "recovery": {
+        "first120Seconds": 0.25,
+        "sustainedRestOfRunSeconds": 0.25,
+        "observedSustainedSeconds": 1199.75
+      },
+      "restoreRecovery": null,
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 6 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 6 lost contact; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603,
+          "message": "Drone 6 malfunction confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        }
+      ]
+    },
+    {
+      "fleetSize": 5,
+      "droneId": 1,
+      "fault": "malfunction",
+      "restoreTime": 900,
+      "detectionLatency": 3,
+      "hotspotCells": 10,
+      "warmBaseline": {
+        "samples": 1200,
+        "duration": 300,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 58.33759999999989,
+          "min": 47.7,
+          "max": 66.34
+        },
+        "hotspotOnTime": {
+          "mean": 18.291666666666668,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7353947425595844,
+          "min": 1.6430244220922712,
+          "max": 5.251848453728204
+        },
+        "meanAge": {
+          "mean": 46.05949940472557,
+          "min": 40.71047758336077,
+          "max": 51.111931494008545
+        },
+        "inView": {
+          "mean": 3.8762500000000006,
+          "min": 1.02,
+          "max": 7.8
+        },
+        "maxAge": {
+          "mean": 107.74084814038366,
+          "min": 99.90779954557337,
+          "max": 111.13673037544646
+        },
+        "areaTargetFraction": 1
+      },
+      "first120": {
+        "samples": 480,
+        "duration": 120,
+        "area": {
+          "mean": 91.70673076923077,
+          "min": 84.13461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 49.37179166666665,
+          "min": 38.3,
+          "max": 59.86
+        },
+        "hotspotOnTime": {
+          "mean": 15.6875,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 7.116551513433363,
+          "min": 2.1821590272683324,
+          "max": 12.44032324618393
+        },
+        "meanAge": {
+          "mean": 60.11218262623761,
+          "min": 44.36543098021316,
+          "max": 69.96719795431758
+        },
+        "inView": {
+          "mean": 3.2575000000000025,
+          "min": 0.32,
+          "max": 8.86
+        },
+        "maxAge": {
+          "mean": 147.68821357027198,
+          "min": 107.34800059136433,
+          "max": 166.48688948025324
+        },
+        "areaTargetFraction": 0.34791666666666665
+      },
+      "first600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 95.31209935897435,
+          "min": 84.13461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 52.24217499999997,
+          "min": 31.72,
+          "max": 70.46
+        },
+        "hotspotOnTime": {
+          "mean": 17.329166666666666,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 5.109255375593537,
+          "min": 1.6436627057736626,
+          "max": 12.44032324618393
+        },
+        "meanAge": {
+          "mean": 53.92499756387168,
+          "min": 39.703863515097794,
+          "max": 69.96719795431758
+        },
+        "inView": {
+          "mean": 3.524825000000006,
+          "min": 0.32,
+          "max": 8.86
+        },
+        "maxAge": {
+          "mean": 128.74490791830186,
+          "min": 100.1987202112889,
+          "max": 166.48688948025324
+        },
+        "areaTargetFraction": 0.48
+      },
+      "tail600": {
+        "samples": 2400,
+        "duration": 600,
+        "area": {
+          "mean": 100,
+          "min": 100,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 57.971799999999966,
+          "min": 44.14,
+          "max": 74.2
+        },
+        "hotspotOnTime": {
+          "mean": 17.770833333333332,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 3.7104157317716195,
+          "min": 1.4641897390483531,
+          "max": 6.491169699383934
+        },
+        "meanAge": {
+          "mean": 46.23647483765948,
+          "min": 35.6123129852872,
+          "max": 57.473529079120325
+        },
+        "inView": {
+          "mean": 3.826874999999992,
+          "min": 0.94,
+          "max": 9.92
+        },
+        "maxAge": {
+          "mean": 108.45385684589743,
+          "min": 98.92959056291193,
+          "max": 111.12457598700826
+        },
+        "areaTargetFraction": 1
+      },
+      "postFault1200": {
+        "samples": 4800,
+        "duration": 1200,
+        "area": {
+          "mean": 97.65604967948717,
+          "min": 84.13461538461539,
+          "max": 100
+        },
+        "populationOnTime": {
+          "mean": 55.10698750000006,
+          "min": 31.72,
+          "max": 74.2
+        },
+        "hotspotOnTime": {
+          "mean": 17.55,
+          "min": 0,
+          "max": 40
+        },
+        "gapCost": {
+          "mean": 4.40983555368258,
+          "min": 1.4641897390483531,
+          "max": 12.44032324618393
+        },
+        "meanAge": {
+          "mean": 50.08073620076566,
+          "min": 35.6123129852872,
+          "max": 69.96719795431758
+        },
+        "inView": {
+          "mean": 3.6758500000000005,
+          "min": 0.32,
+          "max": 9.92
+        },
+        "maxAge": {
+          "mean": 118.59938238210027,
+          "min": 98.92959056291193,
+          "max": 166.48688948025324
+        },
+        "areaTargetFraction": 0.74
+      },
+      "recovery": {
+        "first120Seconds": 378.75,
+        "sustainedRestOfRunSeconds": 378.75,
+        "observedSustainedSeconds": 821.25
+      },
+      "restoreRecovery": {
+        "first120Seconds": 78.75,
+        "sustainedRestOfRunSeconds": 78.75,
+        "observedSustainedSeconds": 821.25
+      },
+      "finalEvents": [
+        {
+          "id": 1,
+          "time": 0,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 2,
+          "time": 600,
+          "message": "Drone 1 lost contact; checking for 3 seconds."
+        },
+        {
+          "id": 3,
+          "time": 603,
+          "message": "Drone 1 malfunction confirmed; removed from patrol."
+        },
+        {
+          "id": 4,
+          "time": 603,
+          "message": "Replanned all 4 healthy drones; 208 cells assigned."
+        },
+        {
+          "id": 5,
+          "time": 900,
+          "message": "Drone 1 restored at its current position."
+        },
+        {
+          "id": 6,
+          "time": 900,
+          "message": "Replanned all 5 healthy drones; 208 cells assigned."
+        }
+      ]
+    }
+  ]
+}

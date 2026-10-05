@@ -7,6 +7,7 @@ import { GROUND_HEIGHT } from './world';
 import { FLIGHT_MAPS } from './maps';
 import type { FlightMap, MapId } from './maps';
 import { passesGate } from './course';
+import { PatrolPanel } from './patrol-panel';
 import type { CameraMode, FlightControls, Vec3 } from './types';
 
 const iconSet = { ArrowUpRight, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Battery, Camera, Check, ChevronDown, CircleHelp, Compass, Crosshair, Gamepad2, Gauge, Keyboard, MapPin, Maximize2, Mountain, Pause, Play, Radio, RotateCcw, Settings2, ShieldCheck, SlidersHorizontal, Target, Wind, X };
@@ -22,7 +23,7 @@ try {
 app.innerHTML = `
   <header class="site-header">
     <a class="brand" href="/" aria-label="Astro Flight Lab home"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="m4 29 14-24 14 24H22l-4-7-4 7Z" fill="currentColor"/><circle cx="18" cy="13" r="2.5" fill="#f8faf5"/></svg><span>astro<span class="brand-divider"></span><span class="brand-sub">flight lab</span></span></a>
-    <nav aria-label="Main navigation"><button class="nav-link active" id="sim-nav">Simulator</button><button class="nav-link" data-open="controller">Controller setup</button><button class="nav-link" data-open="guide">Flight guide ${icon('arrow-up-right')}</button></nav>
+    <nav aria-label="Main navigation"><button class="nav-link active" id="sim-nav" aria-pressed="true">Simulator</button><button class="nav-link" id="patrol-nav" aria-label="Patrol control center" aria-pressed="false">Patrol</button><button class="nav-link" data-open="controller">Controller setup</button><button class="nav-link" data-open="guide">Flight guide ${icon('arrow-up-right')}</button></nav>
     <span class="simulation-badge"><span class="status-dot"></span> SIMULATION ONLY</span>
   </header>
   <main class="workspace">
@@ -57,6 +58,7 @@ app.innerHTML = `
         <section class="session-panel"><div class="panel-title"><h2 id="session-title">A little more sky.</h2>${icon('crosshair')}</div><p id="session-description">No checkpoints. No pressure.<br>Just you, your drone, and room to explore.</p><div class="session-details"><div><span id="session-left-label">FLIGHT TIME</span><strong id="flight-time">00:00</strong></div><div><span id="session-right-label">DISTANCE</span><strong id="distance">0 <small>m</small></strong></div></div><div class="course-progress" id="course-progress" hidden><div></div></div></section>
       </aside>
     </div>
+    <section id="patrol-center" aria-label="Autonomous patrol control center" hidden></section>
     <footer><span><span class="footer-dot"></span>Built for practice. Ready for possibility.</span><span>ASTRO C40 COMPATIBLE INPUT <span class="footer-slash">/</span> FLIGHT LAB v0.1</span></footer>
   </main>
   <dialog id="controller-dialog" class="settings-dialog"><div class="dialog-header"><div><span class="eyebrow">MAKE IT FEEL LIKE YOURS</span><h2>Controller setup</h2></div><button class="icon-button close-dialog" aria-label="Close controller settings">${icon('x')}</button></div><div class="dialog-body"><div class="setup-tip">${icon('gamepad-2')}<div><strong>Plug in. Press a button. Take flight.</strong><p>Set your C40 to <b>Wired</b> and connect it with a USB data cable. Click this page, then press a controller button to make it visible to the browser.</p></div></div><div class="device-status"><span class="status-dot" id="device-dot"></span><div><strong id="device-name">Waiting for a controller</strong><small id="device-detail">You can fly with your keyboard in the meantime.</small></div></div><p class="compatibility-note">The simulator reads controllers exposed by your browser. C40 recognition depends on your OS and drivers; macOS detection is not guaranteed. Use localhost or HTTPS. The C40 wireless option uses its USB transmitter.</p><div class="settings-section"><div class="section-heading"><h3>Stick response</h3><button class="small-button" id="calibrate">Center sticks</button></div><p class="field-help">Release both sticks before centering. Move them afterward to check the live inputs.</p><div class="range-row"><label for="deadzone">Deadzone <output id="deadzone-value"></output></label><input id="deadzone" type="range" min="0" max="0.4" step="0.01" /></div><div class="range-row"><label for="expo">Response curve <output id="expo-value"></output></label><input id="expo" type="range" min="0" max="1" step="0.05" /></div><div class="range-row"><label for="sensitivity">Sensitivity <output id="sensitivity-value"></output></label><input id="sensitivity" type="range" min="0.2" max="2" step="0.1" /></div></div><div class="settings-section"><h3>Axis mapping</h3><p class="field-help">Standard layout is ready to use. Adjust these if a stick moves the wrong control.</p><div id="axis-mappings" class="axis-mappings"></div><div id="raw-axes" class="raw-axes">Raw axes appear when a controller connects.</div></div><details class="button-details"><summary>Button mapping <span>Advanced</span></summary><div id="button-mappings" class="button-mappings"></div><div id="raw-buttons" class="raw-axes">Pressed button numbers appear here.</div></details><div class="dialog-footer"><button id="restore-settings" class="text-button">${icon('rotate-ccw')} Restore defaults</button><span>Settings save automatically</span></div></div></dialog>
@@ -71,6 +73,8 @@ function element<ElementType extends HTMLElement = HTMLElement>(id: string): Ele
 const physics = new DronePhysics();
 physics.setMap(currentMap);
 const input = new ControllerInput();
+const patrolPanel = new PatrolPanel(element('patrol-center'));
+let patrolVisible = false;
 let scene: FlightScene | null = null;
 let renderingError = false;
 try {
@@ -252,9 +256,28 @@ function setCourse(enabled: boolean) {
 }
 
 function showDialog(name: string) {
+  if (patrolVisible && name === 'controller') setPatrolView(false);
+  if (patrolVisible) patrolPanel.pause('Patrol paused while a dialog is open.');
   if ((physics.state.armed || physics.state.surface === null) && !physics.state.crashed && !paused) setPaused(true, 'Resume when you’re ready to fly again.');
   input.clear();
   element<HTMLDialogElement>(`${name}-dialog`).showModal();
+}
+
+function setPatrolView(active: boolean) {
+  input.setEnabled(!active);
+  if (active && (physics.state.armed || physics.state.surface === null) && !paused) setPaused(true, 'Manual flight is paused while the patrol control center is open.');
+  document.querySelectorAll<HTMLDialogElement>('dialog[open]').forEach(dialog => dialog.close());
+  patrolVisible = active;
+  document.querySelector<HTMLElement>('.workspace > .page-heading')!.hidden = active;
+  document.querySelector<HTMLElement>('.flight-layout')!.hidden = active;
+  element('patrol-center').hidden = !active;
+  element('patrol-nav').classList.toggle('active', active);
+  element('patrol-nav').setAttribute('aria-pressed', String(active));
+  element('sim-nav').classList.toggle('active', !active);
+  element('sim-nav').setAttribute('aria-pressed', String(!active));
+  patrolPanel.setActive(active);
+  previousTime = performance.now();
+  accumulator = 0;
 }
 
 document.querySelectorAll<HTMLButtonElement>('[data-open]').forEach(button => button.addEventListener('click', () => showDialog(button.dataset.open!)));
@@ -263,7 +286,8 @@ document.querySelectorAll<HTMLDialogElement>('dialog').forEach(dialog => {
   dialog.addEventListener('click', event => { if (event.target === dialog) { const bounds = dialog.getBoundingClientRect(); if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close(); } });
   dialog.addEventListener('close', () => input.clear());
 });
-element('sim-nav').addEventListener('click', () => { document.querySelectorAll<HTMLDialogElement>('dialog').forEach(dialog => dialog.close()); element('viewport').scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+element('sim-nav').addEventListener('click', () => { setPatrolView(false); element('viewport').scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+element('patrol-nav').addEventListener('click', () => setPatrolView(true));
 element('guide-done').addEventListener('click', () => element<HTMLDialogElement>('guide-dialog').close());
 element('arm-button').addEventListener('click', toggleArm);
 element('reset-button').addEventListener('click', resetFlight);
@@ -291,9 +315,14 @@ element('fullscreen').addEventListener('click', async () => {
 window.addEventListener('focus', () => { windowActive = true; });
 window.addEventListener('blur', () => {
   windowActive = false;
+  if (patrolVisible) patrolPanel.pause('The window lost focus. Resume patrol when ready.');
   if ((physics.state.armed || physics.state.surface === null) && !physics.state.crashed && !paused) setPaused(true, 'The window lost focus. Your drone is waiting here.');
 });
-document.addEventListener('visibilitychange', () => { if (document.hidden && (physics.state.armed || physics.state.surface === null) && !physics.state.crashed && !paused) setPaused(true, 'You switched tabs. Resume whenever you’re ready.'); });
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) return;
+  if (patrolVisible) patrolPanel.pause('The tab is hidden. Resume patrol when ready.');
+  if ((physics.state.armed || physics.state.surface === null) && !physics.state.crashed && !paused) setPaused(true, 'You switched tabs. Resume whenever you’re ready.');
+});
 
 function renderSettings() {
   for (const key of ['deadzone', 'expo', 'sensitivity'] as const) {
@@ -405,6 +434,11 @@ function updateTelemetry(controls: FlightControls) {
 function animate(now: number) {
   const delta = Math.min((now - previousTime) / 1000, 0.1);
   previousTime = now;
+  if (patrolVisible) {
+    if (windowActive && !document.hidden && !document.querySelector('dialog[open]')) patrolPanel.tick(delta);
+    requestAnimationFrame(animate);
+    return;
+  }
   const frame = input.poll();
   const dialogOpen = Boolean(document.querySelector('dialog[open]'));
   if (frame.disconnected && (physics.state.armed || physics.state.surface === null) && !physics.state.crashed) { setPaused(true, 'Controller disconnected. Reconnect it, or resume with your keyboard.'); toast('Controller disconnected. Flight paused.'); }
@@ -465,4 +499,4 @@ updateMapLabels();
 updateFlightStatus();
 updateTelemetry({ throttle: 0, yaw: 0, pitch: 0, roll: 0 });
 requestAnimationFrame(animate);
-window.addEventListener('beforeunload', () => { input.dispose(); scene?.dispose(); });
+window.addEventListener('beforeunload', () => { input.dispose(); scene?.dispose(); patrolPanel.dispose(); });
