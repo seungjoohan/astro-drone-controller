@@ -76,7 +76,7 @@ export function evaluatePopulation(cells: PatrolCell[], time: number, config: Pa
   };
   const missionTime = Number.isFinite(time) ? Math.max(0, time) : 0;
   const crowdedPopulation = Math.round(bounded(config.crowdedCellPopulation, POPULATION_DEFAULTS.crowdedCellPopulation, POPULATION_LIMITS.minCrowdedCellPopulation, POPULATION_LIMITS.maxCrowdedCellPopulation));
-  const active = drones.filter(drone => drone.status === 'patrolling' && drone.fault === null);
+  const active = drones.filter(drone => drone.status === 'patrolling' && drone.fault === null && (!drone.serviceState || drone.serviceState === 'patrol'));
   const radius = Number.isFinite(sensorRadius) ? Math.max(0, sensorRadius) : 0;
   let weightedAge = 0;
   let weightedGap = 0;

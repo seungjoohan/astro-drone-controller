@@ -16,7 +16,7 @@ function createCells(): PatrolCell[] {
 }
 
 function drone(overrides: Partial<PatrolDrone> = {}): PatrolDrone {
-  return { id: 1, color: '#ffffff', status: 'patrolling', fault: null, position: { x: 0, y: 260, z: 0 }, route: [], assignedCellIds: [], routeIndex: 0, cycleSeconds: 0, ...overrides };
+  return { id: 1, color: '#ffffff', status: 'patrolling', serviceState: 'patrol', batteryFraction: 1, speed: 18, chargeCycles: 0, fault: null, position: { x: 0, y: 260, z: 0 }, route: [], assignedCellIds: [], routeIndex: 0, cycleSeconds: 0, ...overrides };
 }
 
 function cell(overrides: Partial<PatrolCell> = {}): PatrolCell {

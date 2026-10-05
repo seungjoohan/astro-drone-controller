@@ -87,9 +87,9 @@ The control center reports population metrics separately from geographic coverag
 - **People within target:** percentage of people whose cell was observed within its own revisit deadline. Unseen people never count as fresh.
 - **People in view:** percentage currently inside at least one healthy drone's circular sensor footprint; overlapping cameras do not double-count people.
 - **Mean observation age:** population-weighted seconds since the last observation. For unseen cells, the evaluation uses mission time plus their revisit deadline as a conservative scoring age, not a known historical observation.
-- **Relative gap cost:** `sum(population * (observationAge / revisitTarget)^2) / totalPopulation`. Lower is better, even below the deadline: a 5-second gap scores better than a 10-second gap, not merely the same pass/fail result. This is an instantaneous evaluation metric, not a trained reward or a mission-average score. A future learner should evaluate it over time alongside coverage and fleet cost rather than optimize one favorable instant.
+- **Relative gap cost:** `sum(population * (observationAge / revisitTarget)^2) / totalPopulation`. Lower is better, even below the deadline: a 5-second gap scores better than a 10-second gap, not merely the same pass/fail result. The live display is instantaneous; the learning evaluator accumulates it over the entire evaluation interval rather than optimizing one favorable frame.
 
-An empty city shows population percentages and costs as **N/A**, not perfect coverage. The existing **95% / 120-second geographic target remains unchanged**. Routes are still the uniform baseline, and fleet recommendations are **area-only**: neither population-aware routing nor a learning system is enabled yet. Meeting the geographic target does not imply that the shorter population deadlines are met. This layer defines measurable constraints and continuous gap costs for that next step.
+An empty city shows population percentages and costs as **N/A**, not perfect coverage. The existing **95% / 120-second geographic target remains unchanged**. Missions start with the uniform baseline and its **area-only** fleet estimate. Population-aware routing is an explicit experiment in the Routing laboratory, not an automatic replacement. Meeting the geographic target does not imply that the shorter population deadlines are met.
 
 People are abstract counts at the 40 m sample locations, including rooftop locations, not individually positioned street pedestrians. Population does not move, and buildings do not occlude observations. Scores are comparable only under the same population scenario and target settings; adjusting a deadline is not a learned improvement.
 
@@ -97,13 +97,49 @@ People are abstract counts at the 40 m sample locations, including rooftop locat
 
 The [patrol baseline report](docs/patrol-baseline.md) records the pre-learning results and evaluation protocols. Frozen raw measurements and source provenance live in `benchmarks/patrol-baseline-v1/`. Across ten 5,000-person scenarios, five drones achieve 100% sampled geographic freshness but only **53.91% mean population on-time coverage**, with **5.074 mean gap cost**. This is the population-priority gap for future planners to improve, not a population-service guarantee.
 
-Run `npm run benchmark:patrol` to reproduce the healthy, fault-recovery, and spatial-fidelity suites. Fresh outputs go to ignored `test-results/`; the frozen baseline is never overwritten by those commands. No learning is enabled yet.
+Run `npm run benchmark:patrol` to reproduce the healthy, fault-recovery, and spatial-fidelity suites. Fresh outputs go to ignored `test-results/`; the frozen baseline is never overwritten by those commands.
+
+### Patrol learning
+
+The **Routing laboratory** below the patrol map searches **total fleet sizes 1–8 immediately**, alongside bounded population urgency, geographic urgency, travel, commitment, and optional cruise-speed parameters. It is a seeded parameter search over a centralized scheduler, not neural reinforcement learning. Healthy aircraft receive coordinated observation-footprint destinations; movement, sensing, altitude lanes, geofence enforcement, and fault detection remain in the simulator. The adaptive planner maintains its own 20 m geographic observation grid so it can see gaps between the population samples; the independent evaluation audit remains separate at 10 m.
+
+1. Apply the desired mission parameters, then choose **Diverse synthetic environments** or **Current mission only**, an optimizer seed, generations, training-environment count, and compute budget. **Start learning** launches isolated accelerated trials in a dedicated worker. It does not advance or change your displayed mission.
+2. **Pause learning**, **Resume learning**, or **Cancel learning** independently of patrol. Leaving the panel or losing focus pauses learning. The budget excludes paused time; it limits elapsed active time, not measured CPU seconds.
+3. Compare the eight fleet cards, paired uniform controls, and tradeoff frontier. Training, held-out healthy evaluation, and one-drone-loss results are separate. A smaller gap cost alone is not success if area coverage falls short.
+4. Explicitly load a held-out-tested candidate into a **new, paused test mission**. Unmet requirements are marked experimental. No policy is silently promoted and no drones appear in a running mission. Returning to the uniform baseline also resets to a paused mission.
+5. Results save locally and can be exported/imported. Imported or restored reports are **read-only**, not proof of trustworthy performance; start a new experiment to retest before applying. Saved reports do not resume the optimizer after a reload.
+
+**Current mission only**, with unlimited endurance, retains the short protocol: **120 seconds of warm-up**, two **240-second training scenarios**, two disjoint **360-second held-out scenarios**, and one separate 360-second fault scenario. Population seeds and optimizer seeds are separate. Every strategy at a given fleet size starts at the same uniform staging positions. The independent **10 m geographic audit grid** checks actual healthy aircraft footprints at 0.5-second intervals. It can conservatively miss observations between samples; it does not model occlusion or independently audit population density.
+
+**Diverse synthetic environments** is the default for new experiments. Choose **3–12 training cases** (default six); half as many held-out cases, rounded up, use a corridor family absent from training. Training uses compact circles and rectangular districts. Deterministic cases vary area dimensions, population count/layout, speed limits, camera radius, battery capacity, initial charge, depot location, recharge rate, reserve, and charging pads. The same cases are shared across fleet sizes and generations for fair comparisons. Each scored battery trial spans three nominal full-speed discharge/recharge cycles, plus warm-up; actual completed charges are reported, not assumed. Per-case results, worst-case gap cost, safety violations, and the fraction of feasible cases prevent pooled means from hiding failures. One separate malfunction trial tests a loss regardless of service state. Additional final-test seeds are reserved but **not evaluated by training**; this finite suite is not a sealed-test certification or proof of arbitrary-environment robustness.
+
+Strict screening requires the configured geographic target at every evaluation sample on both grids, all crowded locations within their deadlines, no never-observed population, and zero battery/reserve violations. These are diagnostic checks, **not approved operational tolerances or a safety certificate**. If none passes, the UI says so instead of relaxing targets or claiming a minimum fleet. Failure results include the pre-fault interval and do not establish a resilient fleet recommendation. Quiet-area age limits, permitted startup/recovery intervals, a sealed final-test campaign, moving populations, and occlusion remain future work. See the [implementation and learning plan](docs/patrol-learning-plan.md).
+
+Run `npm run benchmark:patrol:learning` for a reproducible local pilot plus a matched five-drone diagnostic over the ten published regression seeds (600-second warm-up / 1,200-second evaluation). It writes `test-results/patrol-learning-results.json`. These development scenarios are not a sealed test set, and short pilot scores are not directly comparable to the frozen long-run aggregate.
+
+Run `npm run benchmark:patrol:generalization` for the multi-environment pilot and per-case scenario manifest. It writes `test-results/patrol-generalization-results.json`, including a versioned checkpoint, without opening the reserved final-test cases. Legacy v1 browser reports remain readable and read-only; v2 reports use separate browser storage so the original run is not overwritten.
+
+### Speed and battery rotations
+
+Mission parameters now include **Classic**, **Compact**, **District**, and **Corridor** synthetic environments, with configurable maximum speed, battery enablement, full-speed endurance, recharge time, and charging-pad count. Changes are staged until **Apply and reset**. Classic defaults remain 18 m/s and unlimited endurance for historical regression comparisons. Non-classic boundaries and their service depot appear on the overhead map; the NYC buildings are background context, not physical obstacles in Patrol.
+
+Battery-enabled aircraft transition through **patrol → returning → waiting → charging → patrol**. Returning or docked aircraft do not scan; available aircraft redistribute work. The fleet cost includes charging aircraft. Pads have finite capacity with first-arrival ordering; a faulted aircraft occupying a pad blocks it until restored. Restoring a fault does not refill its battery or teleport it.
+
+Energy is an explicitly synthetic model, in full-pack equivalents per second:
+
+```text
+consumptionRate = (0.55 + 0.45 * (speed / maximumSpeed)^2) / fullSpeedEnduranceSeconds
+```
+
+Hovering consumes energy, and charging restores a full pack over the configured recharge time. A deterministic guard checks energy for the next leg, return to the depot, and reserve before allowing further patrol. The learner cannot alter capacity, charging rate, reserves, or service targets. It can learn a cruise-speed fraction of 0.5–1 in endurance/diverse trials; this is one policy parameter, **not a learned dynamic speed or launch/charging scheduler**. Return guards and charging order remain deterministic.
+
+Depot travel is continuous in the horizontal plane; altitude lanes are retained and vertical docking/takeoff, acceleration, wind, temperature, battery wear, and real aircraft aerodynamics are omitted. Energy totals include warm-up; coverage/gap averages exclude it. Charging endurance is not a real-drone specification or a guarantee that arbitrary user-configured conditions are serviceable. The return guard prevents additional unsafe patrol legs; it cannot guarantee recovery from faults or initial staging with insufficient return energy. Infeasible coverage and energy violations remain visible rather than being hidden by a reward score.
 
 ### Planning model and limits
 
-- A deterministic lawnmower grid is divided into contiguous closed routes and redistributed centrally when fleet availability changes. The recommendation searches fleet sizes within this route family; it is an **estimated minimum**, not a proof of the globally optimal multi-drone solution.
-- Coverage uses **40 m-spaced planar samples** and a **32 m sensor radius**, measured against actual simulated drone positions. It represents an abstract overhead observation footprint, including rooftop locations—not camera resolution, street visibility, people tracking, or line-of-sight coverage between skyscrapers.
-- Patrol aircraft are staged airborne at **260–288 m**, above the map's tallest building, with a distinct fixed altitude lane per aircraft and **18 m/s** cruise speed. They do not use the manual flight physics. Takeoff, landing, endurance, wind, radio links, and physical avoidance around a falling aircraft are not modeled in Patrol.
+- The default deterministic lawnmower grid is divided into contiguous closed routes and redistributed centrally when fleet availability changes. Its recommendation searches fleet sizes within this route family; it is an **estimated minimum**, not a proof of the globally optimal multi-drone solution. Adaptive routes instead show measured experiment results; periodic loop estimates are not applicable.
+- Coverage uses **40 m-spaced planar samples** and a **32 m sensor radius in Classic**, measured against actual simulated drone positions; synthetic environments can vary the sensor radius. It represents an abstract overhead observation footprint, including rooftop locations—not camera resolution, street visibility, people tracking, or line-of-sight coverage between skyscrapers.
+- Patrol aircraft are staged airborne at **260–288 m**, above the map's tallest building, with a distinct fixed altitude lane per aircraft. Classic cruise speed is **18 m/s**; synthetic environments can change it and optionally model battery rotations. They do not use the manual flight physics. Physical takeoff/landing, wind, radio links, and avoidance around a falling aircraft are not modeled in Patrol.
 - Route-cycle estimates describe steady patrol, not a guaranteed recovery deadline while aircraft travel to newly assigned routes. Use measured rolling coverage to assess actual performance after a fault.
 - The browser is the authoritative control center. This is a local planning/failure simulation, not a distributed control server or real-aircraft autopilot; a control-center outage, mission persistence, and redundant communications are outside this model.
 
@@ -131,6 +167,11 @@ npm run build
 - `src/population.ts`: Seeded clustered population, density-based revisit targets, and population-weighted gap metrics.
 - `src/patrol-types.ts`: Shared patrol configuration, telemetry, and route contracts.
 - `src/patrol-panel.ts`: Patrol controls, fleet status, activity log, and overhead mission map.
+- `src/patrol-policy.ts`: Bounded centralized population-aware destination scheduling.
+- `src/patrol-evaluator.ts`, `src/patrol-audit.ts`: Deterministic trial metrics and independent dense geographic audit.
+- `src/patrol-search.ts`, `src/patrol-training.worker.ts`: Joint fleet/parameter search and interruptible background execution.
+- `src/patrol-learning-panel.ts`, `src/patrol-learning-checkpoint.ts`: Experiment controls and validated, versioned result persistence.
+- `src/patrol-environment.ts`, `src/patrol-scenarios.ts`: Validated synthetic hardware/boundaries and deterministic train/held-out/failure scenario families.
 
 Unit tests cover physics, landing speeds and surfaces, input edge cases, gate crossing, patrol fault recovery, and population generation and scoring. Browser tests live in `e2e/` and run with `npm run test:e2e`; they launch installed Google Chrome by default. A test-only fixture isolates physical gamepads so a connected controller cannot steer automated keyboard flights; the controller test supplies a simulated device. To use Playwright's Chromium instead, install it with `npx playwright install chromium`, then run with `PLAYWRIGHT_CHROMIUM=1 npm run test:e2e`.
 

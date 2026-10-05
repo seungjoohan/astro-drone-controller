@@ -87,10 +87,10 @@ describe('PatrolSystem', () => {
   it('keeps conservative estimates below actual steady-state rolling coverage', () => {
     for (const fleetSize of [1, 2, 3, 4, 6, 8]) {
       const system = new PatrolSystem({ fleetSize });
-      system.step(system.snapshot().predictedRevisitSeconds + 1);
+      system.step(system.snapshot().predictedRevisitSeconds! + 1);
       for (let sample = 0; sample < 30; sample += 1) {
         const snapshot = system.snapshot();
-        expect(snapshot.coverage + 1e-8).toBeGreaterThanOrEqual(snapshot.estimatedCoverage);
+        expect(snapshot.coverage + 1e-8).toBeGreaterThanOrEqual(snapshot.estimatedCoverage!);
         system.step(11);
       }
     }

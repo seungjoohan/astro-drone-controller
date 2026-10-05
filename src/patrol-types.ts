@@ -1,4 +1,6 @@
 import type { Vec3 } from './types';
+import type { PatrolStrategy } from './patrol-learning-types';
+import type { PatrolEnergyMetrics, PatrolEnvironment } from './patrol-environment';
 
 export interface PatrolConfig {
   coverageTarget: number;
@@ -12,6 +14,7 @@ export interface PatrolConfig {
 
 export type PatrolFault = 'malfunction' | 'deviation';
 export type PatrolDroneStatus = 'patrolling' | 'deviating' | 'unresponsive' | 'offline';
+export type PatrolServiceState = 'patrol' | 'returning' | 'waiting' | 'charging';
 
 export interface PatrolCell {
   id: number;
@@ -27,6 +30,10 @@ export interface PatrolDrone {
   color: string;
   status: PatrolDroneStatus;
   fault: PatrolFault | null;
+  serviceState: PatrolServiceState;
+  batteryFraction: number;
+  speed: number;
+  chargeCycles: number;
   position: Vec3;
   route: Vec3[];
   assignedCellIds: number[];
@@ -62,6 +69,9 @@ export interface PopulationMetrics {
 
 export interface PatrolSnapshot {
   config: PatrolConfig;
+  environment: PatrolEnvironment;
+  energy: PatrolEnergyMetrics;
+  strategy: PatrolStrategy;
   time: number;
   drones: PatrolDrone[];
   cells: PatrolCell[];
@@ -70,8 +80,8 @@ export interface PatrolSnapshot {
   uncoveredCells: number;
   maxAge: number | null;
   recommendedFleet: FleetRecommendation;
-  estimatedCoverage: number;
-  predictedRevisitSeconds: number;
+  estimatedCoverage: number | null;
+  predictedRevisitSeconds: number | null;
   activeCount: number;
   revision: number;
   events: PatrolEvent[];

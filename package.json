@@ -12,7 +12,9 @@
     "benchmark:patrol": "npm run benchmark:patrol:performance && npm run benchmark:patrol:faults && npm run benchmark:patrol:fidelity",
     "benchmark:patrol:performance": "node scripts/benchmark-patrol-performance.mjs",
     "benchmark:patrol:faults": "node scripts/benchmark-patrol-faults.mjs",
-    "benchmark:patrol:fidelity": "node scripts/benchmark-patrol-fidelity.mjs"
+    "benchmark:patrol:fidelity": "node scripts/benchmark-patrol-fidelity.mjs",
+    "benchmark:patrol:learning": "node scripts/benchmark-patrol-learning.mjs",
+    "benchmark:patrol:generalization": "node scripts/benchmark-patrol-generalization.mjs"
   },
   "dependencies": {
     "three": "^0.180.0",

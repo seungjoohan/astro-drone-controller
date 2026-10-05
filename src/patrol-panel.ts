@@ -1,5 +1,9 @@
 import { CITY_BLOCK_SIZE, CITY_PARK, FLIGHT_MAPS } from './maps';
 import { PATROL_DEFAULTS, PATROL_LIMITS, PatrolSystem, recommendFleet } from './patrol';
+import { PatrolLearningPanel } from './patrol-learning-panel';
+import { DEFAULT_ENVIRONMENT, ENVIRONMENT_PRESETS, environmentKey } from './patrol-environment';
+import type { PatrolEnvironment } from './patrol-environment';
+import type { PatrolStrategy } from './patrol-learning-types';
 import type { PatrolConfig, PatrolDrone, PatrolSnapshot } from './patrol-types';
 import './patrol.css';
 
@@ -21,6 +25,7 @@ export class PatrolPanel {
   private readonly canvas: HTMLCanvasElement;
   private readonly context: CanvasRenderingContext2D;
   private readonly observer: ResizeObserver;
+  private readonly learning: PatrolLearningPanel;
   private readonly events = new AbortController();
   private active = false;
   private running = false;
@@ -38,13 +43,13 @@ export class PatrolPanel {
   constructor(private readonly container: HTMLElement) {
     container.innerHTML = `
       <div class="patrol-heading">
-        <div><div class="eyebrow">AUTONOMOUS OPERATIONS / MIDTOWN NYC</div><h1>Patrol control<span>.</span></h1><p>A coordinated fleet. A shared mission. Coverage that adapts.</p></div>
+        <div><div class="eyebrow">AUTONOMOUS OPERATIONS / SYNTHETIC ENVIRONMENTS</div><h1>Patrol control<span>.</span></h1><p>A coordinated fleet. A shared mission. Coverage that adapts.</p></div>
         <div class="patrol-heading-actions"><button id="patrol-reset" class="patrol-secondary" type="button">Reset patrol</button><button id="patrol-start" class="patrol-primary" type="button">Start patrol</button></div>
       </div>
       <div class="patrol-metrics">
         <div class="patrol-metric patrol-coverage-metric"><span>FRESH AREA COVERAGE</span><strong id="patrol-coverage">0.0%</strong><div class="patrol-coverage-track"><i id="patrol-coverage-fill"></i><b id="patrol-target-tick"></b></div><small id="patrol-coverage-caption"></small></div>
-        <div class="patrol-metric"><span>HEALTHY AIRCRAFT</span><strong id="patrol-active-count">0 / 0</strong><small id="patrol-fleet-caption"></small></div>
-        <div class="patrol-metric"><span>PREDICTED REVISIT</span><strong id="patrol-revisit">—</strong><small>Longest assigned route · estimate</small></div>
+        <div class="patrol-metric"><span>PATROLLING AIRCRAFT</span><strong id="patrol-active-count">0 / 0</strong><small id="patrol-fleet-caption"></small></div>
+        <div class="patrol-metric"><span>PREDICTED REVISIT</span><strong id="patrol-revisit">—</strong><small id="patrol-revisit-caption">Longest assigned route · estimate</small></div>
         <div class="patrol-metric"><span>MISSION CLOCK</span><strong id="patrol-time">00:00</strong><small id="patrol-clock-caption">Paused · simulated time</small></div>
       </div>
       <section class="patrol-population-panel" aria-labelledby="patrol-population-title">
@@ -55,13 +60,14 @@ export class PatrolPanel {
           <div class="patrol-metric"><span>MEAN OBSERVATION AGE</span><strong id="patrol-population-age">—</strong><small>Population weighted · lower is better</small></div>
           <div class="patrol-metric"><span>RELATIVE GAP COST</span><strong id="patrol-population-cost">—</strong><small>Instantaneous weighted (age / target)²</small></div>
         </div>
-        <p id="patrol-population-summary" class="patrol-population-summary"></p><p id="patrol-population-targets" class="patrol-population-note"></p><p class="patrol-population-note">Unseen people count as overdue; their age is mission time plus their revisit target. Routes remain the uniform baseline: population-aware routing and learning are not enabled.</p>
+        <p id="patrol-population-summary" class="patrol-population-summary"></p><p id="patrol-population-targets" class="patrol-population-note"></p><p id="patrol-policy-note" class="patrol-population-note"></p>
       </section>
+      <div class="patrol-strategy-bar"><div><span>VISIBLE MISSION STRATEGY</span><strong id="patrol-strategy">Uniform baseline</strong></div><button id="patrol-baseline" type="button" class="patrol-secondary">Return to baseline · new mission</button></div>
       <div class="patrol-layout">
         <section class="patrol-map-panel" aria-labelledby="patrol-map-title">
           <div class="patrol-map-toolbar"><div><span class="patrol-live-dot"></span><h2 id="patrol-map-title">Live operations map</h2><span class="patrol-view-tag">2D OVERHEAD</span></div><span class="patrol-revision-label">PLAN <strong id="patrol-revision">1</strong></span></div>
           <div class="patrol-population-map-tools"><label for="patrol-population-layer"><input id="patrol-population-layer" type="checkbox" checked> Population density</label><span><i class="patrol-key-population"></i>Larger violet circles = more people · ring = crowded</span></div>
-          <div class="patrol-map-wrap"><canvas id="patrol-map" aria-label="Midtown NYC patrol map showing area coverage cells, population density circles, assigned routes, sensor footprints and aircraft"></canvas><div class="patrol-map-location"><strong>Midtown NYC</strong><span>320 m radius · simulated airspace</span></div><div class="patrol-map-north" aria-hidden="true">N<span>↑</span></div><div class="patrol-map-state"><span class="patrol-state-dot"></span><strong id="patrol-status" role="status">Ready to start</strong></div><div id="patrol-map-scale" class="patrol-map-scale" aria-hidden="true"><span></span>100 m</div></div>
+          <div class="patrol-map-wrap"><canvas id="patrol-map" aria-label="Synthetic patrol map showing area coverage cells, population density circles, assigned routes, sensor footprints, charging bases and aircraft"></canvas><div class="patrol-map-location"><strong id="patrol-environment-name">Midtown NYC</strong><span id="patrol-environment-summary">320 m radius · simulated airspace</span></div><div class="patrol-map-north" aria-hidden="true">N<span>↑</span></div><div class="patrol-map-state"><span class="patrol-state-dot"></span><strong id="patrol-status" role="status">Ready to start</strong></div><div id="patrol-map-scale" class="patrol-map-scale" aria-hidden="true"><span></span>100 m</div></div>
           <div class="patrol-map-legend"><span><i class="patrol-key-fresh"></i>Fresh · fleet color</span><span><i class="patrol-key-stale"></i>Stale</span><span><i class="patrol-key-unseen"></i>Never scanned</span><span><i class="patrol-key-route"></i>Assigned route</span><span><i class="patrol-key-command"></i>Current command</span><span><i class="patrol-key-scan"></i>Sensor footprint</span></div>
           <div class="patrol-map-summary"><span id="patrol-cell-summary"></span><span id="patrol-oldest"></span></div>
         </section>
@@ -78,6 +84,13 @@ export class PatrolPanel {
                 <div><label for="patrol-crowded-window">Crowded revisit (sec)</label><div class="patrol-number-wrap"><input id="patrol-crowded-window" type="number" min="1" max="300" step="1" required value="${PATROL_DEFAULTS.crowdedRevisitSeconds}"></div></div>
                 <div><label for="patrol-crowded-threshold">Crowded: people / cell</label><div class="patrol-number-wrap"><input id="patrol-crowded-threshold" type="number" min="1" max="1000" step="1" required value="${PATROL_DEFAULTS.crowdedCellPopulation}"></div></div>
               </div><button id="patrol-randomize-population" type="button" class="patrol-secondary">Randomize population seed</button><p class="patrol-form-note">Seeded, stationary clusters. Revisit targets shorten gradually as cell population rises, reaching the crowded window at the threshold. Applying clamps that window to the area window.</p></fieldset>
+              <fieldset class="patrol-environment-fields"><legend>Environment & aircraft</legend>
+                <label for="patrol-environment">Synthetic environment</label><select id="patrol-environment"><option value="classic">Classic NYC · 640 m circle</option><option value="compact">Compact · 360 m circle</option><option value="district">District · 520 × 360 m</option><option value="corridor">Corridor · 600 × 160 m</option></select>
+                <div class="patrol-field-grid"><div><label for="patrol-max-speed">Maximum speed (m/s)</label><div class="patrol-number-wrap"><input id="patrol-max-speed" type="number" min="4" max="30" step="1" required value="18"></div></div><div><label for="patrol-charging-pads">Charging pads / base</label><div class="patrol-number-wrap"><input id="patrol-charging-pads" type="number" min="1" max="8" step="1" required value="2"></div></div></div>
+                <label class="patrol-check-label" for="patrol-battery-enabled"><input id="patrol-battery-enabled" type="checkbox"> Enable endurance & charging</label>
+                <div class="patrol-field-grid"><div><label for="patrol-endurance">Endurance at max speed (sec)</label><div class="patrol-number-wrap"><input id="patrol-endurance" type="number" min="120" max="1800" step="1" required value="300"></div></div><div><label for="patrol-recharge">Full recharge (seconds)</label><div class="patrol-number-wrap"><input id="patrol-recharge" type="number" min="30" max="1800" step="1" required value="120"></div></div></div>
+                <p class="patrol-form-note">Synthetic battery drain: (0.55 + 0.45 × speed² / max speed²) / endurance per second. Endurance is a full-pack maximum-speed reference, not guaranteed patrol time; returns keep a reserve. Charging happens at a horizontal depot, without descent or landing physics. Returning, queued and charging aircraft do not patrol. Preset changes are staged until Apply and reset.</p>
+              </fieldset>
               <button id="patrol-apply" type="submit" class="patrol-secondary">Apply and reset</button><p class="patrol-form-note" id="patrol-config-note">Use Apply and reset to change mission parameters.</p>
             </form>
           </section>
@@ -88,21 +101,34 @@ export class PatrolPanel {
         <section class="patrol-fleet-panel" aria-labelledby="patrol-fleet-title"><div class="patrol-section-heading"><div><div class="eyebrow">FLEET TELEMETRY</div><h2 id="patrol-fleet-title">Aircraft & recovery</h2></div><span>INJECT A TEST FAULT</span></div><p class="patrol-section-note">Fail or divert an aircraft to test detection and redistribution. Restore it to rejoin the plan.</p><div id="patrol-fleet-cards" class="patrol-fleet-cards"></div></section>
         <section class="patrol-log-panel" aria-labelledby="patrol-log-title"><div class="patrol-section-heading"><div><div class="eyebrow">MISSION HISTORY</div><h2 id="patrol-log-title">Event log</h2></div><span>SIMULATED TIME</span></div><ol id="patrol-log" role="log" aria-label="Patrol event log" aria-live="polite" aria-relevant="additions"></ol></section>
       </div>
-      <div class="patrol-method-note"><strong>Simulation only</strong><p>Overhead footprint sampling across a ${PATROL_LIMITS.cellSize} m grid, with a ${PATROL_LIMITS.sensorRadius} m sensor radius. Population is an abstract, stationary count per cell, not simulated pedestrians. Buildings do not occlude scans. Aircraft stage instantly in altitude lanes from 260–288 m; this view does not simulate launch, onboard cameras or hardware connections. Fleet recommendations consider the area target only, not population revisit targets. No learned or population-aware routing is enabled.</p></div>`;
+      <section id="patrol-learning" class="patrol-learning-panel" aria-labelledby="patrol-learning-title"></section>
+      <div class="patrol-method-note"><strong>Simulation only</strong><p>Overhead footprint sampling across a ${PATROL_LIMITS.cellSize} m grid, with the environment’s configured sensor radius. Population is an abstract, stationary count per cell, not simulated pedestrians. Buildings do not occlude scans. Aircraft stage instantly in altitude lanes from 260–288 m; charging is a horizontal service abstraction without descent, landing or launch dynamics. This view does not simulate onboard cameras or hardware connections. The historical mission-form fleet estimate describes classic unlimited-endurance uniform routes and the area target only. Learning runs only when explicitly started; applying a tested candidate always creates a new, paused mission.</p></div>`;
     this.canvas = this.element<HTMLCanvasElement>('patrol-map');
     const context = this.canvas.getContext('2d');
     if (!context) throw new Error('This browser could not create the patrol operations map.');
     this.context = context;
     this.observer = new ResizeObserver(() => this.resize());
     this.observer.observe(this.canvas.parentElement!);
+    this.learning = new PatrolLearningPanel(this.element('patrol-learning'), {
+      getConfig: () => this.system.snapshot().config,
+      getEnvironment: () => this.system.snapshot().environment,
+      applyCandidate: candidate => {
+        this.reset({ ...this.system.snapshot().config, fleetSize: candidate.fleetSize }, candidate.strategy);
+        this.text('patrol-config-note', 'Test strategy applied to a new, paused mission. Start patrol when ready.');
+      },
+    });
     this.bindEvents();
+    this.populateEnvironmentFields(this.system.snapshot().environment);
     this.updateRecommendation();
     this.refresh();
   }
 
   setActive(active: boolean): void {
     if (this.disposed) return;
-    if (!active) this.pause('Switched to manual flight');
+    if (!active) {
+      this.pause('Switched to manual flight');
+      this.learning.pause('Switched to manual flight');
+    }
     this.active = active;
     this.container.hidden = !active;
     if (active) this.resize();
@@ -133,6 +159,7 @@ export class PatrolPanel {
   dispose(): void {
     if (this.disposed) return;
     this.running = false;
+    this.learning.dispose();
     this.disposed = true;
     this.events.abort();
     this.observer.disconnect();
@@ -159,16 +186,32 @@ export class PatrolPanel {
       }
     }, options);
     this.element('patrol-reset').addEventListener('click', () => this.reset(), options);
+    this.element('patrol-baseline').addEventListener('click', () => {
+      this.reset(undefined, { kind: 'uniform' });
+      this.text('patrol-config-note', 'Uniform baseline restored in a new, paused mission with the applied fleet and population.');
+    }, options);
     this.element<HTMLFormElement>('patrol-config-form').addEventListener('submit', (event) => {
       event.preventDefault();
       if (!this.element<HTMLFormElement>('patrol-config-form').reportValidity()) return;
-      this.reset(this.pendingConfig());
+      this.reset(this.pendingConfig(), undefined, this.pendingEnvironment());
       this.text('patrol-config-note', 'Parameters applied. Start patrol when ready.');
     }, options);
     for (const id of ['patrol-target', 'patrol-window', 'patrol-fleet', 'patrol-population', 'patrol-population-seed', 'patrol-crowded-window', 'patrol-crowded-threshold']) {
       this.element(id).addEventListener('input', () => {
         this.updateRecommendation();
         this.text('patrol-config-note', 'Unsaved parameters · Apply and reset to use them.');
+      }, options);
+    }
+    this.element<HTMLSelectElement>('patrol-environment').addEventListener('change', () => {
+      this.populateEnvironmentFields(ENVIRONMENT_PRESETS[this.element<HTMLSelectElement>('patrol-environment').value] ?? DEFAULT_ENVIRONMENT);
+      this.updateRecommendation();
+      this.text('patrol-config-note', 'Environment preset staged. Apply and reset to create the new mission.');
+    }, options);
+    for (const id of ['patrol-max-speed', 'patrol-battery-enabled', 'patrol-endurance', 'patrol-recharge', 'patrol-charging-pads']) {
+      this.element(id).addEventListener('input', () => {
+        this.updateBatteryFields();
+        this.updateRecommendation();
+        this.text('patrol-config-note', 'Unsaved aircraft parameters · Apply and reset to use them.');
       }, options);
     }
     this.element('patrol-use-recommended').addEventListener('click', () => {
@@ -223,11 +266,43 @@ export class PatrolPanel {
     };
   }
 
-  private reset(config?: PatrolConfig): void {
+  private pendingEnvironment(): PatrolEnvironment {
+    const preset = ENVIRONMENT_PRESETS[this.element<HTMLSelectElement>('patrol-environment').value] ?? DEFAULT_ENVIRONMENT;
+    const numberValue = (id: string, fallback: number, minimum: number, maximum: number): number => {
+      const value = this.element<HTMLInputElement>(id).valueAsNumber;
+      return Math.max(minimum, Math.min(maximum, Math.round(Number.isFinite(value) ? value : fallback)));
+    };
+    return {
+      ...preset, depot: { ...preset.depot },
+      maxSpeed: numberValue('patrol-max-speed', preset.maxSpeed, 4, 30),
+      batteryEnabled: this.element<HTMLInputElement>('patrol-battery-enabled').checked,
+      enduranceSeconds: numberValue('patrol-endurance', preset.enduranceSeconds, 120, 1800),
+      rechargeSeconds: numberValue('patrol-recharge', preset.rechargeSeconds, 30, 1800),
+      chargingPads: numberValue('patrol-charging-pads', preset.chargingPads, 1, 8),
+    };
+  }
+
+  private populateEnvironmentFields(environment: Readonly<PatrolEnvironment>): void {
+    this.element<HTMLSelectElement>('patrol-environment').value = environment.id;
+    this.element<HTMLInputElement>('patrol-max-speed').value = String(environment.maxSpeed);
+    this.element<HTMLInputElement>('patrol-endurance').value = String(environment.enduranceSeconds);
+    this.element<HTMLInputElement>('patrol-recharge').value = String(environment.rechargeSeconds);
+    this.element<HTMLInputElement>('patrol-charging-pads').value = String(environment.chargingPads);
+    this.element<HTMLInputElement>('patrol-battery-enabled').checked = environment.batteryEnabled;
+    this.updateBatteryFields();
+  }
+
+  private updateBatteryFields(): void {
+    const enabled = this.element<HTMLInputElement>('patrol-battery-enabled').checked;
+    for (const id of ['patrol-endurance', 'patrol-recharge', 'patrol-charging-pads']) this.element<HTMLInputElement>(id).disabled = !enabled;
+  }
+
+  private reset(config?: PatrolConfig, strategy?: PatrolStrategy, environment?: PatrolEnvironment): void {
     this.running = false;
     this.started = false;
     this.pauseReason = '';
-    this.system.reset(config ?? this.system.snapshot().config);
+    if (strategy) this.system.setStrategy(strategy);
+    this.system.reset(config ?? this.system.snapshot().config, environment);
     const applied = this.system.snapshot().config;
     const fields: [string, keyof PatrolConfig][] = [
       ['patrol-target', 'coverageTarget'], ['patrol-window', 'revisitSeconds'], ['patrol-fleet', 'fleetSize'],
@@ -237,31 +312,43 @@ export class PatrolPanel {
     for (const [id, key] of fields) {
       this.element<HTMLInputElement>(id).value = String(applied[key]);
     }
+    this.populateEnvironmentFields(this.system.snapshot().environment);
     this.updateRecommendation();
     this.text('patrol-config-note', 'Mission reset using applied parameters. Start patrol when ready.');
     this.lastEventId = -1;
     this.element('patrol-log').replaceChildren();
     this.refresh();
+    this.learning.notifyConfigChanged();
   }
 
   private updateRecommendation(): void {
+    const baselineEnvironment = environmentKey(this.pendingEnvironment()) === environmentKey(DEFAULT_ENVIRONMENT);
+    this.element<HTMLButtonElement>('patrol-use-recommended').disabled = !baselineEnvironment;
+    if (!baselineEnvironment) {
+      this.text('patrol-recommended', 'Fleet estimate unavailable for this environment');
+      this.text('patrol-recommendation-note', 'The historical estimate assumes classic geography, 18 m/s flight and unlimited endurance. Use measured trials for this environment; a finite test suite cannot prove the globally smallest fleet.');
+      return;
+    }
     const recommendation = recommendFleet(this.pendingConfig());
     this.text('patrol-recommended', recommendation.achievable ? `Area-only minimum: ${recommendation.count} aircraft` : `Area target exceeds ${PATROL_LIMITS.maxDrones}-aircraft estimate`);
     this.text('patrol-recommendation-note', recommendation.achievable
-      ? `Estimate within this route family: ${recommendation.estimatedCoverage.toFixed(1)}% fresh area. Population targets are not included and may be unmet.`
-      : `Best modeled area coverage: ${recommendation.estimatedCoverage.toFixed(1)}%. Increase the area revisit window or lower its target. Population targets are not included.`);
+      ? `Uniform baseline estimate: ${recommendation.estimatedCoverage.toFixed(1)}% fresh area. Not an adaptive-policy promise. Population targets are not included and may be unmet.`
+      : `Best modeled uniform area coverage: ${recommendation.estimatedCoverage.toFixed(1)}%. Increase the area revisit window or lower its target. Population targets and adaptive policies are not included.`);
   }
 
   private refresh(): void {
     if (this.disposed) return;
     const snapshot = this.system.snapshot();
+    const adaptive = snapshot.strategy.kind === 'adaptive';
+    const environment = snapshot.environment;
+    const serviceCount = snapshot.drones.filter(drone => drone.status === 'patrolling' && drone.serviceState !== 'patrol').length;
     const pending = snapshot.drones.some((drone) => drone.status === 'unresponsive' || drone.status === 'deviating');
-    const insufficient = snapshot.activeCount < snapshot.recommendedFleet.count || snapshot.estimatedCoverage + 0.01 < snapshot.config.coverageTarget;
+    const insufficient = adaptive || environment.batteryEnabled ? snapshot.activeCount === 0 : snapshot.activeCount < snapshot.recommendedFleet.count || snapshot.estimatedCoverage !== null && snapshot.estimatedCoverage + 0.01 < snapshot.config.coverageTarget;
     const population = snapshot.population;
     const populationGaps = population.totalPeople > population.onTimePeople;
     const status = !this.started ? 'Ready to start' : !this.running
       ? insufficient ? 'Paused · degraded fleet' : 'Patrol paused'
-      : snapshot.activeCount === 0 ? 'Degraded · no healthy drones' : pending ? 'Anomaly detected · checking health'
+      : snapshot.activeCount === 0 ? serviceCount ? 'Service pause · no scanning drones' : 'Degraded · no healthy drones' : pending ? 'Anomaly detected · checking health'
         : insufficient ? 'Degraded · area target at risk' : snapshot.coverage >= snapshot.config.coverageTarget
           ? populationGaps ? 'Area target met · population gaps' : 'Patrol active · area target met' : 'Patrol active · building coverage';
     this.text('patrol-start', this.running ? 'Pause patrol' : this.started ? 'Resume patrol' : 'Start patrol');
@@ -273,12 +360,18 @@ export class PatrolPanel {
     this.element('patrol-coverage-fill').style.width = `${snapshot.coverage}%`;
     this.element('patrol-target-tick').style.left = `${snapshot.config.coverageTarget}%`;
     this.text('patrol-active-count', `${snapshot.activeCount} / ${snapshot.drones.length}`);
-    this.text('patrol-fleet-caption', `${snapshot.recommendedFleet.count} estimated minimum · area target only`);
-    this.text('patrol-revisit', duration(snapshot.predictedRevisitSeconds));
+    this.text('patrol-environment-name', environment.id === 'classic' ? 'Midtown NYC · classic' : `${environment.id.charAt(0).toUpperCase()}${environment.id.slice(1)} · synthetic`);
+    this.text('patrol-environment-summary', `${environment.shape === 'circle' ? `${environment.width / 2} m radius` : `${environment.width} × ${environment.depth} m`} · ${environment.maxSpeed} m/s limit · ${environment.batteryEnabled ? 'endurance enabled' : 'unlimited endurance'}`);
+    this.text('patrol-strategy', adaptive ? 'Adaptive policy · experimental test mission' : 'Uniform baseline');
+    this.text('patrol-policy-note', `Unseen people count as overdue; their age is mission time plus their revisit target. ${adaptive ? 'The adaptive controller prioritizes observation urgency and population while coordinating destinations. Measured results, not a periodic-route estimate, describe its performance.' : 'Uniform baseline routes do not prioritize population. Learning is opt-in and never changes this mission automatically.'}`);
+    this.text('patrol-fleet-caption', environment.batteryEnabled ? `${serviceCount} returning / waiting / charging` : adaptive ? 'Adaptive fleet · evaluate measured service' : `${snapshot.recommendedFleet.count} estimated minimum · area target only`);
+    this.text('patrol-revisit', snapshot.predictedRevisitSeconds === null ? environment.batteryEnabled ? 'N/A · charging' : 'N/A · adaptive' : duration(snapshot.predictedRevisitSeconds));
+    this.text('patrol-revisit-caption', environment.batteryEnabled ? 'Service interruptions · evaluate measured revisits' : adaptive ? 'Changing destinations · no fixed route cycle' : 'Longest assigned route · estimate');
+    this.element('patrol-revisit').classList.toggle('patrol-adaptive-value', snapshot.predictedRevisitSeconds === null);
     this.text('patrol-time', elapsedTime(snapshot.time));
     this.text('patrol-clock-caption', this.running ? `${this.speed}× speed · simulated time` : this.pauseReason || 'Paused · simulated time');
     this.text('patrol-revision', String(snapshot.revision));
-    this.text('patrol-estimate', `${snapshot.estimatedCoverage.toFixed(1)}%`);
+    this.text('patrol-estimate', snapshot.estimatedCoverage === null ? environment.batteryEnabled ? 'N/A · charging' : 'N/A · adaptive' : `${snapshot.estimatedCoverage.toFixed(1)}%`);
     this.text('patrol-ever-covered', `${snapshot.everCovered.toFixed(1)}%`);
     const fresh = snapshot.cells.filter((cell) => cell.lastVisited !== null && snapshot.time - cell.lastVisited <= snapshot.config.revisitSeconds).length;
     const never = snapshot.cells.filter((cell) => cell.lastVisited === null).length;
@@ -291,16 +384,17 @@ export class PatrolPanel {
     this.text('patrol-population-summary', `${population.totalPeople.toLocaleString('en-US')} people · seed ${snapshot.config.populationSeed} · ${population.unseenPeople.toLocaleString('en-US')} never observed · ${population.hotspotOnTimeCells} / ${population.hotspotCells} crowded cells on time`);
     this.text('patrol-population-targets', `Crowded: ≥${snapshot.config.crowdedCellPopulation} people per cell → revisit within ${snapshot.config.crowdedRevisitSeconds} s. Quieter cells scale gradually up to ${snapshot.config.revisitSeconds} s for empty cells. ${population.totalPeople === 0 ? 'No population: people-based metrics are not applicable.' : 'These service metrics are separate from the geographic coverage target.'}`);
     const areaHealth = snapshot.activeCount === 0
-      ? 'No healthy aircraft remain. Restore an aircraft to rebuild the patrol plan.'
+      ? serviceCount ? 'No aircraft currently patrol. Healthy aircraft are returning, waiting or charging; service will resume when available.' : 'No healthy aircraft remain. Restore an aircraft to rebuild the patrol plan.'
       : pending ? `An aircraft is off plan. The monitor waits ${PATROL_LIMITS.detectionSeconds} simulated seconds after a missing heartbeat or sustained route deviation before excluding it and redistributing work. Resume if paused.`
         : insufficient ? 'Estimated healthy fleet capacity is below the area target. Remaining aircraft continue scanning; restore aircraft or revise the mission parameters.'
           : snapshot.coverage >= snapshot.config.coverageTarget ? 'Fresh area coverage meets its target. Aircraft keep revisiting their assigned areas.'
             : 'The fleet is building fresh area coverage. Previously scanned cells can become stale.';
     const populationHealth = populationGaps
-      ? ` Population revisit targets are currently unmet for ${(population.totalPeople - population.onTimePeople).toLocaleString('en-US')} people. Uniform routes do not prioritize crowded cells.`
+      ? ` Population revisit targets are currently unmet for ${(population.totalPeople - population.onTimePeople).toLocaleString('en-US')} people. ${adaptive ? 'Adaptive prioritization does not guarantee every deadline can be met.' : 'Uniform routes do not prioritize crowded cells.'}`
       : population.totalPeople > 0 ? ' Population revisit targets are currently met; shorter gaps remain preferable.' : ' No population configured.';
-    this.text('patrol-health', areaHealth + populationHealth);
-    this.updateFleet(snapshot.drones);
+    const energyHealth = environment.batteryEnabled ? ` Synthetic battery use: ${snapshot.energy.energyUsed.toFixed(2)} full-pack equivalents · ${snapshot.energy.completedCharges} charges · ${snapshot.energy.reserveViolations} reserve violations · ${snapshot.energy.strandedDrones} stranded. Charging/waiting fleet time: ${snapshot.energy.chargingSeconds.toFixed(0)} / ${snapshot.energy.waitingSeconds.toFixed(0)} s.` : ' Endurance is unlimited in this mission.';
+    this.text('patrol-health', areaHealth + populationHealth + energyHealth);
+    this.updateFleet(snapshot.drones, adaptive, environment.batteryEnabled);
     const newest = snapshot.events[snapshot.events.length - 1]?.id ?? -1;
     if (newest !== this.lastEventId || !this.element('patrol-log').childElementCount) {
       const log = this.element<HTMLOListElement>('patrol-log');
@@ -324,20 +418,26 @@ export class PatrolPanel {
     this.drawMap(snapshot);
   }
 
-  private updateFleet(drones: PatrolDrone[]): void {
+  private updateFleet(drones: PatrolDrone[], adaptive: boolean, batteryEnabled: boolean): void {
     const cards = this.element('patrol-fleet-cards');
     if (this.cardCount !== drones.length) {
-      cards.innerHTML = drones.map((drone) => `<article class="patrol-drone-card" data-drone-id="${drone.id}" style="--drone-color:${drone.color}"><div class="patrol-drone-heading"><span class="patrol-drone-symbol" aria-hidden="true">✣</span><div><h3>Drone ${String(drone.id).padStart(2, '0')}</h3><span class="patrol-drone-lane"></span></div><span class="patrol-drone-status"></span></div><div class="patrol-drone-assignment"></div><div class="patrol-drone-actions"><button type="button" data-patrol-action="fail" aria-label="Fail drone ${drone.id}">Fail drone ${drone.id}</button><button type="button" data-patrol-action="divert" aria-label="Divert drone ${drone.id}">Divert drone ${drone.id}</button><button type="button" data-patrol-action="restore" aria-label="Restore drone ${drone.id}">Restore drone ${drone.id}</button></div></article>`).join('');
+      cards.innerHTML = drones.map((drone) => `<article class="patrol-drone-card" data-drone-id="${drone.id}" style="--drone-color:${drone.color}"><div class="patrol-drone-heading"><span class="patrol-drone-symbol" aria-hidden="true">✣</span><div><h3>Drone ${String(drone.id).padStart(2, '0')}</h3><span class="patrol-drone-lane"></span></div><span class="patrol-drone-status"></span></div><div class="patrol-drone-assignment"></div><div class="patrol-drone-energy"><span></span><meter min="0" max="1" low="0.2" aria-label="Drone ${drone.id} battery remaining"></meter></div><div class="patrol-drone-actions"><button type="button" data-patrol-action="fail" aria-label="Fail drone ${drone.id}">Fail drone ${drone.id}</button><button type="button" data-patrol-action="divert" aria-label="Divert drone ${drone.id}">Divert drone ${drone.id}</button><button type="button" data-patrol-action="restore" aria-label="Restore drone ${drone.id}">Restore drone ${drone.id}</button></div></article>`).join('');
       this.cardCount = drones.length;
     }
     for (const drone of drones) {
       const card = cards.querySelector<HTMLElement>(`[data-drone-id="${drone.id}"]`)!;
       card.dataset.status = drone.status;
-      card.querySelector<HTMLElement>('.patrol-drone-status')!.textContent = drone.status.charAt(0).toUpperCase() + drone.status.slice(1);
+      card.dataset.service = drone.serviceState;
+      const status = drone.status === 'patrolling' && drone.serviceState !== 'patrol' ? drone.serviceState : drone.status;
+      card.querySelector<HTMLElement>('.patrol-drone-status')!.textContent = status.charAt(0).toUpperCase() + status.slice(1);
       card.querySelector<HTMLElement>('.patrol-drone-lane')!.textContent = `${drone.position.y.toFixed(0)} m altitude lane`;
-      card.querySelector<HTMLElement>('.patrol-drone-assignment')!.textContent = drone.status === 'offline' ? 'Excluded from plan · awaiting restoration' : `${drone.assignedCellIds.length} assigned cells · ${duration(drone.cycleSeconds)} route cycle`;
+      card.querySelector<HTMLElement>('.patrol-drone-assignment')!.textContent = drone.status === 'offline' ? 'Excluded from plan · awaiting restoration' : drone.serviceState !== 'patrol' ? 'Not scanning · work redistributed to available aircraft' : adaptive || batteryEnabled ? `${adaptive ? 'Adaptive destination' : 'Uniform route'} · periodic service estimate N/A` : `${drone.assignedCellIds.length} assigned cells · ${duration(drone.cycleSeconds)} route cycle`;
+      card.querySelector<HTMLElement>('.patrol-drone-energy > span')!.textContent = batteryEnabled ? `${(drone.batteryFraction * 100).toFixed(0)}% battery · ${drone.speed.toFixed(1)} m/s · ${drone.chargeCycles} charges` : `Unlimited endurance · ${drone.speed.toFixed(1)} m/s`;
+      const battery = card.querySelector<HTMLMeterElement>('.patrol-drone-energy meter')!;
+      battery.hidden = !batteryEnabled;
+      battery.value = drone.batteryFraction;
       for (const button of card.querySelectorAll<HTMLButtonElement>('[data-patrol-action]')) {
-        button.disabled = button.dataset.patrolAction === 'restore' ? drone.status === 'patrolling' : drone.status !== 'patrolling';
+        button.disabled = button.dataset.patrolAction === 'restore' ? drone.status === 'patrolling' : drone.status !== 'patrolling' || drone.serviceState !== 'patrol';
       }
     }
   }
@@ -357,7 +457,8 @@ export class PatrolPanel {
   private drawMap(snapshot: PatrolSnapshot): void {
     const context = this.context;
     const map = FLIGHT_MAPS.nyc;
-    const scale = Math.min(this.width - 48, this.height - 102) / (map.radius * 2);
+    const environment = snapshot.environment;
+    const scale = Math.min((this.width - 48) / environment.width, (this.height - 102) / environment.depth);
     if (scale <= 0) return;
     const centerX = this.width / 2;
     const centerY = this.height / 2 + 7;
@@ -367,8 +468,12 @@ export class PatrolPanel {
     context.save();
     context.translate(centerX, centerY);
     context.scale(scale, scale);
-    context.beginPath();
-    context.arc(0, 0, map.radius, 0, Math.PI * 2);
+    const boundaryPath = () => {
+      context.beginPath();
+      if (environment.shape === 'circle') context.arc(0, 0, environment.width / 2, 0, Math.PI * 2);
+      else context.rect(-environment.width / 2, -environment.depth / 2, environment.width, environment.depth);
+    };
+    boundaryPath();
     context.fillStyle = '#dfe9e1';
     context.fill();
     context.save();
@@ -452,9 +557,9 @@ export class PatrolPanel {
         context.stroke();
         context.setLineDash([]);
       }
-      if (drone.status === 'patrolling') {
+      if (drone.status === 'patrolling' && drone.serviceState === 'patrol') {
         context.beginPath();
-        context.arc(drone.position.x, drone.position.z, PATROL_LIMITS.sensorRadius, 0, Math.PI * 2);
+        context.arc(drone.position.x, drone.position.z, environment.sensorRadius, 0, Math.PI * 2);
         context.fillStyle = drone.color;
         context.globalAlpha = 0.11;
         context.fill();
@@ -467,14 +572,31 @@ export class PatrolPanel {
     }
     context.globalAlpha = 1;
     context.restore();
-    context.beginPath();
-    context.arc(0, 0, map.radius, 0, Math.PI * 2);
+    boundaryPath();
     context.strokeStyle = '#8ba186';
     context.lineWidth = 1 / scale;
     context.setLineDash([4 / scale, 5 / scale]);
     context.stroke();
     context.setLineDash([]);
     context.restore();
+    if (environment.batteryEnabled) {
+      context.save();
+      const horizontal = centerX + environment.depot.x * scale;
+      const depth = centerY + environment.depot.z * scale;
+      context.fillStyle = '#edf7fc';
+      context.strokeStyle = '#497b98';
+      context.lineWidth = 2;
+      context.fillRect(horizontal - 11, depth - 11, 22, 22);
+      context.strokeRect(horizontal - 11, depth - 11, 22, 22);
+      context.fillStyle = '#497b98';
+      context.font = '600 10px "DM Sans", sans-serif';
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      context.fillText('B', horizontal, depth);
+      context.font = '9px "DM Sans", sans-serif';
+      context.fillText(`Base · ${environment.chargingPads} pads`, horizontal, depth + 23);
+      context.restore();
+    }
     for (const drone of snapshot.drones) {
       const horizontal = centerX + drone.position.x * scale;
       const depth = centerY + drone.position.z * scale;
