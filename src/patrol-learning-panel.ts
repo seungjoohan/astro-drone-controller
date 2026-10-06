@@ -1,12 +1,13 @@
 import { createCheckpoint, parseCheckpoint, serializeCheckpoint } from './patrol-learning-checkpoint';
 import { DEFAULT_ENVIRONMENT, environmentKey } from './patrol-environment';
+import { DEFAULT_POPULATION_DYNAMICS } from './population';
 import type { PatrolEnvironment } from './patrol-environment';
 import type { EvaluationMetrics, LearningCandidate, LearningCheckpoint, LearningProgress, LearningResponse, LearningSettings } from './patrol-learning-types';
 import type { PatrolConfig } from './patrol-types';
 import './patrol-learning.css';
 
-const STORAGE_KEY = 'astro-patrol-learning-results-v2';
-const LEGACY_STORAGE_KEY = 'astro-patrol-learning-results-v1';
+const STORAGE_KEY = 'astro-patrol-learning-results-v3';
+const LEGACY_STORAGE_KEYS = ['astro-patrol-learning-results-v2', 'astro-patrol-learning-results-v1'];
 const CONFIG_KEYS: (keyof PatrolConfig)[] = ['coverageTarget', 'revisitSeconds', 'populationCount', 'populationSeed', 'crowdedRevisitSeconds', 'crowdedCellPopulation'];
 
 interface LearningPanelCallbacks {
@@ -32,7 +33,13 @@ function gap(value: number | null): string {
 }
 
 function matchingConfig(first: PatrolConfig, second: PatrolConfig): boolean {
-  return CONFIG_KEYS.every(key => first[key] === second[key]);
+  const firstDynamics = first.populationDynamics;
+  const secondDynamics = second.populationDynamics;
+  const sameDynamics = firstDynamics === undefined || secondDynamics === undefined
+    ? firstDynamics === secondDynamics
+    : firstDynamics.enabled === secondDynamics.enabled && firstDynamics.intervalSeconds === secondDynamics.intervalSeconds
+      && firstDynamics.redistributionFraction === secondDynamics.redistributionFraction && firstDynamics.countVariation === secondDynamics.countVariation;
+  return CONFIG_KEYS.every(key => first[key] === second[key]) && sameDynamics;
 }
 
 function testedFeasible(metrics: EvaluationMetrics | null): boolean {
@@ -69,7 +76,7 @@ export class PatrolLearningPanel {
       <p id="patrol-learning-config" class="patrol-learning-config"></p>
       <div class="patrol-learning-monitor"><div><strong id="patrol-learning-status" role="status">Ready for an experiment</strong><span id="patrol-learning-counts"></span></div><div class="patrol-learning-counter-line"><span>Evaluations <strong id="patrol-learning-evaluations">0</strong></span><span>Tested fleets <strong id="patrol-learning-tested-fleets">None</strong></span></div><progress id="patrol-learning-progress" max="120" value="0" aria-label="Learning compute budget used"></progress><p id="patrol-learning-message"></p></div>
       <p id="patrol-learning-recommendation" class="patrol-learning-recommendation"></p>
-      <p class="patrol-learning-caption">Training and held-out scores are separate. Area is minimum rolling freshness after warm-up; people is mean on-time coverage; gap is mean relative observation cost (lower is better). Energy, charge and violation totals include warm-up. Generalization summaries include per-environment and worst-case results, not only averages. One-drone-loss results never certify healthy-operation recommendations.</p>
+      <p class="patrol-learning-caption">Training and held-out scores are separate. Area is minimum rolling freshness after warm-up; people is on-time coverage; gap is relative observation cost (lower is better). Dynamic-population averages are person-time weighted, so busier periods carry more weight; static experiments retain time-weighted averages. Energy, charge and violation totals include warm-up; reported population ranges and changes exclude it. Generalization summaries include per-environment and worst-case results, not only averages. One-drone-loss results never certify healthy-operation recommendations.</p>
       <div id="patrol-learning-results" class="patrol-learning-results" aria-label="Results for fleet sizes one through eight"></div>
       <div class="patrol-learning-storage"><div><button id="patrol-learning-export" type="button" class="patrol-secondary" disabled>Export results</button><button id="patrol-learning-import" type="button" class="patrol-secondary">Import results</button><input id="patrol-learning-import-file" type="file" accept="application/json,.json" hidden aria-label="Import learning results file"></div><p>Results are saved locally, not an exact optimizer resume point. Imported or restored results are untrusted, read-only records; run a new experiment before applying a strategy.</p></div>
       <p id="patrol-learning-notice" class="patrol-learning-notice" role="status"></p>
@@ -139,7 +146,7 @@ export class PatrolLearningPanel {
   private start(): void {
     if (this.worker || this.disposed || !this.element<HTMLFormElement>('patrol-learning-form').reportValidity()) return;
     this.settings = {
-      config: { ...this.callbacks.getConfig() },
+      config: structuredClone(this.callbacks.getConfig()),
       environment: structuredClone(this.callbacks.getEnvironment()),
       profile: this.element<HTMLSelectElement>('patrol-learning-profile').value === 'current' ? 'current' : 'diverse',
       scenarioCount: this.element<HTMLInputElement>('patrol-learning-scenarios').valueAsNumber,
@@ -248,14 +255,14 @@ export class PatrolLearningPanel {
   private restore(): void {
     try {
       let storedRecordFound = false;
-      for (const key of [STORAGE_KEY, LEGACY_STORAGE_KEY]) {
+      for (const key of [STORAGE_KEY, ...LEGACY_STORAGE_KEYS]) {
         const stored = localStorage.getItem(key);
         if (!stored) continue;
         storedRecordFound = true;
         const checkpoint = parseCheckpoint(stored);
         if (!checkpoint) continue;
         this.loadReadOnly(checkpoint);
-        this.notice = `Saved ${checkpoint.version === 1 ? 'legacy ' : ''}results restored as an untrusted, read-only record. Start a new experiment to retest strategies; training has not resumed. The original legacy storage record is never overwritten by new experiments.`;
+        this.notice = `Saved ${checkpoint.version < 3 ? 'legacy ' : ''}results restored as an untrusted, read-only record. Start a new experiment to retest strategies; training has not resumed. Original v1 and v2 storage records are never overwritten by new experiments.`;
         return;
       }
       if (storedRecordFound) this.notice = 'Saved results were invalid or incompatible and were not loaded.';
@@ -265,9 +272,9 @@ export class PatrolLearningPanel {
   }
 
   private loadReadOnly(checkpoint: LearningCheckpoint): void {
-    this.checkpoint = checkpoint;
-    this.settings = checkpoint.settings;
-    this.progress = checkpoint.progress;
+    this.checkpoint = structuredClone(checkpoint);
+    this.settings = structuredClone(checkpoint.settings);
+    this.progress = structuredClone(checkpoint.progress);
     this.trusted = false;
     this.restored = true;
     this.pendingPause = false;
@@ -344,7 +351,16 @@ export class PatrolLearningPanel {
     const environment = this.settings?.environment ?? (this.settings ? DEFAULT_ENVIRONMENT : this.callbacks.getEnvironment());
     const profile = this.settings?.profile ?? (this.settings ? 'current' : this.element<HTMLSelectElement>('patrol-learning-profile').value);
     const scenarioCount = this.settings?.scenarioCount ?? this.element<HTMLInputElement>('patrol-learning-scenarios').valueAsNumber;
-    this.element('patrol-learning-config').textContent = `${this.settings ? 'Captured' : 'Next experiment uses applied'} mission: ${config.populationCount.toLocaleString('en-US')} people · population seed ${config.populationSeed} · ${config.coverageTarget}% area / ${config.revisitSeconds} s · crowded ${config.crowdedRevisitSeconds} s at ${config.crowdedCellPopulation} people/cell. ${environment.id} · ${environment.maxSpeed} m/s · ${environment.batteryEnabled ? `${environment.enduranceSeconds} s endurance at max speed / ${environment.rechargeSeconds} s recharge / ${environment.chargingPads} pads` : 'unlimited endurance'}. ${profile === 'diverse' ? `Diverse suite: ${Number.isFinite(scenarioCount) ? scenarioCount : 6} training environments, a finite pilot rather than a universal guarantee. Geometry, population and aircraft constraints vary in isolated trials; the captured mission is unchanged.` : 'Current-mission profile: held-out population seeds, fixed environment.'} ${stale ? 'MISSION CHANGED: these results cannot be applied. Start a new experiment for the new requirements or environment.' : 'Unsaved mission form edits are not used.'}`;
+    const defaultDynamicsEnabled = profile === 'diverse' && !(this.restored && this.checkpoint && this.checkpoint.version < 3);
+    const dynamics = config.populationDynamics ?? { ...DEFAULT_POPULATION_DYNAMICS, enabled: defaultDynamicsEnabled };
+    const dynamicsDescription = dynamics.enabled
+      ? profile === 'diverse'
+        ? 'Changing total & density: cases vary across 15–90 s intervals, 15–80% redistribution and ±10–60% total variation; choose Current mission only to use the exact applied bounds.'
+        : `Changing total & density: ${dynamics.intervalSeconds} s interval, ${Math.round(dynamics.redistributionFraction * 100)}% redistribution, ±${Math.round(dynamics.countVariation * 100)}% total variation.`
+      : 'Static population within each trial.';
+    const defaultDynamicsNote = defaultDynamicsEnabled && config.populationDynamics === undefined
+      ? ' No population dynamics applied yet: diverse learning uses dynamic defaults; the visible mission stays static. Apply mission settings to explicitly enable or disable trial dynamics.' : '';
+    this.element('patrol-learning-config').textContent = `${this.settings ? 'Captured' : 'Next experiment uses applied'} mission: ${config.populationCount.toLocaleString('en-US')} base people · population seed ${config.populationSeed} · ${config.coverageTarget}% area / ${config.revisitSeconds} s · crowded ${config.crowdedRevisitSeconds} s at ${config.crowdedCellPopulation} people/cell. ${environment.id} · ${environment.maxSpeed} m/s · ${environment.batteryEnabled ? `${environment.enduranceSeconds} s endurance at max speed / ${environment.rechargeSeconds} s recharge / ${environment.chargingPads} pads` : 'unlimited endurance'}. ${dynamicsDescription}${defaultDynamicsNote} ${profile === 'diverse' ? `Diverse suite: ${Number.isFinite(scenarioCount) ? scenarioCount : 6} training environments, a finite pilot rather than a universal guarantee. Geometry, population and aircraft constraints vary in isolated trials; the captured mission is unchanged.` : 'Current-mission profile: held-out population seeds, fixed environment and population-change settings.'} ${stale ? 'MISSION CHANGED: these results cannot be applied. Start a new experiment for the new requirements or environment.' : 'Unsaved mission form edits are not used.'}`;
     this.element('patrol-learning-config').classList.toggle('patrol-learning-stale', stale);
     const states = { idle: 'Ready for an experiment', running: 'Running · learning in background', paused: 'Paused · learning', completed: 'Completed · experiment finished', cancelled: 'Cancelled · learning stopped', error: 'Error · learning stopped' };
     this.element('patrol-learning-status').textContent = this.restored ? 'Read-only results · untrusted' : this.pendingPause ? 'Pausing learning…' : this.pendingResume ? 'Resuming learning…' : states[this.progress.status];
@@ -457,6 +473,11 @@ export class PatrolLearningPanel {
     const details = document.createElement('small');
     details.textContent = `${metrics.scenarios} scenarios · dense audit min ${percent(metrics.auditAreaMinimum)} · hotspot on-time ${percent(metrics.hotspotOnTime)} · area check ${metrics.geographicFeasible ? 'pass' : 'unmet'} · hotspot check ${metrics.hotspotFeasible ? 'pass' : 'unmet'} · never observed ${metrics.neverObservedPeople.toLocaleString('en-US')} people`;
     block.append(values, details);
+    if (metrics.populationWeighting === 'person-time') {
+      const population = document.createElement('small');
+      population.textContent = `Person-time weighted · scored population ${metrics.populationMinimum ?? 0}–${metrics.populationMaximum ?? 0} people · ${metrics.populationUpdates ?? 0} changes after warm-up`;
+      block.append(population);
+    }
     if (metrics.feasibleScenarioFraction !== undefined || metrics.worstCaseGapCost !== undefined) {
       const tail = document.createElement('small');
       tail.dataset.generalizationSummary = caseKey;
@@ -476,7 +497,9 @@ export class PatrolLearningPanel {
         entry.dataset.generalizationCase = scenario.id;
         const environment = scenario.environment;
         const result = scenario.metrics;
-        entry.textContent = `${scenario.family} · ${environment.width} × ${environment.depth} m ${environment.shape} · ${scenario.populationCount.toLocaleString('en-US')} people / seed ${scenario.populationSeed} · ${environment.maxSpeed} m/s · ${environment.sensorRadius} m sensor radius · ${environment.batteryEnabled ? `${environment.enduranceSeconds} s endurance at max speed / ${environment.rechargeSeconds} s recharge / ${environment.chargingPads} pads / ${Math.round(environment.initialChargeFraction * 100)}% initial charge / ${Math.round(environment.reserveFraction * 100)}% reserve` : 'unlimited endurance'} — gap ${gap(result.gapCost)} · people ${percent(result.populationOnTime)} · dense min ${percent(result.auditAreaMinimum)} · hotspots ${percent(result.hotspotOnTime)} · ${testedFeasible(result) ? 'sampled checks pass' : 'requirements unmet'} · energy/reserve violations ${result.energyViolations ?? 0}/${result.reserveViolations ?? 0}.`;
+        const dynamics = scenario.populationDynamics;
+        const populationMode = dynamics?.enabled ? `dynamic every ${dynamics.intervalSeconds} s / ${Math.round(dynamics.redistributionFraction * 100)}% redistribution / ±${Math.round(dynamics.countVariation * 100)}% total; scored ${result.populationMinimum ?? 0}–${result.populationMaximum ?? 0} people / ${result.populationUpdates ?? 0} changes / person-time weighted` : 'static population';
+        entry.textContent = `${scenario.family} · ${environment.width} × ${environment.depth} m ${environment.shape} · ${scenario.populationCount.toLocaleString('en-US')} base people / seed ${scenario.populationSeed} · ${populationMode} · ${environment.maxSpeed} m/s · ${environment.sensorRadius} m sensor radius · ${environment.batteryEnabled ? `${environment.enduranceSeconds} s endurance at max speed / ${environment.rechargeSeconds} s recharge / ${environment.chargingPads} pads / ${Math.round(environment.initialChargeFraction * 100)}% initial charge / ${Math.round(environment.reserveFraction * 100)}% reserve` : 'unlimited endurance'} — gap ${gap(result.gapCost)} · people ${percent(result.populationOnTime)} · dense min ${percent(result.auditAreaMinimum)} · hotspots ${percent(result.hotspotOnTime)} · ${testedFeasible(result) ? 'sampled checks pass' : 'requirements unmet'} · energy/reserve violations ${result.energyViolations ?? 0}/${result.reserveViolations ?? 0}.`;
         cases.append(entry);
       }
       block.append(cases);

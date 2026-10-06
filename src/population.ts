@@ -1,4 +1,21 @@
-import type { PatrolCell, PatrolConfig, PatrolDrone, PopulationMetrics } from './patrol-types';
+import type { PatrolCell, PatrolConfig, PatrolDrone, PopulationDynamics, PopulationMetrics } from './patrol-types';
+
+export const DEFAULT_POPULATION_DYNAMICS: Readonly<PopulationDynamics> = Object.freeze({
+  enabled: false,
+  intervalSeconds: 30,
+  redistributionFraction: 0.35,
+  countVariation: 0.25,
+});
+
+export function validatePopulationDynamics(value: unknown): PopulationDynamics | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const settings = value as Record<string, unknown>;
+  if (Object.keys(settings).length !== 4 || typeof settings.enabled !== 'boolean'
+    || typeof settings.intervalSeconds !== 'number' || !Number.isInteger(settings.intervalSeconds) || settings.intervalSeconds < 5 || settings.intervalSeconds > 600
+    || typeof settings.redistributionFraction !== 'number' || !Number.isFinite(settings.redistributionFraction) || settings.redistributionFraction < 0.05 || settings.redistributionFraction > 1
+    || typeof settings.countVariation !== 'number' || !Number.isFinite(settings.countVariation) || settings.countVariation < 0 || settings.countVariation > 1) return null;
+  return { enabled: settings.enabled, intervalSeconds: settings.intervalSeconds, redistributionFraction: settings.redistributionFraction, countVariation: settings.countVariation };
+}
 
 export const POPULATION_DEFAULTS = Object.freeze({
   populationCount: 5000,
@@ -28,13 +45,39 @@ function randomGenerator(seed: number): () => number {
   };
 }
 
+function assignPopulation(cells: PatrolCell[], weights: number[], totalPeople: number, config: PatrolConfig, random?: () => number): void {
+  const revisitSeconds = bounded(config.revisitSeconds, 120, 1, 3600);
+  const crowdedSeconds = Math.min(revisitSeconds, bounded(config.crowdedRevisitSeconds, POPULATION_DEFAULTS.crowdedRevisitSeconds, POPULATION_LIMITS.minCrowdedRevisitSeconds, POPULATION_LIMITS.maxCrowdedSeconds));
+  const crowdedPopulation = Math.round(bounded(config.crowdedCellPopulation, POPULATION_DEFAULTS.crowdedCellPopulation, POPULATION_LIMITS.minCrowdedCellPopulation, POPULATION_LIMITS.maxCrowdedCellPopulation));
+  const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+  const allocations = weights.map(weight => totalPeople * weight / totalWeight);
+  const counts = allocations.map(Math.floor);
+  let remaining = totalPeople - counts.reduce((sum, count) => sum + count, 0);
+  if (random && remaining > 0) {
+    let threshold = random();
+    let cumulative = 0;
+    for (let index = 0; index < allocations.length; index += 1) {
+      cumulative += allocations[index] - counts[index];
+      if (remaining > 0 && threshold < cumulative) {
+        counts[index] += 1;
+        remaining -= 1;
+        threshold += 1;
+      }
+    }
+  }
+  const remainderOrder = allocations.map((allocation, index) => ({ index, remainder: allocation - counts[index] }))
+    .sort((first, second) => second.remainder - first.remainder || first.index - second.index);
+  for (let index = 0; index < remaining; index += 1) counts[remainderOrder[index].index] += 1;
+  cells.forEach((cell, index) => {
+    cell.population = counts[index];
+    cell.targetRevisitSeconds = revisitSeconds + (crowdedSeconds - revisitSeconds) * Math.min(1, cell.population / crowdedPopulation);
+  });
+}
+
 export function populateCells(cells: PatrolCell[], config: PatrolConfig): void {
   if (!cells.length) return;
   const totalPeople = Math.round(bounded(config.populationCount, POPULATION_DEFAULTS.populationCount, 0, POPULATION_LIMITS.maxPopulation));
   const seed = Math.round(bounded(config.populationSeed, POPULATION_DEFAULTS.populationSeed, 1, POPULATION_LIMITS.maxSeed));
-  const revisitSeconds = bounded(config.revisitSeconds, 120, 1, 3600);
-  const crowdedSeconds = Math.min(revisitSeconds, bounded(config.crowdedRevisitSeconds, POPULATION_DEFAULTS.crowdedRevisitSeconds, POPULATION_LIMITS.minCrowdedRevisitSeconds, POPULATION_LIMITS.maxCrowdedSeconds));
-  const crowdedPopulation = Math.round(bounded(config.crowdedCellPopulation, POPULATION_DEFAULTS.crowdedCellPopulation, POPULATION_LIMITS.minCrowdedCellPopulation, POPULATION_LIMITS.maxCrowdedCellPopulation));
   const random = randomGenerator(seed);
   const horizontal = cells.map(cell => cell.position.x);
   const depth = cells.map(cell => cell.position.z);
@@ -48,17 +91,28 @@ export function populateCells(cells: PatrolCell[], config: PatrolConfig): void {
     const squaredDistance = (cell.position.x - hotspot.position.x) ** 2 + (cell.position.z - hotspot.position.z) ** 2;
     return weight + hotspot.strength * Math.exp(-squaredDistance / (2 * hotspot.spread ** 2));
   }, 0));
-  const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
-  const allocations = weights.map(weight => totalPeople * weight / totalWeight);
-  const counts = allocations.map(Math.floor);
-  const remaining = totalPeople - counts.reduce((sum, count) => sum + count, 0);
-  const remainderOrder = allocations.map((allocation, index) => ({ index, remainder: allocation - counts[index] }))
-    .sort((first, second) => second.remainder - first.remainder || first.index - second.index);
-  for (let index = 0; index < remaining; index += 1) counts[remainderOrder[index].index] += 1;
-  cells.forEach((cell, index) => {
-    cell.population = counts[index];
-    cell.targetRevisitSeconds = revisitSeconds + (crowdedSeconds - revisitSeconds) * Math.min(1, cell.population / crowdedPopulation);
-  });
+  assignPopulation(cells, weights, totalPeople, config);
+}
+
+export function updatePopulation(cells: PatrolCell[], config: PatrolConfig, epoch: number): void {
+  const dynamics = config.populationDynamics;
+  if (!dynamics?.enabled || !cells.length) return;
+  if (!Number.isSafeInteger(epoch) || epoch < 1) throw new Error('Population update epoch must be a positive integer.');
+  let epochSeed = config.populationSeed ^ Math.imul(epoch, 0x9e3779b9);
+  epochSeed = Math.imul(epochSeed ^ epochSeed >>> 16, 0x85ebca6b);
+  epochSeed = Math.imul(epochSeed ^ epochSeed >>> 13, 0xc2b2ae35);
+  const random = randomGenerator((epochSeed ^ epochSeed >>> 16) >>> 0);
+  const basePopulation = Math.round(bounded(config.populationCount, POPULATION_DEFAULTS.populationCount, 0, POPULATION_LIMITS.maxPopulation));
+  const totalPeople = basePopulation === 0 ? 0 : Math.max(1, Math.min(POPULATION_LIMITS.maxPopulation,
+    Math.round(basePopulation * (1 + dynamics.countVariation * (2 * random() - 1)))));
+  const populationSeed = 1 + Math.floor(random() * POPULATION_LIMITS.maxSeed);
+  const targets = cells.map(cell => ({ ...cell }));
+  populateCells(targets, { ...config, populationCount: totalPeople, populationSeed });
+  const currentTotal = cells.reduce((total, cell) => total + cell.population, 0);
+  const weights = cells.map((cell, index) =>
+    (1 - dynamics.redistributionFraction) * (currentTotal ? cell.population / currentTotal : 1 / cells.length)
+      + dynamics.redistributionFraction * (totalPeople ? targets[index].population / totalPeople : 1 / cells.length));
+  assignPopulation(cells, weights, totalPeople, config, random);
 }
 
 export function evaluatePopulation(cells: PatrolCell[], time: number, config: PatrolConfig, drones: PatrolDrone[], sensorRadius: number): PopulationMetrics {

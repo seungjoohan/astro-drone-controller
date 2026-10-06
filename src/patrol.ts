@@ -1,5 +1,5 @@
 import { FLIGHT_MAPS } from './maps';
-import { evaluatePopulation, populateCells, POPULATION_DEFAULTS, POPULATION_LIMITS } from './population';
+import { evaluatePopulation, populateCells, POPULATION_DEFAULTS, POPULATION_LIMITS, updatePopulation, validatePopulationDynamics } from './population';
 import { assignPolicyRegions, PopulationPolicy, validateStrategy } from './patrol-policy';
 import { DEFAULT_ENVIRONMENT, energyRate, insideEnvironment, validateEnvironment } from './patrol-environment';
 import type { PatrolEnergyMetrics, PatrolEnvironment } from './patrol-environment';
@@ -127,6 +127,8 @@ export class PatrolSystem {
   private reserveBreaches = new Set<number>();
   private stranded = new Set<number>();
   private serviceChanged = false;
+  private populationUpdates = 0;
+  private nextPopulationChange: number | null = null;
 
   constructor(config: Partial<PatrolConfig> = {}, strategy: PatrolStrategy = { kind: 'uniform' }, environment: PatrolEnvironment = DEFAULT_ENVIRONMENT) {
     const validated = validateStrategy(strategy);
@@ -152,6 +154,9 @@ export class PatrolSystem {
     if (!validatedEnvironment) throw new Error('Invalid patrol environment.');
     this.environment = validatedEnvironment;
     const revisitSeconds = bounded(overrides.revisitSeconds, this.config.revisitSeconds, 1, 3600);
+    const requestedDynamics = overrides.populationDynamics ?? this.config.populationDynamics;
+    const populationDynamics = requestedDynamics === undefined ? undefined : validatePopulationDynamics(requestedDynamics);
+    if (populationDynamics === null) throw new Error('Invalid population dynamics.');
     this.config = {
       coverageTarget: bounded(overrides.coverageTarget, this.config.coverageTarget, 0, 100),
       revisitSeconds,
@@ -160,9 +165,12 @@ export class PatrolSystem {
       populationSeed: Math.round(bounded(overrides.populationSeed, this.config.populationSeed, 1, POPULATION_LIMITS.maxSeed)),
       crowdedRevisitSeconds: Math.min(revisitSeconds, bounded(overrides.crowdedRevisitSeconds, this.config.crowdedRevisitSeconds, 1, POPULATION_LIMITS.maxCrowdedSeconds)),
       crowdedCellPopulation: Math.round(bounded(overrides.crowdedCellPopulation, this.config.crowdedCellPopulation, 1, POPULATION_LIMITS.maxCrowdedCellPopulation)),
+      ...(populationDynamics ? { populationDynamics } : {}),
     };
     this.recommendation = recommendFleet(this.config, this.environment);
     this.time = 0;
+    this.populationUpdates = 0;
+    this.nextPopulationChange = populationDynamics?.enabled ? populationDynamics.intervalSeconds : null;
     this.cells = createCells(revisitSeconds, this.environment);
     this.policy = new PopulationPolicy(this.cells.map(cell => cell.position), this.environment.width / 2, this.environment.sensorRadius, PATROL_LIMITS.cellSize, this.environment);
     populateCells(this.cells, this.config);
@@ -210,6 +218,7 @@ export class PatrolSystem {
     let remaining = Math.min(dtSeconds, MAX_STEP_SECONDS);
     while (remaining > POSITION_EPSILON) {
       let interval = remaining;
+      if (this.nextPopulationChange !== null) interval = Math.min(interval, Math.max(0, this.nextPopulationChange - this.time));
       if (this.environment.batteryEnabled) {
         this.assignChargingPads();
         interval = Math.min(interval, (Math.floor((this.time + POSITION_EPSILON) / ENERGY_INTERVAL) + 1) * ENERGY_INTERVAL - this.time);
@@ -232,6 +241,14 @@ export class PatrolSystem {
         this.time += interval;
         remaining -= interval;
       }
+      let populationChanged = false;
+      if (this.nextPopulationChange !== null && this.time >= this.nextPopulationChange - POSITION_EPSILON) {
+        this.populationUpdates += 1;
+        updatePopulation(this.cells, this.config, this.populationUpdates);
+        this.nextPopulationChange = (this.populationUpdates + 1) * this.config.populationDynamics!.intervalSeconds;
+        this.log(`Population update ${this.populationUpdates}: ${this.cells.reduce((total, cell) => total + cell.population, 0)} people; density and revisit priorities refreshed.`);
+        populationChanged = true;
+      }
       let confirmed = false;
       for (const drone of this.drones) {
         if (drone.status === 'offline') continue;
@@ -253,7 +270,7 @@ export class PatrolSystem {
         this.log(`Drone ${drone.id} ${drone.fault === 'deviation' ? 'route deviation' : 'malfunction'} confirmed; removed from patrol.`);
         confirmed = true;
       }
-      if (confirmed || this.serviceChanged) {
+      if (confirmed || this.serviceChanged || populationChanged && this.strategy.kind === 'adaptive') {
         this.serviceChanged = false;
         this.replan();
       }
@@ -270,7 +287,7 @@ export class PatrolSystem {
     const visited = this.cells.filter(cell => cell.lastVisited !== null);
     const fullyAssigned = this.cells.every(cell => active.some(drone => drone.id === cell.assignedDroneId));
     return {
-      config: { ...this.config },
+      config: { ...this.config, ...(this.config.populationDynamics ? { populationDynamics: { ...this.config.populationDynamics } } : {}) },
       environment: { ...this.environment, depot: { ...this.environment.depot } },
       energy: { ...this.energy },
       strategy: this.strategy.kind === 'uniform' ? { kind: 'uniform' } : { kind: 'adaptive', parameters: { ...this.strategy.parameters } },
@@ -278,6 +295,8 @@ export class PatrolSystem {
       drones: this.drones.map(drone => ({ ...drone, position: { ...drone.position }, route: drone.route.map(position => ({ ...position })), assignedCellIds: [...drone.assignedCellIds] })),
       cells: this.cells.map(cell => ({ ...cell, position: { ...cell.position } })),
       population: evaluatePopulation(this.cells, this.time, this.config, this.drones.filter(drone => drone.serviceState === 'patrol'), this.environment.sensorRadius),
+      populationUpdates: this.populationUpdates,
+      nextPopulationChange: this.nextPopulationChange,
       coverage: 100 * covered.length / this.cells.length,
       everCovered: 100 * visited.length / this.cells.length,
       uncoveredCells: this.cells.length - covered.length,

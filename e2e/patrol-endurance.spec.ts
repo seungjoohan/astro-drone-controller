@@ -38,6 +38,8 @@ test('runs bounded diverse trials and exposes individual environments without ch
   await expect(page.locator('[data-generalization-case]').first()).toBeAttached();
   await expect(page.locator('#patrol-learning-results')).toContainText('worst-case gap');
   await expect(page.locator('#patrol-learning-results')).toContainText('reserve violations');
+  await expect(page.locator('#patrol-learning-results')).toContainText('Person-time weighted');
+  await expect(page.locator('[data-generalization-case]').first()).toContainText('dynamic every');
   await expect(page.locator('#patrol-time')).toHaveText('00:00');
   await expect(page.locator('#patrol-strategy')).toContainText('Uniform baseline');
   await expect(page.locator('#patrol-environment-summary')).toContainText('unlimited');
@@ -47,7 +49,7 @@ test('runs bounded diverse trials and exposes individual environments without ch
   await page.screenshot({ path: 'test-results/patrol-generalization-mobile.png', fullPage: true });
 });
 
-test('preserves the original learning report when saving new environment-aware results', async ({ page }) => {
+test('preserves both original learning reports when saving dynamic-population results', async ({ page }) => {
   const legacy = JSON.stringify({
     version: 1, evaluatorVersion: 'patrol-pilot-v1-grid40-audit10-dt0.5',
     settings: {
@@ -59,14 +61,27 @@ test('preserves the original learning report when saving new environment-aware r
       frontierIds: [], recommendedId: null, message: 'Original learning report retained for review.',
     },
   });
-  await page.addInitScript(value => localStorage.setItem('astro-patrol-learning-results-v1', value), legacy);
+  const energyLegacy = JSON.stringify({
+    ...JSON.parse(legacy), version: 2, evaluatorVersion: 'patrol-robustness-v2-energy-grid40-audit10-dt0.5',
+    progress: { ...JSON.parse(legacy).progress, message: 'Original energy learning report retained for review.' },
+  });
+  await page.addInitScript(values => {
+    localStorage.setItem('astro-patrol-learning-results-v1', values.legacy);
+    localStorage.setItem('astro-patrol-learning-results-v2', values.energyLegacy);
+  }, { legacy, energyLegacy });
   await page.goto('/');
   await page.getByRole('button', { name: 'Patrol control center', exact: true }).click();
   await expect(page.locator('#patrol-learning-status')).toContainText('Read-only');
-  await expect(page.locator('#patrol-learning-message')).toContainText('Original learning report');
+  await expect(page.locator('#patrol-learning-message')).toContainText('Original energy learning report');
   await expect(page.locator('#patrol-learning-profile')).toHaveValue('current');
   await page.locator('#patrol-learning-start').click();
   await expect(page.locator('#patrol-learning-status')).toContainText('Completed', { timeout: 45000 });
   expect(await page.evaluate(() => localStorage.getItem('astro-patrol-learning-results-v1'))).toBe(legacy);
-  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('astro-patrol-learning-results-v2') ?? '{}').version)).toBe(2);
+  expect(await page.evaluate(() => localStorage.getItem('astro-patrol-learning-results-v2'))).toBe(energyLegacy);
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('astro-patrol-learning-results-v3') ?? '{}').version)).toBe(3);
+  await page.locator('#patrol-population-dynamic').check();
+  await page.locator('#patrol-population-interval').fill('5');
+  await page.locator('#patrol-apply').click();
+  await expect(page.locator('#patrol-learning-config')).toContainText('MISSION CHANGED');
+  await expect(page.locator('[data-learning-apply]:enabled')).toHaveCount(0);
 });

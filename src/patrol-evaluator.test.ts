@@ -3,6 +3,7 @@ import { PATROL_DEFAULTS, PatrolSystem } from './patrol';
 import { createScenarios, evaluateScenarios, EvaluationAccumulator, scenarioSeeds } from './patrol-evaluator';
 import { DEFAULT_POLICY_PARAMETERS } from './patrol-policy';
 import { DEFAULT_ENVIRONMENT } from './patrol-environment';
+import { DEFAULT_POPULATION_DYNAMICS } from './population';
 
 describe('patrol episode evaluation', () => {
   it('freezes disjoint population splits independently of optimizer randomness', () => {
@@ -62,6 +63,27 @@ describe('patrol episode evaluation', () => {
     expect(accumulator.metrics()).toMatchObject({ hotspotOnTime: 25, hotspotFeasible: false });
   });
 
+  it('weights changing population and hotspot metrics by person-time instead of averaging percentages', () => {
+    const snapshot = new PatrolSystem().snapshot();
+    snapshot.time = 100;
+    snapshot.cells = [{ ...snapshot.cells[0], population: 100, lastVisited: 100, targetRevisitSeconds: 15 }];
+    snapshot.population.totalPeople = 100;
+    snapshot.population.onTimeCoverage = 100;
+    snapshot.population.meanAgeSeconds = 0;
+    snapshot.population.normalizedGapCost = 0;
+    const accumulator = new EvaluationAccumulator(true);
+    accumulator.add(snapshot, 1);
+    snapshot.cells[0].population = 300;
+    snapshot.cells[0].lastVisited = 0;
+    snapshot.population.totalPeople = 300;
+    snapshot.population.onTimeCoverage = 0;
+    snapshot.population.meanAgeSeconds = 100;
+    snapshot.population.normalizedGapCost = 4;
+    accumulator.add(snapshot, 1);
+    expect(accumulator.metrics()).toMatchObject({ populationWeighting: 'person-time', populationOnTime: 25,
+      hotspotOnTime: 25, meanAgeSeconds: 75, gapCost: 3, populationMinimum: 100, populationMaximum: 300, hotspotFeasible: false });
+  });
+
   it('reports no population objective for an empty city', async () => {
     const result = await evaluateScenarios({ ...PATROL_DEFAULTS, populationCount: 0 }, { kind: 'uniform' }, [{ populationSeed: 42, warmupSeconds: 1, evaluationSeconds: 2 }]);
     expect(result).toMatchObject({ scenarios: 1, durationSeconds: 2, populationOnTime: null, hotspotOnTime: null, meanAgeSeconds: null, gapCost: null, neverObservedPeople: 0, hotspotFeasible: true });
@@ -87,6 +109,26 @@ describe('patrol episode evaluation', () => {
       checkpoint: async () => { if (++checks === 9) throw new Error('stop'); },
     })).rejects.toThrow('stop');
     expect(checks).toBe(9);
+  });
+
+  it('replays changing populations, excludes warmup changes, and honors scenario overrides', async () => {
+    const populationDynamics = { ...DEFAULT_POPULATION_DYNAMICS, enabled: true, intervalSeconds: 5, countVariation: 0.75 };
+    const config = { ...PATROL_DEFAULTS, populationDynamics };
+    const scenarios = [{ populationSeed: 77, warmupSeconds: 5, evaluationSeconds: 15 }];
+    const first = await evaluateScenarios(config, { kind: 'uniform' }, scenarios);
+    expect(await evaluateScenarios(config, { kind: 'uniform' }, scenarios)).toEqual(first);
+    expect(first.populationUpdates).toBe(3);
+    expect(first.populationMinimum).toBeLessThan(first.populationMaximum!);
+    expect(first.scenarioResults![0].populationDynamics).toEqual(populationDynamics);
+    expect(first.populationWeighting).toBe('person-time');
+    const stationary = await evaluateScenarios(config, { kind: 'uniform' }, [{ ...scenarios[0], populationDynamics: { ...populationDynamics, enabled: false } }]);
+    const classic = await evaluateScenarios(PATROL_DEFAULTS, { kind: 'uniform' }, scenarios);
+    expect(stationary.populationWeighting).toBeUndefined();
+    expect(stationary.populationOnTime).toBe(classic.populationOnTime);
+    expect(stationary.gapCost).toBe(classic.gapCost);
+    const empty = await evaluateScenarios({ ...config, populationCount: 0 }, { kind: 'uniform' }, scenarios);
+    expect(empty).toMatchObject({ populationOnTime: null, gapCost: null, populationMinimum: 0, populationMaximum: 0, neverObservedPeople: 0 });
+    await expect(evaluateScenarios(config, { kind: 'uniform' }, [{ ...scenarios[0], populationDynamics: { ...populationDynamics, intervalSeconds: 0 } }])).rejects.toThrow();
   });
 
   it('keeps every scenario visible and reports worst-case gaps rather than just pooled means', async () => {

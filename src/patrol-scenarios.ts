@@ -1,7 +1,8 @@
 import { DEFAULT_ENVIRONMENT, validateEnvironment } from './patrol-environment';
 import type { PatrolEnvironment } from './patrol-environment';
 import type { LearningSettings } from './patrol-learning-types';
-import type { PatrolConfig, PatrolFault } from './patrol-types';
+import type { PatrolConfig, PatrolFault, PopulationDynamics } from './patrol-types';
+import { DEFAULT_POPULATION_DYNAMICS, validatePopulationDynamics } from './population';
 
 export const PILOT_PROTOCOL = Object.freeze({ warmupSeconds: 120, trainingSeconds: 240, validationSeconds: 360, stepSeconds: 0.5 });
 export type ScenarioKind = 'training' | 'validation' | 'failure' | 'final';
@@ -11,6 +12,7 @@ export interface EvaluationScenario {
   family?: string;
   populationSeed: number;
   populationCount?: number;
+  populationDynamics?: PopulationDynamics;
   environment?: PatrolEnvironment;
   warmupSeconds: number;
   evaluationSeconds: number;
@@ -47,11 +49,20 @@ function diverseScenario(config: PatrolConfig, kind: ScenarioKind, index: number
     depot: { x: Math.round((random() - 0.5) * width * 0.5), z: Math.round((random() - 0.5) * depth * 0.5) },
   };
   const warmupSeconds = Math.min(3600, Math.max(PILOT_PROTOCOL.warmupSeconds, config.revisitSeconds));
+  const populationCount = config.populationCount === 0 ? 0 : Math.max(1, Math.min(50000, Math.round(config.populationCount * (0.35 + random() * 1.1))));
+  const dynamics = config.populationDynamics ?? { ...DEFAULT_POPULATION_DYNAMICS, enabled: true };
+  const populationDynamics = dynamics.enabled ? {
+    enabled: true,
+    intervalSeconds: pick(15, 90),
+    redistributionFraction: pick(15, 80) / 100,
+    countVariation: pick(10, 60) / 100,
+  } : { ...dynamics };
   return {
     id: environment.id,
     family,
     populationSeed,
-    populationCount: config.populationCount === 0 ? 0 : Math.max(1, Math.min(50000, Math.round(config.populationCount * (0.35 + random() * 1.1)))),
+    populationCount,
+    populationDynamics,
     environment,
     warmupSeconds,
     evaluationSeconds: 3 * (environment.enduranceSeconds + environment.rechargeSeconds),
@@ -64,6 +75,7 @@ function diverseScenario(config: PatrolConfig, kind: ScenarioKind, index: number
 }
 
 export function createScenarios(config: PatrolConfig, kind: ScenarioKind, options: Pick<LearningSettings, 'profile' | 'environment' | 'scenarioCount'> = {}): EvaluationScenario[] {
+  if (config.populationDynamics !== undefined && !validatePopulationDynamics(config.populationDynamics)) throw new Error('Invalid population dynamics.');
   if (options.profile === 'diverse') {
     const count = options.scenarioCount ?? 6;
     if (!Number.isInteger(count) || count < 3 || count > 12) throw new Error('Diverse training requires 3–12 scenarios.');
@@ -79,6 +91,7 @@ export function createScenarios(config: PatrolConfig, kind: ScenarioKind, option
   const seeds = kind === 'final' ? [268501, 294001].map(offset => (config.populationSeed - 1 + offset) % 2147483647 + 1) : scenarioSeeds(config.populationSeed)[kind];
   return seeds.map(populationSeed => ({
     populationSeed,
+    ...(config.populationDynamics === undefined ? {} : { populationDynamics: { ...config.populationDynamics } }),
     ...(environment ? { environment } : {}),
     warmupSeconds: PILOT_PROTOCOL.warmupSeconds,
     evaluationSeconds: environment?.batteryEnabled ? 3 * (environment.enduranceSeconds + environment.rechargeSeconds)

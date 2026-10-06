@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { PATROL_DEFAULTS } from './patrol';
 import { DEFAULT_ENVIRONMENT, validateEnvironment } from './patrol-environment';
 import { createScenarios, PILOT_PROTOCOL } from './patrol-scenarios';
+import { DEFAULT_POPULATION_DYNAMICS, validatePopulationDynamics } from './population';
 
 describe('bounded generalization scenarios', () => {
   it('preserves the classic pilot unless a new profile or environment is selected', () => {
@@ -69,5 +70,22 @@ describe('bounded generalization scenarios', () => {
     expect(createScenarios({ ...config, populationCount: 0 }, 'validation', { profile: 'diverse' }).every(scenario => scenario.populationCount === 0)).toBe(true);
     const faults = createScenarios({ ...config, fleetSize: 1 }, 'failure', { profile: 'diverse' });
     expect(faults[0].fault).toMatchObject({ droneId: 1, kind: 'malfunction' });
+  });
+
+  it('randomizes reproducible density and count changes while respecting an explicit static city', () => {
+    const options = { profile: 'diverse' as const };
+    const changing = createScenarios(PATROL_DEFAULTS, 'training', options);
+    expect(changing.every(scenario => scenario.populationDynamics?.enabled)).toBe(true);
+    expect(new Set(changing.map(scenario => scenario.populationDynamics!.intervalSeconds)).size).toBeGreaterThan(1);
+    expect(new Set(changing.map(scenario => scenario.populationDynamics!.countVariation)).size).toBeGreaterThan(1);
+    for (const scenario of changing) expect(validatePopulationDynamics(scenario.populationDynamics)).toEqual(scenario.populationDynamics);
+    const disabled = { ...PATROL_DEFAULTS, populationDynamics: { ...DEFAULT_POPULATION_DYNAMICS } };
+    const stationary = createScenarios(disabled, 'training', options);
+    expect(stationary.every(scenario => scenario.populationDynamics?.enabled === false)).toBe(true);
+    expect(stationary.map(({ populationDynamics: _dynamics, ...scenario }) => scenario)).toEqual(changing.map(({ populationDynamics: _dynamics, ...scenario }) => scenario));
+    const enabled = { ...disabled, populationDynamics: { ...DEFAULT_POPULATION_DYNAMICS, enabled: true, intervalSeconds: 10 } };
+    expect(createScenarios(enabled, 'training')[0].populationDynamics).toEqual(enabled.populationDynamics);
+    expect(createScenarios(enabled, 'training')[0].populationDynamics).not.toBe(enabled.populationDynamics);
+    expect(() => createScenarios({ ...enabled, populationDynamics: { ...enabled.populationDynamics, countVariation: 2 } }, 'training')).toThrow();
   });
 });

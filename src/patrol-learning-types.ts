@@ -1,4 +1,4 @@
-import type { PatrolConfig } from './patrol-types';
+import type { PatrolConfig, PopulationDynamics } from './patrol-types';
 import type { PatrolEnvironment } from './patrol-environment';
 
 export interface PolicyParameters {
@@ -27,6 +27,7 @@ export interface ScenarioEvaluationResult {
   family: string;
   populationSeed: number;
   populationCount: number;
+  populationDynamics?: PopulationDynamics;
   environment: PatrolEnvironment;
   metrics: Omit<EvaluationMetrics, 'scenarioResults'>;
 }
@@ -55,6 +56,10 @@ export interface EvaluationMetrics {
   reserveViolations?: number;
   energyUsed?: number;
   completedCharges?: number;
+  populationWeighting?: 'person-time';
+  populationMinimum?: number;
+  populationMaximum?: number;
+  populationUpdates?: number;
 }
 
 export interface LearningCandidate {
@@ -81,7 +86,7 @@ export interface LearningProgress {
 }
 
 export interface LearningCheckpoint {
-  version: 1 | 2;
+  version: 1 | 2 | 3;
   evaluatorVersion: string;
   settings: LearningSettings;
   progress: LearningProgress;

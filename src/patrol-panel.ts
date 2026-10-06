@@ -2,6 +2,7 @@ import { CITY_BLOCK_SIZE, CITY_PARK, FLIGHT_MAPS } from './maps';
 import { PATROL_DEFAULTS, PATROL_LIMITS, PatrolSystem, recommendFleet } from './patrol';
 import { PatrolLearningPanel } from './patrol-learning-panel';
 import { DEFAULT_ENVIRONMENT, ENVIRONMENT_PRESETS, environmentKey } from './patrol-environment';
+import { DEFAULT_POPULATION_DYNAMICS } from './population';
 import type { PatrolEnvironment } from './patrol-environment';
 import type { PatrolStrategy } from './patrol-learning-types';
 import type { PatrolConfig, PatrolDrone, PatrolSnapshot } from './patrol-types';
@@ -60,7 +61,7 @@ export class PatrolPanel {
           <div class="patrol-metric"><span>MEAN OBSERVATION AGE</span><strong id="patrol-population-age">—</strong><small>Population weighted · lower is better</small></div>
           <div class="patrol-metric"><span>RELATIVE GAP COST</span><strong id="patrol-population-cost">—</strong><small>Instantaneous weighted (age / target)²</small></div>
         </div>
-        <p id="patrol-population-summary" class="patrol-population-summary"></p><p id="patrol-population-targets" class="patrol-population-note"></p><p id="patrol-policy-note" class="patrol-population-note"></p>
+        <p id="patrol-population-summary" class="patrol-population-summary"></p><p id="patrol-population-dynamics" class="patrol-population-note"></p><p id="patrol-population-targets" class="patrol-population-note"></p><p id="patrol-policy-note" class="patrol-population-note"></p>
       </section>
       <div class="patrol-strategy-bar"><div><span>VISIBLE MISSION STRATEGY</span><strong id="patrol-strategy">Uniform baseline</strong></div><button id="patrol-baseline" type="button" class="patrol-secondary">Return to baseline · new mission</button></div>
       <div class="patrol-layout">
@@ -79,11 +80,18 @@ export class PatrolPanel {
               <label for="patrol-fleet">Fleet size</label><div class="patrol-number-wrap"><input id="patrol-fleet" type="number" min="1" max="${PATROL_LIMITS.maxDrones}" step="1" required value="${PATROL_DEFAULTS.fleetSize}"><span>aircraft</span></div>
               <div class="patrol-recommendation"><strong id="patrol-recommended"></strong><p id="patrol-recommendation-note"></p><button id="patrol-use-recommended" type="button">Use recommended fleet <span aria-hidden="true">↗</span></button></div>
               <fieldset class="patrol-population-fields"><legend>City population</legend><div class="patrol-field-grid">
-                <div><label for="patrol-population">Total people</label><div class="patrol-number-wrap"><input id="patrol-population" type="number" min="0" max="50000" step="1" required value="${PATROL_DEFAULTS.populationCount}"></div></div>
+                <div><label for="patrol-population">Initial / base people</label><div class="patrol-number-wrap"><input id="patrol-population" type="number" min="0" max="50000" step="1" required value="${PATROL_DEFAULTS.populationCount}"></div></div>
                 <div><label for="patrol-population-seed">Population seed</label><div class="patrol-number-wrap"><input id="patrol-population-seed" type="number" min="1" max="2147483647" step="1" required value="${PATROL_DEFAULTS.populationSeed}"></div></div>
                 <div><label for="patrol-crowded-window">Crowded revisit (sec)</label><div class="patrol-number-wrap"><input id="patrol-crowded-window" type="number" min="1" max="300" step="1" required value="${PATROL_DEFAULTS.crowdedRevisitSeconds}"></div></div>
                 <div><label for="patrol-crowded-threshold">Crowded: people / cell</label><div class="patrol-number-wrap"><input id="patrol-crowded-threshold" type="number" min="1" max="1000" step="1" required value="${PATROL_DEFAULTS.crowdedCellPopulation}"></div></div>
-              </div><button id="patrol-randomize-population" type="button" class="patrol-secondary">Randomize population seed</button><p class="patrol-form-note">Seeded, stationary clusters. Revisit targets shorten gradually as cell population rises, reaching the crowded window at the threshold. Applying clamps that window to the area window.</p></fieldset>
+              </div><button id="patrol-randomize-population" type="button" class="patrol-secondary">Randomize population seed</button>
+                <label class="patrol-check-label" for="patrol-population-dynamic"><input id="patrol-population-dynamic" type="checkbox"> Vary total & density during patrol</label>
+                <div class="patrol-field-grid">
+                  <div><label for="patrol-population-interval">Change interval (sec)</label><div class="patrol-number-wrap"><input id="patrol-population-interval" type="number" min="5" max="600" step="1" required value="30" disabled></div></div>
+                  <div><label for="patrol-population-redistribution">Density redistribution (%)</label><div class="patrol-number-wrap"><input id="patrol-population-redistribution" type="number" min="5" max="100" step="1" required value="35" disabled></div></div>
+                  <div><label for="patrol-population-variation">Total variation (±%)</label><div class="patrol-number-wrap"><input id="patrol-population-variation" type="number" min="0" max="100" step="1" required value="25" disabled></div></div>
+                </div>
+                <p class="patrol-form-note">At each simulated interval, blend toward new seeded hotspots and sample a total within the base count ± variation (1–50,000 people; an empty city stays empty). Redistribution sets how much density changes each time. Changes pause with the mission and replay on reset; observation ages belong to locations, not individual people. Revisit targets shorten as density rises. Apply and reset also applies these settings to learning.</p></fieldset>
               <fieldset class="patrol-environment-fields"><legend>Environment & aircraft</legend>
                 <label for="patrol-environment">Synthetic environment</label><select id="patrol-environment"><option value="classic">Classic NYC · 640 m circle</option><option value="compact">Compact · 360 m circle</option><option value="district">District · 520 × 360 m</option><option value="corridor">Corridor · 600 × 160 m</option></select>
                 <div class="patrol-field-grid"><div><label for="patrol-max-speed">Maximum speed (m/s)</label><div class="patrol-number-wrap"><input id="patrol-max-speed" type="number" min="4" max="30" step="1" required value="18"></div></div><div><label for="patrol-charging-pads">Charging pads / base</label><div class="patrol-number-wrap"><input id="patrol-charging-pads" type="number" min="1" max="8" step="1" required value="2"></div></div></div>
@@ -102,7 +110,7 @@ export class PatrolPanel {
         <section class="patrol-log-panel" aria-labelledby="patrol-log-title"><div class="patrol-section-heading"><div><div class="eyebrow">MISSION HISTORY</div><h2 id="patrol-log-title">Event log</h2></div><span>SIMULATED TIME</span></div><ol id="patrol-log" role="log" aria-label="Patrol event log" aria-live="polite" aria-relevant="additions"></ol></section>
       </div>
       <section id="patrol-learning" class="patrol-learning-panel" aria-labelledby="patrol-learning-title"></section>
-      <div class="patrol-method-note"><strong>Simulation only</strong><p>Overhead footprint sampling across a ${PATROL_LIMITS.cellSize} m grid, with the environment’s configured sensor radius. Population is an abstract, stationary count per cell, not simulated pedestrians. Buildings do not occlude scans. Aircraft stage instantly in altitude lanes from 260–288 m; charging is a horizontal service abstraction without descent, landing or launch dynamics. This view does not simulate onboard cameras or hardware connections. The historical mission-form fleet estimate describes classic unlimited-endurance uniform routes and the area target only. Learning runs only when explicitly started; applying a tested candidate always creates a new, paused mission.</p></div>`;
+      <div class="patrol-method-note"><strong>Simulation only</strong><p>Overhead footprint sampling across a ${PATROL_LIMITS.cellSize} m grid, with the environment’s configured sensor radius. Population is an abstract count per location, optionally changing in seeded intervals, not simulated pedestrian paths or person tracking. Buildings do not occlude scans. Aircraft stage instantly in altitude lanes from 260–288 m; charging is a horizontal service abstraction without descent, landing or launch dynamics. This view does not simulate onboard cameras or hardware connections. The historical mission-form fleet estimate describes classic unlimited-endurance uniform routes and the area target only. Learning runs only when explicitly started; applying a tested candidate always creates a new, paused mission.</p></div>`;
     this.canvas = this.element<HTMLCanvasElement>('patrol-map');
     const context = this.canvas.getContext('2d');
     if (!context) throw new Error('This browser could not create the patrol operations map.');
@@ -113,11 +121,12 @@ export class PatrolPanel {
       getConfig: () => this.system.snapshot().config,
       getEnvironment: () => this.system.snapshot().environment,
       applyCandidate: candidate => {
-        this.reset({ ...this.system.snapshot().config, fleetSize: candidate.fleetSize }, candidate.strategy);
+        this.reset({ ...structuredClone(this.system.snapshot().config), fleetSize: candidate.fleetSize }, candidate.strategy);
         this.text('patrol-config-note', 'Test strategy applied to a new, paused mission. Start patrol when ready.');
       },
     });
     this.bindEvents();
+    this.populatePopulationDynamicsFields(this.system.snapshot().config);
     this.populateEnvironmentFields(this.system.snapshot().environment);
     this.updateRecommendation();
     this.refresh();
@@ -202,6 +211,12 @@ export class PatrolPanel {
         this.text('patrol-config-note', 'Unsaved parameters · Apply and reset to use them.');
       }, options);
     }
+    for (const id of ['patrol-population-dynamic', 'patrol-population-interval', 'patrol-population-redistribution', 'patrol-population-variation']) {
+      this.element(id).addEventListener('input', () => {
+        this.updatePopulationDynamicsFields();
+        this.text('patrol-config-note', 'Unsaved population dynamics · Apply and reset to use them in patrol and learning.');
+      }, options);
+    }
     this.element<HTMLSelectElement>('patrol-environment').addEventListener('change', () => {
       this.populateEnvironmentFields(ENVIRONMENT_PRESETS[this.element<HTMLSelectElement>('patrol-environment').value] ?? DEFAULT_ENVIRONMENT);
       this.updateRecommendation();
@@ -263,7 +278,27 @@ export class PatrolPanel {
       populationSeed: numberValue('patrol-population-seed', PATROL_DEFAULTS.populationSeed, 1, 2147483647),
       crowdedRevisitSeconds: numberValue('patrol-crowded-window', PATROL_DEFAULTS.crowdedRevisitSeconds, 1, 300),
       crowdedCellPopulation: numberValue('patrol-crowded-threshold', PATROL_DEFAULTS.crowdedCellPopulation, 1, 1000),
+      populationDynamics: {
+        enabled: this.element<HTMLInputElement>('patrol-population-dynamic').checked,
+        intervalSeconds: numberValue('patrol-population-interval', DEFAULT_POPULATION_DYNAMICS.intervalSeconds, 5, 600),
+        redistributionFraction: numberValue('patrol-population-redistribution', DEFAULT_POPULATION_DYNAMICS.redistributionFraction * 100, 5, 100) / 100,
+        countVariation: numberValue('patrol-population-variation', DEFAULT_POPULATION_DYNAMICS.countVariation * 100, 0, 100) / 100,
+      },
     };
+  }
+
+  private populatePopulationDynamicsFields(config: PatrolConfig): void {
+    const dynamics = config.populationDynamics ?? DEFAULT_POPULATION_DYNAMICS;
+    this.element<HTMLInputElement>('patrol-population-dynamic').checked = dynamics.enabled;
+    this.element<HTMLInputElement>('patrol-population-interval').value = String(dynamics.intervalSeconds);
+    this.element<HTMLInputElement>('patrol-population-redistribution').value = String(dynamics.redistributionFraction * 100);
+    this.element<HTMLInputElement>('patrol-population-variation').value = String(dynamics.countVariation * 100);
+    this.updatePopulationDynamicsFields();
+  }
+
+  private updatePopulationDynamicsFields(): void {
+    const enabled = this.element<HTMLInputElement>('patrol-population-dynamic').checked;
+    for (const id of ['patrol-population-interval', 'patrol-population-redistribution', 'patrol-population-variation']) this.element<HTMLInputElement>(id).disabled = !enabled;
   }
 
   private pendingEnvironment(): PatrolEnvironment {
@@ -312,6 +347,7 @@ export class PatrolPanel {
     for (const [id, key] of fields) {
       this.element<HTMLInputElement>(id).value = String(applied[key]);
     }
+    this.populatePopulationDynamicsFields(applied);
     this.populateEnvironmentFields(this.system.snapshot().environment);
     this.updateRecommendation();
     this.text('patrol-config-note', 'Mission reset using applied parameters. Start patrol when ready.');
@@ -382,6 +418,14 @@ export class PatrolPanel {
     this.text('patrol-population-age', population.meanAgeSeconds === null ? 'N/A' : `${population.meanAgeSeconds.toFixed(1)} s`);
     this.text('patrol-population-cost', population.normalizedGapCost === null ? 'N/A' : population.normalizedGapCost.toFixed(2));
     this.text('patrol-population-summary', `${population.totalPeople.toLocaleString('en-US')} people · seed ${snapshot.config.populationSeed} · ${population.unseenPeople.toLocaleString('en-US')} never observed · ${population.hotspotOnTimeCells} / ${population.hotspotCells} crowded cells on time`);
+    const dynamics = snapshot.config.populationDynamics ?? DEFAULT_POPULATION_DYNAMICS;
+    const peakPopulation = Math.max(0, ...snapshot.cells.map(cell => cell.population));
+    this.element('patrol-population-dynamics').dataset.updates = String(snapshot.populationUpdates);
+    this.element('patrol-population-dynamics').dataset.total = String(population.totalPeople);
+    this.element('patrol-population-dynamics').dataset.peak = String(peakPopulation);
+    this.text('patrol-population-dynamics', dynamics.enabled
+      ? `Changing population · base ${snapshot.config.populationCount.toLocaleString('en-US')} ±${Math.round(dynamics.countVariation * 100)}% · ${Math.round(dynamics.redistributionFraction * 100)}% density redistribution every ${dynamics.intervalSeconds} s · ${snapshot.populationUpdates} updates · ${snapshot.nextPopulationChange === null ? 'no change scheduled' : `next in ${Math.max(0, Math.ceil(snapshot.nextPopulationChange - snapshot.time))} s`} · peak ${peakPopulation} people/cell. Location observation history is preserved.`
+      : `Static population · peak ${peakPopulation} people/cell. Enable varying total & density, then Apply and reset to change this mission.`);
     this.text('patrol-population-targets', `Crowded: ≥${snapshot.config.crowdedCellPopulation} people per cell → revisit within ${snapshot.config.crowdedRevisitSeconds} s. Quieter cells scale gradually up to ${snapshot.config.revisitSeconds} s for empty cells. ${population.totalPeople === 0 ? 'No population: people-based metrics are not applicable.' : 'These service metrics are separate from the geographic coverage target.'}`);
     const areaHealth = snapshot.activeCount === 0
       ? serviceCount ? 'No aircraft currently patrol. Healthy aircraft are returning, waiting or charging; service will resume when available.' : 'No healthy aircraft remain. Restore an aircraft to rebuild the patrol plan.'

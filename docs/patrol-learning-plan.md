@@ -8,13 +8,19 @@ The historical reference remains [patrol baseline v1](patrol-baseline.md), recor
 
 - Search fleet sizes 1–8 from the first generation, not a five-drone-only improvement phase. A compute-budget interruption can leave evaluations incomplete; the UI does not claim untested fleets were evaluated.
 - Keep one adaptive incumbent per fleet and a separate uniform baseline per size. Subsequent generations mutate bounded parameters and retain candidates using training results.
-- Keep scenario population totals and seeds, sensing radius, maximum speed, battery specifications, geographic targets, crowded-area deadlines, and density thresholds outside the learned action space. Scenarios may vary these environmental constraints; the optimizer cannot lower requirements to improve a score. It may learn a patrol speed between 50% and 100% of the scenario's maximum.
+- Keep scenario population base totals, seeds and temporal-change settings, sensing radius, maximum speed, battery specifications, geographic targets, crowded-area deadlines, and density thresholds outside the learned action space. Scenarios may vary these environmental constraints; the optimizer cannot lower requirements or remove people to improve a score. It may learn a patrol speed between 50% and 100% of the scenario's maximum.
 - Keep fleet size fixed within each trial. Failed aircraft remain part of deployed cost; policies cannot spawn, remove, or teleport aircraft.
 - Run held-out healthy evaluations and a separate one-drone-loss check when budget permits. Incomplete evaluations are not scored or eligible for application.
 - Report fleet/service trade-offs and unmet requirements. Lower gap cost alone does not establish feasibility.
 - Preserve the classic unlimited-endurance visible mission by default. New learning runs default to the diverse profile; restoring a legacy report retains its current-mission profile.
 
-The model still uses stationary population and circular overhead sensing with no building occlusion. Aircraft fly in separate altitude lanes above the buildings. This is not a low-altitude visibility or collision-avoidance learning system.
+The model supports static or randomly changing total population and density, with circular overhead sensing and no building occlusion. Population is a count per sample location, not simulated pedestrian motion. Aircraft fly in separate altitude lanes above the buildings. This is not a low-altitude visibility or collision-avoidance learning system.
+
+### Temporal population model
+
+The mission's initial/base population remains immutable. With dynamics enabled, each simulated interval blends the previous density toward new reproducibly seeded clusters and samples a new total within `base × (1 ± countVariation)`. Nonempty cities clamp to 1–50,000 people and empty cities stay empty. Integer allocation preserves the sampled total exactly. Defaults are 30 seconds, 35% redistribution and ±25% total variation; supported bounds are 5–600 integer seconds, 5–100% redistribution and 0–100% total variation. Zero variation keeps the total fixed while density changes. These are discrete aggregate updates, not continuous walking paths or a compounding population random walk.
+
+Changes follow simulated time independently of policy, fleet size, charging or faults. Pause freezes them; reset reproduces the sequence. Neither the observation timestamps nor the immutable base count are reset by redistribution. Revisit deadlines are recalculated from the new local density; adaptive decisions use the updated population. Observation age belongs to a location, so an arrival may inherit that location's scan history; this is not person-level observation tracking.
 
 ## Objective and pilot gates
 
@@ -24,7 +30,7 @@ The continuous population objective is unchanged:
 gapCost(time) = sum(people[cell] * (age[cell] / deadline[cell])^2) / totalPeople
 ```
 
-Smaller observation gaps remain better before a deadline is missed. Never-observed cells retain the conservative age `missionTime + deadline` and never count as fresh. With no people, population objectives are not applicable rather than perfect scores. Episode means are time-weighted 0.5-second samples, not exact continuous-time integrals.
+Smaller observation gaps remain better before a deadline is missed. Never-observed cells retain the conservative age `missionTime + deadline` and never count as fresh. With no people, population objectives are not applicable rather than perfect scores. Static experiments retain time-weighted 0.5-second averages. Dynamic population service uses person-time weighting: `sum(metric(time) × totalPeople(time) × dt) / sum(totalPeople(time) × dt)`, including across scenarios; hotspot service uses crowded-person time. Thus low-population periods cannot dilute a crowded period's gaps. Geographic metrics remain time-weighted. These sampled means are not exact continuous-time integrals, and dynamic versus archived static scores are not interchangeable.
 
 | Recorded metric | Meaning |
 | --- | --- |
@@ -40,6 +46,7 @@ Smaller observation gaps remain better before a deadline is missed. Never-observ
 | Feasible scenario fraction | Share of complete scenarios meeting all sampled service and energy checks. |
 | Worst-case gap cost | Largest scenario-mean gap cost, not a percentile or the largest instantaneous gap. |
 | Energy and service totals | Full-pack-equivalent energy use, completed charges, reserve breaches and stranded-aircraft counts. These totals include warm-up, unlike the scored service averages. |
+| Dynamic population range/updates | Minimum and maximum live totals in scored samples, plus population epochs after warm-up; the initial base and dynamics settings are retained separately in each scenario. |
 
 A candidate receives the pilot's **tested feasible** label only when held-out healthy trials satisfy every sampled check:
 
@@ -117,9 +124,9 @@ Tests cover policy/command validation, detached inputs, stepping invariance, sha
 
 ## Evaluation protocol
 
-Current identifier: `patrol-robustness-v2-energy-grid40-audit10-dt0.5`. Legacy v1 reports retain their original evaluator identity and remain read-only.
+Current identifier: `patrol-robustness-v3-dynamic-population-energy-grid40-audit10-dt0.5`. Legacy v1 and v2 reports retain their original evaluator identities and remain read-only. The version changes because dynamic trials introduce temporal population semantics and person-time-weighted service averages; static regression protocols remain unchanged.
 
-**Current-mission profile:** fixed captured geometry, population count and aircraft constraints, with different population seeds. Unlimited-endurance durations remain:
+**Current-mission profile:** fixed captured geometry, base population, temporal population settings and aircraft constraints, with different population seeds. The profile retains static population when dynamics are absent or explicitly disabled. Unlimited-endurance durations remain:
 
 | Split | Scenarios | Warm-up per scenario | Scored duration per scenario |
 | --- | --- | --- | --- |
@@ -129,7 +136,9 @@ Current identifier: `patrol-robustness-v2-energy-grid40-audit10-dt0.5`. Legacy v
 
 For a battery-enabled current mission, each scored episode instead lasts `3 × (enduranceSeconds + rechargeSeconds)`, with the same 120-second warm-up. This spans three nominal service-cycle periods; queues and patrol behavior may produce fewer than three completed charges per aircraft. Its fault check injects a malfunction, while classic unlimited checks retain malfunction/deviation variation.
 
-**Diverse profile:** the operator selects 3–12 training environments, default 6. Held-out validation uses `ceil(trainingCount / 2)` additional cases; one fault case is separate. Compact-circle and district families are used for training, with corridors reserved for held-out evaluation. Geometry, population count and seed, sensing radius, maximum speed, endurance, recharge time, pad count, initial charge, reserve and depot location vary reproducibly. Population remains zero throughout if the captured city is empty; otherwise counts vary around the captured population rather than becoming a learned target.
+**Diverse profile:** the operator selects 3–12 training environments, default 6. Held-out validation uses `ceil(trainingCount / 2)` additional cases; one fault case is separate. Compact-circle and district families are used for training, with corridors reserved for held-out evaluation. Geometry, population base count and seed, sensing radius, maximum speed, endurance, recharge time, pad count, initial charge, reserve and depot location vary reproducibly. Population remains zero throughout if the captured city is empty; otherwise counts vary around the captured population rather than becoming a learned target.
+
+When the captured configuration omits dynamics, diverse experiments enable the temporal model by default while the visible mission remains static. Applying Mission parameters makes the operator's enabled/disabled choice explicit for future experiments. Enabled diverse cases sample intervals of 15–90 seconds, redistribution of 15–80%, and total variation of ±10–60%, rather than using the exact captured bounds; choose the current-mission profile for exact bounds. Disabled cases remain static. Every strategy and fleet receives the exact same population timeline in a given scenario. Held-out seeds produce separate timelines, not policy-dependent random updates. Scenario details show the temporal settings, scored population range, scored update count and weighting protocol.
 
 Diverse warm-up is `max(120 seconds, configured revisit window)` and each scored duration is `3 × (enduranceSeconds + rechargeSeconds)`. Its fault case injects a reproducible aircraft malfunction one endurance period after warm-up. The planner cannot see future fault schedules. The UI reports each case and the worst case, not merely a favorable combined mean.
 
@@ -149,9 +158,9 @@ Pause/resume continues the same in-memory worker. Cancellation or budget exhaust
 
 Versioned results are saved locally and can be exported/imported as JSON. Validation checks settings, bounded strategies, numerical consistency, and evaluator compatibility. **These records are not exact optimizer checkpoints:** they do not serialize suspended episodes, RNG progression, or the complete resumable process. Reloading or importing requires a new experiment to continue learning.
 
-New results use a separate v2 browser-storage key. Restoration checks that key first and falls back to the old v1 key; new runs never overwrite or delete the original legacy record. Importing legacy data does not relabel it as a new evaluator result.
+New results use a separate v3 browser-storage key. Restoration checks v3 first, then falls back to v2 and v1; new runs never overwrite or delete either original legacy record. Importing legacy data does not relabel it as a new evaluator result. Checkpoint validation covers dynamic settings and person-time metrics as well as the existing numerical checks.
 
-Imported and restored results are untrusted, read-only reports. Their numbers are not cryptographically verified and cannot authorize strategy application. A new local experiment must produce held-out results before its candidate can be tested. Changes to the captured mission requirements or environment fingerprint disable application until a matching experiment runs.
+Imported and restored results are untrusted, read-only reports. Their numbers are not cryptographically verified and cannot authorize strategy application. A new local experiment must produce held-out results before its candidate can be tested. Changes to the captured mission requirements, nested population dynamics or environment fingerprint disable application until a matching experiment runs. Form edits remain staged until Apply and reset; captured settings and restored records are deep copies, not shared mutable mission settings.
 
 Applying a locally evaluated candidate is always explicit and starts a **new, paused test mission**, including its selected fleet size, in the captured visible environment. It never silently replaces a running mission. A candidate with completed held-out results but unmet gates may be used through the clearly labeled **experimental mission** action; this is an operator test, not automatic promotion or a recommendation. A diverse-suite score does not certify that visible environment. Patrol must then be started explicitly.
 

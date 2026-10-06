@@ -2,13 +2,14 @@ import { PatrolSystem } from './patrol';
 import { PatrolCoverageAudit } from './patrol-audit';
 import { DEFAULT_ENVIRONMENT, validateEnvironment } from './patrol-environment';
 import { PILOT_PROTOCOL } from './patrol-scenarios';
+import { validatePopulationDynamics } from './population';
 import type { EvaluationScenario } from './patrol-scenarios';
 import type { EvaluationMetrics, PatrolStrategy, ScenarioEvaluationResult } from './patrol-learning-types';
 import type { PatrolConfig, PatrolSnapshot } from './patrol-types';
 
 export { createScenarios, PILOT_PROTOCOL, scenarioSeeds } from './patrol-scenarios';
 export type { EvaluationScenario } from './patrol-scenarios';
-export const EVALUATOR_VERSION = 'patrol-robustness-v2-energy-grid40-audit10-dt0.5';
+export const EVALUATOR_VERSION = 'patrol-robustness-v3-dynamic-population-energy-grid40-audit10-dt0.5';
 
 export interface EvaluationControls {
   checkpoint?: () => Promise<void>;
@@ -30,6 +31,10 @@ export class EvaluationAccumulator {
   private maxAge = 0;
   private unseen = 0;
   private hotspotsAlwaysFresh = true;
+  private populationMinimum = Infinity;
+  private populationMaximum = 0;
+
+  constructor(private readonly personTimeWeighted = false) {}
 
   add(snapshot: PatrolSnapshot, seconds: number, auditCoverage = snapshot.coverage): void {
     if (!Number.isFinite(seconds) || seconds <= 0) throw new Error('Evaluation interval must be positive and finite.');
@@ -49,16 +54,20 @@ export class EvaluationAccumulator {
       if (cell.lastVisited !== null && age <= cell.targetRevisitSeconds + 1e-8) hotspotFresh += cell.population;
     }
     if (hotspotPeople) {
-      this.hotspotIntegral += 100 * hotspotFresh / hotspotPeople * seconds;
-      this.hotspotDuration += seconds;
+      const weight = this.personTimeWeighted ? hotspotPeople * seconds : seconds;
+      this.hotspotIntegral += 100 * hotspotFresh / hotspotPeople * weight;
+      this.hotspotDuration += weight;
       if (hotspotFresh < hotspotPeople) this.hotspotsAlwaysFresh = false;
     }
     if (snapshot.population.totalPeople) {
-      this.populationIntegral += snapshot.population.onTimeCoverage! * seconds;
-      this.ageIntegral += snapshot.population.meanAgeSeconds! * seconds;
-      this.gapIntegral += snapshot.population.normalizedGapCost! * seconds;
-      this.populationDuration += seconds;
+      const weight = this.personTimeWeighted ? snapshot.population.totalPeople * seconds : seconds;
+      this.populationIntegral += snapshot.population.onTimeCoverage! * weight;
+      this.ageIntegral += snapshot.population.meanAgeSeconds! * weight;
+      this.gapIntegral += snapshot.population.normalizedGapCost! * weight;
+      this.populationDuration += weight;
     }
+    this.populationMinimum = Math.min(this.populationMinimum, snapshot.population.totalPeople);
+    this.populationMaximum = Math.max(this.populationMaximum, snapshot.population.totalPeople);
     this.unseen = Math.max(this.unseen, snapshot.population.unseenPeople);
   }
 
@@ -81,13 +90,19 @@ export class EvaluationAccumulator {
       distanceMeters,
       geographicFeasible: this.targetIntegral >= this.duration - 1e-8,
       hotspotFeasible: this.hotspotsAlwaysFresh,
+      ...(this.personTimeWeighted ? {
+        populationWeighting: 'person-time' as const,
+        populationMinimum: this.populationMinimum,
+        populationMaximum: this.populationMaximum,
+      } : {}),
     };
   }
 }
 
 export async function evaluateScenarios(config: PatrolConfig, strategy: PatrolStrategy, scenarios: EvaluationScenario[], controls: EvaluationControls = {}): Promise<EvaluationMetrics> {
   if (!scenarios.length) throw new Error('At least one scenario is required.');
-  const accumulator = new EvaluationAccumulator();
+  const hasDynamicPopulation = scenarios.some(scenario => (scenario.populationDynamics ?? config.populationDynamics)?.enabled);
+  const accumulator = new EvaluationAccumulator(hasDynamicPopulation);
   const scenarioResults: ScenarioEvaluationResult[] = [];
   let distanceMeters = 0;
   for (const scenario of scenarios) {
@@ -95,15 +110,20 @@ export async function evaluateScenarios(config: PatrolConfig, strategy: PatrolSt
     if (!Number.isInteger(scenario.populationSeed) || scenario.populationSeed < 1 || scenario.populationSeed > 2147483647) throw new Error('Invalid scenario seed.');
     const populationCount = scenario.populationCount ?? config.populationCount;
     if (!Number.isInteger(populationCount) || populationCount < 0 || populationCount > 50000) throw new Error('Invalid scenario population.');
+    const dynamicsSource = scenario.populationDynamics === undefined ? config.populationDynamics : scenario.populationDynamics;
+    const populationDynamics = dynamicsSource === undefined ? undefined : validatePopulationDynamics(dynamicsSource);
+    if (populationDynamics === null) throw new Error('Invalid scenario population dynamics.');
     const environment = validateEnvironment(scenario.environment ?? DEFAULT_ENVIRONMENT);
     if (!environment) throw new Error('Invalid scenario environment.');
     if (scenario.fault && (!Number.isInteger(scenario.fault.droneId) || scenario.fault.droneId < 1 || scenario.fault.droneId > config.fleetSize
       || !['malfunction', 'deviation'].includes(scenario.fault.kind) || !Number.isFinite(scenario.fault.timeSeconds)
       || scenario.fault.timeSeconds < 0 || scenario.fault.timeSeconds >= scenario.warmupSeconds + scenario.evaluationSeconds)) throw new Error('Invalid fault scenario.');
     await controls.checkpoint?.();
-    const scenarioAccumulator = new EvaluationAccumulator();
+    const scenarioAccumulator = new EvaluationAccumulator(populationDynamics?.enabled);
     let scenarioDistance = 0;
-    const system = new PatrolSystem({ ...config, populationSeed: scenario.populationSeed, populationCount }, strategy, environment);
+    let populationUpdates = 0;
+    const system = new PatrolSystem({ ...config, populationSeed: scenario.populationSeed, populationCount,
+      ...(populationDynamics === undefined ? {} : { populationDynamics }) }, strategy, environment);
     const audit = new PatrolCoverageAudit(10, environment);
     const end = scenario.warmupSeconds + scenario.evaluationSeconds;
     let snapshot = system.snapshot();
@@ -126,6 +146,7 @@ export async function evaluateScenarios(config: PatrolConfig, strategy: PatrolSt
         const auditCoverage = audit.measure(snapshot.time, config.revisitSeconds).coverage;
         accumulator.add(snapshot, interval, auditCoverage);
         scenarioAccumulator.add(snapshot, interval, auditCoverage);
+        populationUpdates += snapshot.populationUpdates - previous.populationUpdates;
         const distance = snapshot.drones.reduce((total, drone, index) => total + Math.hypot(drone.position.x - previous.drones[index].position.x, drone.position.z - previous.drones[index].position.z), 0);
         distanceMeters += distance;
         scenarioDistance += distance;
@@ -136,6 +157,7 @@ export async function evaluateScenarios(config: PatrolConfig, strategy: PatrolSt
       family: scenario.family ?? 'current',
       populationSeed: scenario.populationSeed,
       populationCount,
+      ...(populationDynamics === undefined ? {} : { populationDynamics }),
       environment,
       metrics: {
         ...scenarioAccumulator.metrics(1, scenarioDistance),
@@ -143,6 +165,7 @@ export async function evaluateScenarios(config: PatrolConfig, strategy: PatrolSt
         reserveViolations: snapshot.energy.reserveViolations,
         energyUsed: snapshot.energy.energyUsed,
         completedCharges: snapshot.energy.completedCharges,
+        ...(populationDynamics?.enabled ? { populationUpdates } : {}),
       },
     });
     await controls.checkpoint?.();
@@ -159,5 +182,6 @@ export async function evaluateScenarios(config: PatrolConfig, strategy: PatrolSt
     reserveViolations: caseMetrics.reduce((total, metrics) => total + (metrics.reserveViolations ?? 0), 0),
     energyUsed: caseMetrics.reduce((total, metrics) => total + (metrics.energyUsed ?? 0), 0),
     completedCharges: caseMetrics.reduce((total, metrics) => total + (metrics.completedCharges ?? 0), 0),
+    ...(hasDynamicPopulation ? { populationUpdates: caseMetrics.reduce((total, metrics) => total + (metrics.populationUpdates ?? 0), 0) } : {}),
   };
 }

@@ -2,6 +2,13 @@ import type { Vec3 } from './types';
 import type { PatrolStrategy } from './patrol-learning-types';
 import type { PatrolEnergyMetrics, PatrolEnvironment } from './patrol-environment';
 
+export interface PopulationDynamics {
+  enabled: boolean;
+  intervalSeconds: number;
+  redistributionFraction: number;
+  countVariation: number;
+}
+
 export interface PatrolConfig {
   coverageTarget: number;
   revisitSeconds: number;
@@ -10,6 +17,7 @@ export interface PatrolConfig {
   populationSeed: number;
   crowdedRevisitSeconds: number;
   crowdedCellPopulation: number;
+  populationDynamics?: PopulationDynamics;
 }
 
 export type PatrolFault = 'malfunction' | 'deviation';
@@ -86,4 +94,6 @@ export interface PatrolSnapshot {
   revision: number;
   events: PatrolEvent[];
   population: PopulationMetrics;
+  populationUpdates: number;
+  nextPopulationChange: number | null;
 }
