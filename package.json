@@ -14,13 +14,16 @@
     "benchmark:patrol:faults": "node scripts/benchmark-patrol-faults.mjs",
     "benchmark:patrol:fidelity": "node scripts/benchmark-patrol-fidelity.mjs",
     "benchmark:patrol:learning": "node scripts/benchmark-patrol-learning.mjs",
-    "benchmark:patrol:generalization": "node scripts/benchmark-patrol-generalization.mjs"
+    "benchmark:patrol:generalization": "node scripts/benchmark-patrol-generalization.mjs",
+    "train:patrol:rl": "node scripts/train-patrol-rl.mjs",
+    "benchmark:patrol:rl": "node scripts/train-patrol-rl.mjs --evaluate"
   },
   "dependencies": {
     "three": "^0.180.0",
     "lucide": "^0.468.0"
   },
   "devDependencies": {
+    "@tensorflow/tfjs": "4.22.0",
     "@types/three": "^0.180.0",
     "typescript": "~5.9.3",
     "vite": "^7.1.9",

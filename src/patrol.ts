@@ -2,6 +2,8 @@ import { FLIGHT_MAPS } from './maps';
 import { evaluatePopulation, populateCells, POPULATION_DEFAULTS, POPULATION_LIMITS, updatePopulation, validatePopulationDynamics } from './population';
 import { assignPolicyRegions, PopulationPolicy, validateStrategy } from './patrol-policy';
 import { DEFAULT_ENVIRONMENT, energyRate, insideEnvironment, validateEnvironment } from './patrol-environment';
+import { parseExternalPatrolCommand } from './patrol-external';
+import type { ExternalPatrolCommand, ExternalPatrolMetrics } from './patrol-external';
 import type { PatrolEnergyMetrics, PatrolEnvironment } from './patrol-environment';
 import type { PatrolStrategy } from './patrol-learning-types';
 import type { FleetRecommendation, PatrolCell, PatrolConfig, PatrolDrone, PatrolEvent, PatrolFault, PatrolSnapshot } from './patrol-types';
@@ -128,7 +130,10 @@ export class PatrolSystem {
   private stranded = new Set<number>();
   private serviceChanged = false;
   private populationUpdates = 0;
+  private populationEpoch = 0;
   private nextPopulationChange: number | null = null;
+  private externalControl: ExternalPatrolMetrics | null = null;
+  private externalSpeeds = new Map<number, number>();
 
   constructor(config: Partial<PatrolConfig> = {}, strategy: PatrolStrategy = { kind: 'uniform' }, environment: PatrolEnvironment = DEFAULT_ENVIRONMENT) {
     const validated = validateStrategy(strategy);
@@ -144,9 +149,68 @@ export class PatrolSystem {
     const validated = validateStrategy(strategy);
     if (!validated) throw new Error('Invalid patrol strategy.');
     this.strategy = validated;
+    this.externalControl = null;
+    this.externalSpeeds.clear();
+    for (const drone of this.drones) if (drone.serviceState === 'standby') drone.serviceState = 'patrol';
     this.commitmentUntil.clear();
     this.nextDecisionTime = Math.floor(this.time) + 1;
     this.replan();
+  }
+
+  enableExternalControl(): void {
+    if (this.externalControl) return;
+    this.externalControl = { rejectedCommands: 0, forcedReturns: 0 };
+    this.externalSpeeds.clear();
+    this.commitmentUntil.clear();
+    this.replanExternal(true);
+  }
+
+  applyExternalCommands(commands: ExternalPatrolCommand[]): void {
+    if (!this.externalControl) throw new Error('External patrol control is not enabled.');
+    const parsed = Array.isArray(commands) ? Array.from(commands, parseExternalPatrolCommand) : [];
+    const ids = new Set<number>();
+    const valid = Array.isArray(commands) && parsed.every(command => {
+      if (!command || ids.has(command.droneId)) return false;
+      ids.add(command.droneId);
+      const drone = this.drones.find(candidate => candidate.id === command.droneId);
+      if (!drone || drone.status !== 'patrolling' || drone.fault !== null || !['patrol', 'standby'].includes(drone.serviceState)) return false;
+      if (command.mode === 'patrol') return insideEnvironment(command.destination, this.environment);
+      return command.mode !== 'standby' || Math.hypot(drone.position.x - this.environment.depot.x, drone.position.z - this.environment.depot.z) <= POSITION_EPSILON;
+    });
+    if (!valid) {
+      this.externalControl.rejectedCommands += Math.max(1, Array.isArray(commands) ? commands.length : 1);
+      throw new Error('Invalid external patrol command batch; no commands applied.');
+    }
+    for (const command of parsed as ExternalPatrolCommand[]) {
+      const drone = this.drones.find(candidate => candidate.id === command.droneId)!;
+      if (command.mode === 'return') this.beginReturn(drone, false);
+      else if (command.mode === 'standby') {
+        drone.serviceState = 'standby';
+        drone.route = [];
+        drone.routeIndex = 0;
+        drone.speed = 0;
+        this.plannedLegs.set(drone.id, { start: { ...drone.position }, end: { ...drone.position } });
+      } else {
+        drone.serviceState = 'patrol';
+        drone.route = [{ ...command.destination, y: drone.position.y }];
+        drone.routeIndex = 0;
+        this.externalSpeeds.set(drone.id, command.speedFraction ?? 1);
+        this.plannedLegs.set(drone.id, { start: { ...drone.position }, end: { ...drone.route[0] } });
+      }
+    }
+    this.serviceChanged = false;
+  }
+
+  applyPopulationCounts(counts: number[]): void {
+    if (!Array.isArray(counts) || counts.length !== this.cells.length
+      || Array.from(counts).some(count => !Number.isSafeInteger(count) || count < 0)
+      || counts.reduce((total, count) => total + count, 0) > POPULATION_LIMITS.maxPopulation) throw new Error('Invalid external population counts.');
+    this.cells.forEach((cell, index) => {
+      cell.population = counts[index];
+      cell.targetRevisitSeconds = this.config.revisitSeconds + (this.config.crowdedRevisitSeconds - this.config.revisitSeconds) * Math.min(1, cell.population / this.config.crowdedCellPopulation);
+    });
+    this.populationUpdates += 1;
+    if (!this.externalControl && this.strategy.kind === 'adaptive') this.replan();
   }
 
   reset(overrides: Partial<PatrolConfig> = {}, environment: PatrolEnvironment = this.environment): void {
@@ -170,6 +234,7 @@ export class PatrolSystem {
     this.recommendation = recommendFleet(this.config, this.environment);
     this.time = 0;
     this.populationUpdates = 0;
+    this.populationEpoch = 0;
     this.nextPopulationChange = populationDynamics?.enabled ? populationDynamics.intervalSeconds : null;
     this.cells = createCells(revisitSeconds, this.environment);
     this.policy = new PopulationPolicy(this.cells.map(cell => cell.position), this.environment.width / 2, this.environment.sensorRadius, PATROL_LIMITS.cellSize, this.environment);
@@ -188,6 +253,8 @@ export class PatrolSystem {
     this.reserveBreaches.clear();
     this.stranded.clear();
     this.serviceChanged = false;
+    if (this.externalControl) this.externalControl = { rejectedCommands: 0, forcedReturns: 0 };
+    this.externalSpeeds.clear();
     this.drones = Array.from({ length: this.config.fleetSize }, (_, index) => ({
       id: index + 1,
       color: COLORS[index],
@@ -210,7 +277,8 @@ export class PatrolSystem {
       this.lastHeartbeat.set(drone.id, 0);
       this.plannedLegs.set(drone.id, { start: { ...drone.position }, end: { ...drone.route[drone.routeIndex] } });
     }
-    if (this.strategy.kind === 'adaptive') this.updateAdaptiveCommands(true);
+    if (this.externalControl) this.replanExternal(true);
+    else if (this.strategy.kind === 'adaptive') this.updateAdaptiveCommands(true);
   }
 
   step(dtSeconds: number): void {
@@ -223,7 +291,7 @@ export class PatrolSystem {
         this.assignChargingPads();
         interval = Math.min(interval, (Math.floor((this.time + POSITION_EPSILON) / ENERGY_INTERVAL) + 1) * ENERGY_INTERVAL - this.time);
       }
-      if (this.strategy.kind === 'adaptive') interval = Math.min(interval, Math.max(0, this.nextDecisionTime - this.time));
+      if (!this.externalControl && this.strategy.kind === 'adaptive') interval = Math.min(interval, Math.max(0, this.nextDecisionTime - this.time));
       const pending = this.drones.some(drone => drone.status === 'unresponsive' || drone.status === 'deviating');
       if (pending) interval = Math.min(interval, (Math.floor((this.time + POSITION_EPSILON) / HEALTH_INTERVAL) + 1) * HEALTH_INTERVAL - this.time);
       for (const drone of this.drones) {
@@ -233,7 +301,7 @@ export class PatrolSystem {
         for (const drone of this.drones) {
           drone.speed = 0;
           if (drone.status === 'patrolling') {
-            if (this.environment.batteryEnabled) this.advanceService(drone, interval);
+            if (this.environment.batteryEnabled || this.externalControl) this.advanceService(drone, interval);
             else this.advanceDrone(drone, interval);
           } else if (drone.status === 'deviating') this.advanceDeviation(drone, interval);
           else if (drone.status === 'unresponsive' && (drone.serviceState === 'patrol' || drone.serviceState === 'returning')) this.consumeEnergy(drone, interval, 0);
@@ -244,8 +312,9 @@ export class PatrolSystem {
       let populationChanged = false;
       if (this.nextPopulationChange !== null && this.time >= this.nextPopulationChange - POSITION_EPSILON) {
         this.populationUpdates += 1;
-        updatePopulation(this.cells, this.config, this.populationUpdates);
-        this.nextPopulationChange = (this.populationUpdates + 1) * this.config.populationDynamics!.intervalSeconds;
+        this.populationEpoch += 1;
+        updatePopulation(this.cells, this.config, this.populationEpoch);
+        this.nextPopulationChange = (this.populationEpoch + 1) * this.config.populationDynamics!.intervalSeconds;
         this.log(`Population update ${this.populationUpdates}: ${this.cells.reduce((total, cell) => total + cell.population, 0)} people; density and revisit priorities refreshed.`);
         populationChanged = true;
       }
@@ -270,11 +339,11 @@ export class PatrolSystem {
         this.log(`Drone ${drone.id} ${drone.fault === 'deviation' ? 'route deviation' : 'malfunction'} confirmed; removed from patrol.`);
         confirmed = true;
       }
-      if (confirmed || this.serviceChanged || populationChanged && this.strategy.kind === 'adaptive') {
+      if (confirmed || this.serviceChanged || !this.externalControl && populationChanged && this.strategy.kind === 'adaptive') {
         this.serviceChanged = false;
         this.replan();
       }
-      if (this.strategy.kind === 'adaptive' && this.time >= this.nextDecisionTime - POSITION_EPSILON) {
+      if (!this.externalControl && this.strategy.kind === 'adaptive' && this.time >= this.nextDecisionTime - POSITION_EPSILON) {
         this.updateAdaptiveCommands(false);
         this.nextDecisionTime = Math.floor(this.time + POSITION_EPSILON) + 1;
       }
@@ -287,6 +356,7 @@ export class PatrolSystem {
     const visited = this.cells.filter(cell => cell.lastVisited !== null);
     const fullyAssigned = this.cells.every(cell => active.some(drone => drone.id === cell.assignedDroneId));
     return {
+      ...(this.externalControl ? { externalControl: { ...this.externalControl } } : {}),
       config: { ...this.config, ...(this.config.populationDynamics ? { populationDynamics: { ...this.config.populationDynamics } } : {}) },
       environment: { ...this.environment, depot: { ...this.environment.depot } },
       energy: { ...this.energy },
@@ -302,8 +372,8 @@ export class PatrolSystem {
       uncoveredCells: this.cells.length - covered.length,
       maxAge: visited.length ? Math.max(0, ...visited.map(cell => this.time - cell.lastVisited!)) : null,
       recommendedFleet: { ...this.recommendation },
-      estimatedCoverage: this.strategy.kind === 'adaptive' || this.environment.batteryEnabled ? null : estimateCoverage(active.map(drone => drone.route), this.config.revisitSeconds, this.patrolSpeed(), this.cells.length),
-      predictedRevisitSeconds: this.strategy.kind === 'adaptive' || this.environment.batteryEnabled ? null : active.length && fullyAssigned ? Math.max(...active.map(drone => drone.cycleSeconds)) : Infinity,
+      estimatedCoverage: this.externalControl || this.strategy.kind === 'adaptive' || this.environment.batteryEnabled ? null : estimateCoverage(active.map(drone => drone.route), this.config.revisitSeconds, this.patrolSpeed(), this.cells.length),
+      predictedRevisitSeconds: this.externalControl || this.strategy.kind === 'adaptive' || this.environment.batteryEnabled ? null : active.length && fullyAssigned ? Math.max(...active.map(drone => drone.cycleSeconds)) : Infinity,
       activeCount: active.length,
       revision: this.revision,
       events: this.events.map(event => ({ ...event })),
@@ -353,18 +423,43 @@ export class PatrolSystem {
     this.lastHeartbeat.set(id, this.time);
     this.deviationSince.delete(id);
     this.deviationTargets.delete(id);
+    if (this.externalControl && drone.serviceState === 'patrol') {
+      drone.route = [];
+      drone.routeIndex = 0;
+    }
     this.log(`Drone ${id} restored at its current position.`);
     this.replan();
   }
 
   private replan(): void {
-    if (this.strategy.kind === 'uniform') this.replanUniform();
+    if (this.externalControl) this.replanExternal();
+    else if (this.strategy.kind === 'uniform') this.replanUniform();
     else {
       this.updateAdaptiveCommands(true);
       this.revision += 1;
       const count = this.drones.filter(drone => drone.status === 'patrolling' && drone.serviceState === 'patrol').length;
       this.log(count ? `Replanned all ${count} healthy drones with population-aware destinations.` : 'No healthy drones remain; all cells are unassigned.');
     }
+  }
+
+  private replanExternal(resetCommands = false): void {
+    for (const cell of this.cells) cell.assignedDroneId = null;
+    for (const drone of this.drones) {
+      drone.assignedCellIds = [];
+      drone.cycleSeconds = 0;
+      if (drone.status === 'patrolling' && drone.serviceState === 'patrol' && (resetCommands || !drone.route.length)) {
+        drone.route = [{ ...drone.position }];
+        drone.routeIndex = 0;
+        drone.speed = 0;
+        this.plannedLegs.set(drone.id, { start: { ...drone.position }, end: { ...drone.position } });
+      } else if (drone.status === 'offline' && drone.serviceState === 'patrol') {
+        drone.route = [];
+        drone.routeIndex = 0;
+        this.plannedLegs.delete(drone.id);
+      }
+    }
+    this.revision += 1;
+    this.log('External controller retains all destination decisions; unavailable aircraft are unassigned.');
   }
 
   private updateAdaptiveCommands(force: boolean): void {
@@ -452,12 +547,13 @@ export class PatrolSystem {
   private advanceDrone(drone: PatrolDrone, seconds: number): void {
     let remaining = seconds;
     let cursor = this.time;
+    const speed = this.patrolSpeed(drone);
     while (remaining > POSITION_EPSILON) {
       const target = drone.route[drone.routeIndex];
       if (!target) return;
       const distance = horizontalDistance(drone.position, target);
       if (this.environment.batteryEnabled) {
-        const moveEnergy = distance / this.patrolSpeed() * energyRate(this.patrolSpeed(), this.environment);
+        const moveEnergy = distance / speed * energyRate(speed, this.environment);
         const hoverEnergy = distance <= POSITION_EPSILON && drone.route.length === 1 ? remaining * energyRate(0, this.environment) : 0;
         const returnEnergy = this.returnEnergy(target);
         if (drone.batteryFraction < moveEnergy + hoverEnergy + returnEnergy + this.environment.reserveFraction + POSITION_EPSILON) {
@@ -477,12 +573,12 @@ export class PatrolSystem {
         this.plannedLegs.set(drone.id, { start: { ...drone.position }, end: { ...drone.route[drone.routeIndex] } });
         continue;
       }
-      const travelSeconds = Math.min(remaining, distance / this.patrolSpeed());
-      const ratio = Math.min(1, this.patrolSpeed() * travelSeconds / distance);
+      const travelSeconds = Math.min(remaining, distance / speed);
+      const ratio = Math.min(1, speed * travelSeconds / distance);
       const nextPosition = { x: drone.position.x + (target.x - drone.position.x) * ratio, y: drone.position.y, z: drone.position.z + (target.z - drone.position.z) * ratio };
       this.observe(drone.position, nextPosition, cursor, travelSeconds);
       drone.position = nextPosition;
-      drone.speed = this.patrolSpeed();
+      drone.speed = speed;
       this.consumeEnergy(drone, travelSeconds, drone.speed);
       remaining -= travelSeconds;
       cursor += travelSeconds;
@@ -526,7 +622,8 @@ export class PatrolSystem {
     }
   }
 
-  private patrolSpeed(): number {
+  private patrolSpeed(drone?: PatrolDrone): number {
+    if (this.externalControl) return this.environment.maxSpeed * (drone ? this.externalSpeeds.get(drone.id) ?? 1 : 1);
     return this.environment.maxSpeed * (this.strategy.kind === 'adaptive' ? this.strategy.parameters.speedFraction ?? 1 : 1);
   }
 
@@ -534,7 +631,8 @@ export class PatrolSystem {
     return Math.hypot(position.x - this.environment.depot.x, position.z - this.environment.depot.z) / this.environment.maxSpeed * energyRate(this.environment.maxSpeed, this.environment);
   }
 
-  private beginReturn(drone: PatrolDrone): void {
+  private beginReturn(drone: PatrolDrone, forced = true): void {
+    if (this.externalControl && forced) this.externalControl.forcedReturns += 1;
     drone.serviceState = 'returning';
     drone.route = [{ x: this.environment.depot.x, y: drone.position.y, z: this.environment.depot.z }];
     drone.routeIndex = 0;
@@ -542,14 +640,14 @@ export class PatrolSystem {
     this.plannedLegs.set(drone.id, { start: { ...drone.position }, end: { ...drone.route[0] } });
     this.commitmentUntil.delete(drone.id);
     this.serviceChanged = true;
-    this.log(`Drone ${drone.id} returning to charge; remaining patrol paths will redistribute.`);
+    this.log(this.externalControl ? `Drone ${drone.id} returning to depot${forced ? ' under the battery safety shield' : ' by controller command'}.` : `Drone ${drone.id} returning to charge; remaining patrol paths will redistribute.`);
   }
 
   private advanceService(drone: PatrolDrone, seconds: number): void {
     if (drone.serviceState === 'patrol') this.advanceDrone(drone, seconds);
     else if (drone.serviceState === 'returning') this.advanceReturn(drone, seconds, this.time);
     else if (drone.serviceState === 'waiting') this.energy.waitingSeconds += seconds;
-    else {
+    else if (drone.serviceState === 'charging') {
       const chargingSeconds = Math.min(seconds, (1 - drone.batteryFraction) * this.environment.rechargeSeconds);
       this.energy.chargingSeconds += chargingSeconds;
       drone.batteryFraction = Math.min(1, drone.batteryFraction + chargingSeconds / this.environment.rechargeSeconds);
@@ -558,12 +656,12 @@ export class PatrolSystem {
         drone.chargeCycles += 1;
         this.energy.completedCharges += 1;
         this.energy.waitingSeconds += seconds - chargingSeconds;
-        drone.serviceState = 'patrol';
+        drone.serviceState = this.externalControl ? 'standby' : 'patrol';
         drone.route = [];
         drone.routeIndex = 0;
         this.reserveBreaches.delete(drone.id);
         this.serviceChanged = true;
-        this.log(`Drone ${drone.id} fully charged and rejoining patrol.`);
+        this.log(this.externalControl ? `Drone ${drone.id} fully charged and awaiting deployment.` : `Drone ${drone.id} fully charged and rejoining patrol.`);
       }
     }
   }
@@ -572,7 +670,7 @@ export class PatrolSystem {
     const target = drone.route[0];
     if (!target) return;
     const distance = horizontalDistance(drone.position, target);
-    const availableSeconds = drone.batteryFraction / energyRate(this.environment.maxSpeed, this.environment);
+    const availableSeconds = this.environment.batteryEnabled ? drone.batteryFraction / energyRate(this.environment.maxSpeed, this.environment) : Infinity;
     const travelSeconds = Math.min(seconds, distance / this.environment.maxSpeed, availableSeconds);
     const ratio = distance ? Math.min(1, travelSeconds * this.environment.maxSpeed / distance) : 1;
     drone.position.x += (target.x - drone.position.x) * ratio;
@@ -582,10 +680,15 @@ export class PatrolSystem {
     if (ratio >= 1 - POSITION_EPSILON) {
       drone.position.x = target.x;
       drone.position.z = target.z;
-      drone.serviceState = 'waiting';
+      drone.serviceState = this.externalControl && (!this.environment.batteryEnabled || drone.batteryFraction >= 1 - POSITION_EPSILON) ? 'standby' : 'waiting';
       drone.speed = 0;
-      this.waitingSince.set(drone.id, time + travelSeconds);
-      this.energy.waitingSeconds += seconds - travelSeconds;
+      if (drone.serviceState === 'waiting') {
+        this.waitingSince.set(drone.id, time + travelSeconds);
+        this.energy.waitingSeconds += seconds - travelSeconds;
+      } else {
+        drone.route = [];
+        drone.routeIndex = 0;
+      }
       this.plannedLegs.set(drone.id, { start: { ...drone.position }, end: { ...drone.position } });
     }
   }

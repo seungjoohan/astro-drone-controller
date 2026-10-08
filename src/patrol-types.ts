@@ -1,6 +1,7 @@
 import type { Vec3 } from './types';
 import type { PatrolStrategy } from './patrol-learning-types';
 import type { PatrolEnergyMetrics, PatrolEnvironment } from './patrol-environment';
+import type { ExternalPatrolMetrics } from './patrol-external';
 
 export interface PopulationDynamics {
   enabled: boolean;
@@ -22,7 +23,7 @@ export interface PatrolConfig {
 
 export type PatrolFault = 'malfunction' | 'deviation';
 export type PatrolDroneStatus = 'patrolling' | 'deviating' | 'unresponsive' | 'offline';
-export type PatrolServiceState = 'patrol' | 'returning' | 'waiting' | 'charging';
+export type PatrolServiceState = 'patrol' | 'returning' | 'waiting' | 'charging' | 'standby';
 
 export interface PatrolCell {
   id: number;
@@ -76,6 +77,7 @@ export interface PopulationMetrics {
 }
 
 export interface PatrolSnapshot {
+  externalControl?: ExternalPatrolMetrics;
   config: PatrolConfig;
   environment: PatrolEnvironment;
   energy: PatrolEnergyMetrics;

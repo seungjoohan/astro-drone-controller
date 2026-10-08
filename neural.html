@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f6f7f3" />
+    <meta name="robots" content="noindex" />
+    <title>ASTRO — Neural Patrol Preview</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="preview-header"><a href="/">ASTRO <span>Flight Lab</span></a><span class="local-badge">LOCAL PREVIEW</span></header>
+    <main>
+      <div class="heading"><div><p class="eyebrow">CONTROL CENTER / LEARNED POLICY</p><h1>Neural patrol preview</h1><p>Watch the trained controller make its own decisions. No fixed territories.</p></div><a class="back-link" href="/">← Back to flight lab</a></div>
+      <section class="warning" aria-label="Experimental policy warning"><strong>EXPERIMENTAL · TARGETS NOT MET</strong><p>The trained policies do not meet all coverage targets; geographic blind spots remain. Compare with the baselines using the same environment and fleet. This is simulation playback, not a certified controller or a new training run.</p></section>
+      <div id="preview-error" class="error" role="alert" hidden></div>
+      <button id="preview-retry" type="button" hidden>Retry loading preview</button>
+      <div class="preview-layout">
+        <section class="map-panel" aria-label="Patrol map and telemetry">
+          <div class="map-heading"><div><h2 id="preview-map-title">Loading local policies…</h2><p id="preview-applied">No mission loaded</p></div><span id="preview-status" role="status">Loading</span></div>
+          <canvas id="preview-map" role="img" aria-label="Top-down patrol map showing population, camera footprints, and drone commands"></canvas>
+          <div class="legend"><span><i class="population-dot"></i> Population; outlined = crowded</span><span><i class="camera-dot"></i> 360° camera footprint</span><span><i class="command-line"></i> Current command</span><span><i class="depot-dot"></i> Charging depot</span></div>
+          <div class="playback-controls"><button id="preview-start" type="button" disabled>Start patrol</button><button id="preview-reset" type="button" disabled>Reset</button><label>Playback <select id="preview-speed" disabled><option value="1">1×</option><option value="4">4×</option><option value="8">8×</option><option value="16">16×</option></select></label><span id="preview-time">00:00</span></div>
+          <div class="metrics"><div><span>People on time</span><strong id="preview-on-time">—</strong></div><div><span>People in view</span><strong id="preview-in-view">—</strong></div><div><span>Population gap ↓</span><strong id="preview-gap">—</strong></div><div><span>Fresh area</span><strong id="preview-area">—</strong></div><div><span>10 m area audit</span><strong id="preview-audit">—</strong></div><div><span>Neural decisions</span><strong id="preview-decisions">0</strong></div></div>
+          <p id="preview-context" class="context">Waiting for the local training artifacts.</p>
+        </section>
+        <aside>
+          <section class="settings-panel"><h2>Preview setup</h2><p id="preview-training" class="muted">Loading training metadata…</p><label>Trained policy<select id="preview-policy" disabled></select></label><label>Environment<select id="preview-scenario" disabled></select></label><label>Controller<select id="preview-controller" disabled><option value="neural">Neural PPO — experimental</option><option value="uniform">Uniform baseline</option><option value="adaptive">Adaptive baseline</option></select></label><label>Fleet size<select id="preview-fleet" disabled><option value="1">1 drone</option><option value="2">2 drones</option><option value="3">3 drones</option><option value="4">4 drones</option><option value="5">5 drones</option><option value="6">6 drones</option><option value="7">7 drones</option><option value="8" selected>8 drones</option></select></label><button id="preview-apply" type="button" disabled>Apply preview</button><p id="preview-staged" class="muted">Changes apply to a new, paused mission.</p></section>
+          <section class="fleet-panel"><h2>Fleet status</h2><p id="preview-environment" class="muted">—</p><div id="preview-drones"></div></section>
+        </aside>
+      </div>
+      <footer>Local-only evaluation viewer. Frozen weights; no background training. Pauses when this tab is hidden or loses focus. Buildings are visual context: this training simulator uses 2D coverage without building occlusion.</footer>
+    </main>
+    <script type="module" src="/src/patrol-neural-preview.ts"></script>
+  </body>
+</html>

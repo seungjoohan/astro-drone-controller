@@ -11,6 +11,8 @@ export class PatrolCoverageAudit {
   private readonly originZ: number;
   private readonly lastSeen: Float64Array;
   private readonly inside: Uint8Array;
+  private readonly sensingMultiplicity: Uint32Array;
+  private latestOverlapFraction = 0;
   readonly pointCount: number;
 
   constructor(spacing = 10, environment: PatrolEnvironment = DEFAULT_ENVIRONMENT) {
@@ -24,6 +26,7 @@ export class PatrolCoverageAudit {
     this.originZ = -validated.depth / 2 + this.spacing / 2;
     this.lastSeen = new Float64Array(this.columns * this.rows).fill(-Infinity);
     this.inside = new Uint8Array(this.lastSeen.length);
+    this.sensingMultiplicity = new Uint32Array(this.lastSeen.length);
     let pointCount = 0;
     for (let row = 0; row < this.rows; row += 1) {
       for (let column = 0; column < this.columns; column += 1) {
@@ -39,6 +42,9 @@ export class PatrolCoverageAudit {
 
   observe(snapshot: Pick<PatrolSnapshot, 'time' | 'drones'>): void {
     if (!Number.isFinite(snapshot.time) || snapshot.time < 0) return;
+    this.sensingMultiplicity.fill(0);
+    let sensedPoints = 0;
+    let uniqueSensedPoints = 0;
     const radiusSquared = this.sensorRadius ** 2;
     for (const drone of snapshot.drones) {
       if (drone.status !== 'patrolling' || drone.fault !== null || drone.serviceState && drone.serviceState !== 'patrol') continue;
@@ -55,10 +61,14 @@ export class PatrolCoverageAudit {
           const horizontalOffset = this.originX + column * this.spacing - horizontal;
           const depthOffset = this.originZ + row * this.spacing - depth;
           if (horizontalOffset ** 2 + depthOffset ** 2 > radiusSquared + 1e-8) continue;
+          if (this.sensingMultiplicity[index] === 0) uniqueSensedPoints += 1;
+          this.sensingMultiplicity[index] += 1;
+          sensedPoints += 1;
           this.lastSeen[index] = Math.max(this.lastSeen[index], snapshot.time);
         }
       }
     }
+    this.latestOverlapFraction = sensedPoints ? (sensedPoints - uniqueSensedPoints) / sensedPoints : 0;
   }
 
   measure(time: number, revisitSeconds: number): { coverage: number; neverObserved: number; maxAge: number } {
@@ -76,5 +86,22 @@ export class PatrolCoverageAudit {
       maxAge = Math.max(maxAge, age);
     }
     return { coverage: 100 * fresh / this.pointCount, neverObserved, maxAge };
+  }
+
+  measureReward(time: number, revisitSeconds: number): { coverage: number; meanAgeCost: number; overlapFraction: number } {
+    const currentTime = Number.isFinite(time) ? Math.max(0, time) : 0;
+    const window = Number.isFinite(revisitSeconds) ? Math.max(1e-6, revisitSeconds) : 1e-6;
+    let ageCost = 0;
+    for (let index = 0; index < this.lastSeen.length; index += 1) {
+      if (!this.inside[index]) continue;
+      if (!Number.isFinite(this.lastSeen[index])) {
+        ageCost += 1;
+        continue;
+      }
+      const age = Math.max(0, currentTime - this.lastSeen[index]);
+      ageCost += age / (age + window);
+    }
+    return { coverage: this.measure(time, revisitSeconds).coverage, meanAgeCost: ageCost / this.pointCount,
+      overlapFraction: this.latestOverlapFraction };
   }
 }
